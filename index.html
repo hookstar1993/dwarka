@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Train Journey Plan</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        /* Custom styles for the dashed line */
+        .dashed-line {
+            flex-grow: 1;
+            background-image: linear-gradient(to right, #D1D5DB 33%, rgba(255,255,255,0) 0%);
+            background-position: bottom;
+            background-size: 12px 2px;
+            background-repeat: repeat-x;
+            height: 2px;
+            margin: 0 1rem;
+        }
+    </style>
+</head>
+<body class="bg-sky-50 flex items-start justify-center min-h-screen p-2 sm:p-4">
+
+    <div class="w-full max-w-4xl mx-auto">
+        <!-- Header Section -->
+        <header class="bg-sky-600 text-white rounded-t-xl p-4 sm:p-6 shadow-lg">
+            <div class="flex items-center justify-center space-x-2 sm:space-x-4">
+                <!-- Calendar Icon -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 sm:h-8 sm:w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                <h1 class="text-xl sm:text-2xl md:text-3xl font-bold text-center">Dwarka Poonam</h1>
+                <!-- Globe Icon -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 sm:h-8 sm:w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2h1a2 2 0 002-2v-1a2 2 0 012-2h1.945M7.75 4a3 3 0 013.75 0M16.25 4a3 3 0 00-3.75 0M12 19.5a3 3 0 01-3-3V15a3 3 0 013-3h.008v4.5H12zM12 19.5a3 3 0 003-3V15a3 3 0 00-3-3h-.008v4.5H12z" />
+                </svg>
+            </div>
+            <p class="text-center text-sky-100 mt-2 text-sm sm:text-lg px-2">October 2025 (Sharad Poonam & Diwali)</p>
+        </header>
+
+        <!-- Main Content -->
+        <main class="bg-white rounded-b-xl shadow-lg p-3 sm:p-6 md:p-8 space-y-6">
+
+            <!-- Journey 1: Surat to Dwarka -->
+            <div class="border border-gray-200 rounded-xl p-4 sm:p-6 transition-shadow hover:shadow-md">
+                <div class="flex flex-col sm:flex-row justify-between sm:items-start mb-6 text-center sm:text-left">
+                    <div>
+                        <h2 class="text-xl sm:text-2xl font-bold text-sky-800">Surat to Dwarka</h2>
+                        <p class="text-gray-500 text-sm sm:text-base">Puri Okha SF Express</p>
+                    </div>
+                    <div class="sm:text-right mt-2 sm:mt-0 mx-auto sm:mx-0">
+                        <span class="font-bold text-lg sm:text-xl text-gray-800">20819</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] sm:gap-x-4 items-center">
+                    <!-- Departure Info -->
+                    <div class="text-center sm:text-left">
+                        <p class="text-sm text-gray-500">Departs From</p>
+                        <p class="font-semibold text-base sm:text-lg text-gray-800">Surat (ST)</p>
+                        <div class="flex items-center justify-center sm:justify-start mt-2 text-gray-600 text-sm sm:text-base">
+                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                            <span>07:38 PM</span>
+                        </div>
+                        <div class="flex items-center justify-center sm:justify-start mt-1 text-gray-600 text-sm sm:text-base">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                            <span>06-Oct-2025</span>
+                        </div>
+                    </div>
+
+                    <!-- Graphical Line -->
+                    <div class="w-full flex items-center my-4 sm:my-0">
+                        <div class="dashed-line hidden sm:block"></div>
+                        <div class="bg-sky-100 text-sky-700 p-2 rounded-full shadow-inner">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.69 2 6 2.5 6 3.5V14c0 1.66 1.34 3 3 3h6c1.66 0 3-1.34 3-3V3.5C18 2.5 15.31 2 12 2zm0 2c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm-4 13.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm8 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM6 10h12v2H6v-2z"/></svg>
+                        </div>
+                        <div class="dashed-line hidden sm:block"></div>
+                    </div>
+
+                    <!-- Arrival Info -->
+                    <div class="text-center sm:text-right">
+                        <p class="text-sm text-gray-500">Arrives At</p>
+                        <p class="font-semibold text-base sm:text-lg text-gray-800">Dwarka (DWK)</p>
+                         <div class="flex items-center justify-center sm:justify-end mt-2 text-gray-600 text-sm sm:text-base">
+                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                            <span>09:03 AM</span>
+                        </div>
+                        <div class="flex items-center justify-center sm:justify-end mt-1 text-gray-600 text-sm sm:text-base">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                            <span>07-Oct-2025</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Journey 2: Dwarka to Jamnagar -->
+            <div class="border border-gray-200 rounded-xl p-4 sm:p-6 transition-shadow hover:shadow-md">
+                <div class="flex flex-col sm:flex-row justify-between sm:items-start mb-6 text-center sm:text-left">
+                    <div>
+                        <h2 class="text-xl sm:text-2xl font-bold text-amber-800">Dwarka to Jamnagar</h2>
+                        <p class="text-gray-500 text-sm sm:text-base">Okha BVC Express</p>
+                    </div>
+                    <div class="sm:text-right mt-2 sm:mt-0 mx-auto sm:mx-0">
+                        <span class="font-bold text-lg sm:text-xl text-gray-800">19210</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] sm:gap-x-4 items-center">
+                    <!-- Departure Info -->
+                    <div class="text-center sm:text-left">
+                        <p class="text-sm text-gray-500">Departs From</p>
+                        <p class="font-semibold text-base sm:text-lg text-gray-800">Dwarka (DWK)</p>
+                        <div class="flex items-center justify-center sm:justify-start mt-2 text-gray-600 text-sm sm:text-base">
+                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                            <span>03:55 PM</span>
+                        </div>
+                        <div class="flex items-center justify-center sm:justify-start mt-1 text-gray-600 text-sm sm:text-base">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                            <span>07-Oct-2025</span>
+                        </div>
+                    </div>
+
+                    <!-- Graphical Line -->
+                    <div class="w-full flex items-center my-4 sm:my-0">
+                        <div class="dashed-line hidden sm:block"></div>
+                        <div class="bg-amber-100 text-amber-700 p-2 rounded-full shadow-inner">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.69 2 6 2.5 6 3.5V14c0 1.66 1.34 3 3 3h6c1.66 0 3-1.34 3-3V3.5C18 2.5 15.31 2 12 2zm0 2c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm-4 13.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm8 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM6 10h12v2H6v-2z"/></svg>
+                        </div>
+                        <div class="dashed-line hidden sm:block"></div>
+                    </div>
+
+                    <!-- Arrival Info -->
+                    <div class="text-center sm:text-right">
+                        <p class="text-sm text-gray-500">Arrives At</p>
+                        <p class="font-semibold text-base sm:text-lg text-gray-800">Jamnagar (JAM)</p>
+                         <div class="flex items-center justify-center sm:justify-end mt-2 text-gray-600 text-sm sm:text-base">
+                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                            <span>06:33 PM</span>
+                        </div>
+                        <div class="flex items-center justify-center sm:justify-end mt-1 text-gray-600 text-sm sm:text-base">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                            <span>07-Oct-2025</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Journey 3: Jamnagar to Surat -->
+            <div class="border border-gray-200 rounded-xl p-4 sm:p-6 transition-shadow hover:shadow-md">
+                <div class="flex flex-col sm:flex-row justify-between sm:items-start mb-6 text-center sm:text-left">
+                    <div>
+                        <h2 class="text-xl sm:text-2xl font-bold text-rose-800">Jamnagar to Surat</h2>
+                        <p class="text-gray-500 text-sm sm:text-base">BDTS Humsafar Express</p>
+                    </div>
+                    <div class="sm:text-right mt-2 sm:mt-0 mx-auto sm:mx-0">
+                        <span class="font-bold text-lg sm:text-xl text-gray-800">22924</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] sm:gap-x-4 items-center">
+                    <!-- Departure Info -->
+                    <div class="text-center sm:text-left">
+                        <p class="text-sm text-gray-500">Departs From</p>
+                        <p class="font-semibold text-base sm:text-lg text-gray-800">Jamnagar (JAM)</p>
+                        <div class="flex items-center justify-center sm:justify-start mt-2 text-gray-600 text-sm sm:text-base">
+                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                            <span>08:15 PM</span>
+                        </div>
+                        <div class="flex items-center justify-center sm:justify-start mt-1 text-gray-600 text-sm sm:text-base">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                            <span>07-Oct-2025</span>
+                        </div>
+                    </div>
+
+                    <!-- Graphical Line -->
+                    <div class="w-full flex items-center my-4 sm:my-0">
+                        <div class="dashed-line hidden sm:block"></div>
+                        <div class="bg-rose-100 text-rose-700 p-2 rounded-full shadow-inner">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.69 2 6 2.5 6 3.5V14c0 1.66 1.34 3 3 3h6c1.66 0 3-1.34 3-3V3.5C18 2.5 15.31 2 12 2zm0 2c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm-4 13.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm8 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM6 10h12v2H6v-2z"/></svg>
+                        </div>
+                        <div class="dashed-line hidden sm:block"></div>
+                    </div>
+
+                    <!-- Arrival Info -->
+                    <div class="text-center sm:text-right">
+                        <p class="text-sm text-gray-500">Arrives At</p>
+                        <p class="font-semibold text-base sm:text-lg text-gray-800">Surat (ST)</p>
+                         <div class="flex items-center justify-center sm:justify-end mt-2 text-gray-600 text-sm sm:text-base">
+                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                            <span>05:25 AM</span>
+                        </div>
+                        <div class="flex items-center justify-center sm:justify-end mt-1 text-gray-600 text-sm sm:text-base">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                            <span>08-Oct-2025</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer Message -->
+            <div class="text-center pt-4">
+                <div class="inline-flex items-center bg-emerald-100 text-emerald-800 text-sm sm:text-lg font-semibold px-4 py-2 sm:px-6 sm:py-3 rounded-full">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6 mr-2 sm:mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    All set and ready for the journey!
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+</body>
+</html>
