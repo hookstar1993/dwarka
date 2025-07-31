@@ -14,12 +14,6 @@
         .dropdown-menu {
             transition: opacity 0.3s ease-out, transform 0.3s ease-out;
         }
-        .modal-overlay {
-            transition: opacity 0.3s ease-in-out;
-        }
-        .modal-content {
-            transition: transform 0.3s ease-in-out;
-        }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800">
@@ -73,66 +67,6 @@
             <!-- Date cards will be injected here by JavaScript -->
         </div>
     </main>
-
-    <!-- Booking Modal -->
-    <div id="booking-modal" class="modal-overlay fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 hidden">
-        <div class="modal-content bg-white w-full max-w-2xl rounded-lg shadow-2xl transform scale-95">
-            <!-- Modal Header -->
-            <div class="flex justify-between items-center p-5 border-b">
-                <h3 class="text-2xl font-semibold">Booking Details</h3>
-                <button id="close-modal-button" class="text-gray-400 hover:text-gray-600">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                </button>
-            </div>
-            
-            <!-- Modal Body -->
-            <div class="p-6">
-                <p class="text-lg mb-4">You are booking for: <strong id="booking-date-display" class="text-blue-600"></strong></p>
-                
-                <!-- Booking Form -->
-                <form>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label for="name" class="block text-sm font-medium text-gray-700">Full Name</label>
-                            <input type="text" id="name" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                        </div>
-                        <div>
-                            <label for="email" class="block text-sm font-medium text-gray-700">Email Address</label>
-                            <input type="email" id="email" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                        </div>
-                         <div>
-                            <label for="booking-type" class="block text-sm font-medium text-gray-700">Booking Type</label>
-                            <select id="booking-type" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                                <option>Train Ticket</option>
-                                <option>Hotel Reservation</option>
-                                <option>Train + Hotel Package</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label for="passengers" class="block text-sm font-medium text-gray-700">Number of Passengers</label>
-                            <input type="number" id="passengers" value="1" min="1" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                        </div>
-                        <div class="md:col-span-2">
-                            <label for="notes" class="block text-sm font-medium text-gray-700">Additional Notes</label>
-                            <textarea id="notes" rows="3" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="e.g., special requests, preferred train class..."></textarea>
-                        </div>
-                    </div>
-                </form>
-            </div>
-
-            <!-- Modal Footer -->
-            <div class="flex justify-end items-center p-5 border-t bg-gray-50 rounded-b-lg">
-                <button id="cancel-button" class="px-6 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 mr-2">Cancel</button>
-                <button id="confirm-button" class="px-6 py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700">Confirm Booking</button>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Success Message -->
-    <div id="success-message" class="fixed top-5 right-5 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg opacity-0 transform -translate-y-10 transition-all duration-500">
-        Booking Confirmed!
-    </div>
-
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -197,66 +131,6 @@
             }
             
             generateDateCards();
-
-            // --- Modal Handling ---
-            const bookingModal = document.getElementById('booking-modal');
-            const closeModalButton = document.getElementById('close-modal-button');
-            const cancelButton = document.getElementById('cancel-button');
-            const confirmButton = document.getElementById('confirm-button');
-            const bookingDateDisplay = document.getElementById('booking-date-display');
-            const successMessage = document.getElementById('success-message');
-
-            function openModal(date) {
-                if (!bookingModal || !bookingDateDisplay) return;
-                bookingDateDisplay.textContent = date;
-                bookingModal.classList.remove('hidden');
-                // Animate in
-                setTimeout(() => {
-                    bookingModal.querySelector('.modal-overlay').classList.add('opacity-100');
-                    bookingModal.querySelector('.modal-content').classList.add('scale-100');
-                }, 10);
-            }
-
-            function closeModal() {
-                 if (!bookingModal) return;
-                 // Animate out
-                 bookingModal.querySelector('.modal-overlay').classList.remove('opacity-100');
-                 bookingModal.querySelector('.modal-content').classList.remove('scale-100');
-                 setTimeout(() => {
-                    bookingModal.classList.add('hidden');
-                 }, 300);
-            }
-            
-            function showSuccessMessage() {
-                if (!successMessage) return;
-                successMessage.classList.remove('opacity-0', '-translate-y-10');
-                successMessage.classList.add('opacity-100', 'translate-y-0');
-                setTimeout(() => {
-                    successMessage.classList.remove('opacity-100', 'translate-y-0');
-                    successMessage.classList.add('opacity-0', '-translate-y-10');
-                }, 3000); // Hide after 3 seconds
-            }
-
-            grid.addEventListener('click', function(e) {
-                if (e.target.classList.contains('book-now-button')) {
-                    const date = e.target.dataset.date;
-                    openModal(date);
-                }
-            });
-            
-            closeModalButton.addEventListener('click', closeModal);
-            cancelButton.addEventListener('click', closeModal);
-            bookingModal.addEventListener('click', function(e) {
-                if (e.target.id === 'booking-modal') {
-                    closeModal();
-                }
-            });
-            
-            confirmButton.addEventListener('click', () => {
-                // Here you would typically handle form submission logic
-                closeModal();
-                showSuccessMessage();
-            });
 
             // --- Header Dropdown ---
             const dropdownButton = document.getElementById('dropdown-button');
