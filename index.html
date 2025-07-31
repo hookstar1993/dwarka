@@ -3,219 +3,286 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Train Journey Plan</title>
+    <title>Poonam Booking System</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
         }
-        /* Custom styles for the dashed line */
-        .dashed-line {
-            flex-grow: 1;
-            background-image: linear-gradient(to right, #D1D5DB 33%, rgba(255,255,255,0) 0%);
-            background-position: bottom;
-            background-size: 12px 2px;
-            background-repeat: repeat-x;
-            height: 2px;
-            margin: 0 1rem;
+        /* Simple transition for the dropdown */
+        .dropdown-menu {
+            transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+        }
+        .modal-overlay {
+            transition: opacity 0.3s ease-in-out;
+        }
+        .modal-content {
+            transition: transform 0.3s ease-in-out;
         }
     </style>
 </head>
-<body class="bg-sky-50 flex items-start justify-center min-h-screen p-2 sm:p-4">
+<body class="bg-gray-50 text-gray-800">
 
-    <div class="w-full max-w-4xl mx-auto">
-        <!-- Header Section -->
-        <header class="bg-sky-600 text-white rounded-t-xl p-4 sm:p-6 shadow-lg">
-            <div class="flex items-center justify-center space-x-2 sm:space-x-4">
-                <!-- Calendar Icon -->
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 sm:h-8 sm:w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-                <h1 class="text-xl sm:text-2xl md:text-3xl font-bold text-center">Dwarka Poonam</h1>
-                <!-- Globe Icon -->
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 sm:h-8 sm:w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2h1a2 2 0 002-2v-1a2 2 0 012-2h1.945M7.75 4a3 3 0 013.75 0M16.25 4a3 3 0 00-3.75 0M12 19.5a3 3 0 01-3-3V15a3 3 0 013-3h.008v4.5H12zM12 19.5a3 3 0 003-3V15a3 3 0 00-3-3h-.008v4.5H12z" />
-                </svg>
+    <!-- Header -->
+    <header class="bg-white shadow-md sticky top-0 z-40">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="text-2xl font-bold text-blue-600">
+                Poonam Travel
             </div>
-            <p class="text-center text-sky-100 mt-2 text-sm sm:text-lg px-2">October 2025 (Sharad Poonam & Diwali)</p>
-        </header>
-
-        <!-- Main Content -->
-        <main class="bg-white rounded-b-xl shadow-lg p-3 sm:p-6 md:p-8 space-y-6">
-
-            <!-- Journey 1: Surat to Dwarka -->
-            <div class="border border-gray-200 rounded-xl p-4 sm:p-6 transition-shadow hover:shadow-md">
-                <div class="flex flex-col sm:flex-row justify-between sm:items-start mb-6 text-center sm:text-left">
-                    <div>
-                        <h2 class="text-xl sm:text-2xl font-bold text-sky-800">Surat to Dwarka</h2>
-                        <p class="text-gray-500 text-sm sm:text-base">Puri Okha SF Express</p>
-                    </div>
-                    <div class="sm:text-right mt-2 sm:mt-0 mx-auto sm:mx-0">
-                        <span class="font-bold text-lg sm:text-xl text-gray-800">20819</span>
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="#" class="text-gray-600 hover:text-blue-600">Home</a>
+                <!-- Dropdown Menu -->
+                <div class="relative" id="dropdown-container">
+                    <button id="dropdown-button" class="flex items-center text-gray-600 hover:text-blue-600">
+                        <span>Services</span>
+                        <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div id="dropdown-menu" class="dropdown-menu absolute right-0 mt-2 w-48 bg-white rounded-md shadow-xl z-50 opacity-0 transform -translate-y-2 pointer-events-none">
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-500 hover:text-white rounded-t-md">Train Bookings</a>
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-500 hover:text-white">Hotel Bookings</a>
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-500 hover:text-white rounded-b-md">Holiday Packages</a>
                     </div>
                 </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] sm:gap-x-4 items-center">
-                    <!-- Departure Info -->
-                    <div class="text-center sm:text-left">
-                        <p class="text-sm text-gray-500">Departs From</p>
-                        <p class="font-semibold text-base sm:text-lg text-gray-800">Surat (ST)</p>
-                        <div class="flex items-center justify-center sm:justify-start mt-2 text-gray-600 text-sm sm:text-base">
-                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                            <span>07:38 PM</span>
-                        </div>
-                        <div class="flex items-center justify-center sm:justify-start mt-1 text-gray-600 text-sm sm:text-base">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                            <span>06-Oct-2025</span>
-                        </div>
-                    </div>
-
-                    <!-- Graphical Line -->
-                    <div class="w-full flex items-center my-4 sm:my-0">
-                        <div class="dashed-line hidden sm:block"></div>
-                        <div class="bg-sky-100 text-sky-700 p-2 rounded-full shadow-inner">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.69 2 6 2.5 6 3.5V14c0 1.66 1.34 3 3 3h6c1.66 0 3-1.34 3-3V3.5C18 2.5 15.31 2 12 2zm0 2c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm-4 13.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm8 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM6 10h12v2H6v-2z"/></svg>
-                        </div>
-                        <div class="dashed-line hidden sm:block"></div>
-                    </div>
-
-                    <!-- Arrival Info -->
-                    <div class="text-center sm:text-right">
-                        <p class="text-sm text-gray-500">Arrives At</p>
-                        <p class="font-semibold text-base sm:text-lg text-gray-800">Dwarka (DWK)</p>
-                         <div class="flex items-center justify-center sm:justify-end mt-2 text-gray-600 text-sm sm:text-base">
-                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                            <span>09:03 AM</span>
-                        </div>
-                        <div class="flex items-center justify-center sm:justify-end mt-1 text-gray-600 text-sm sm:text-base">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                            <span>07-Oct-2025</span>
-                        </div>
-                    </div>
-                </div>
+                <a href="#" class="text-gray-600 hover:text-blue-600">About Us</a>
+                <a href="#" class="text-gray-600 hover:text-blue-600">Contact</a>
             </div>
+            <button class="md:hidden" id="mobile-menu-button">
+                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+            </button>
+        </nav>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden px-6 pb-4">
+            <a href="#" class="block py-2 text-gray-600 hover:text-blue-600">Home</a>
+            <a href="#" class="block py-2 text-gray-600 hover:text-blue-600">Train Bookings</a>
+            <a href="#" class="block py-2 text-gray-600 hover:text-blue-600">Hotel Bookings</a>
+            <a href="#" class="block py-2 text-gray-600 hover:text-blue-600">About Us</a>
+            <a href="#" class="block py-2 text-gray-600 hover:text-blue-600">Contact</a>
+        </div>
+    </header>
 
-            <!-- Journey 2: Dwarka to Jamnagar -->
-            <div class="border border-gray-200 rounded-xl p-4 sm:p-6 transition-shadow hover:shadow-md">
-                <div class="flex flex-col sm:flex-row justify-between sm:items-start mb-6 text-center sm:text-left">
-                    <div>
-                        <h2 class="text-xl sm:text-2xl font-bold text-amber-800">Dwarka to Jamnagar</h2>
-                        <p class="text-gray-500 text-sm sm:text-base">Okha BVC Express</p>
-                    </div>
-                    <div class="sm:text-right mt-2 sm:mt-0 mx-auto sm:mx-0">
-                        <span class="font-bold text-lg sm:text-xl text-gray-800">19210</span>
-                    </div>
-                </div>
+    <!-- Main Content -->
+    <main class="container mx-auto px-6 py-12">
+        <div class="text-center mb-12">
+            <h1 class="text-4xl font-bold text-gray-800">Auspicious Travel Dates</h1>
+            <p class="text-lg text-gray-600 mt-2">Book your travel for these special full moon days from Aug 2025 to Aug 2027.</p>
+        </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] sm:gap-x-4 items-center">
-                    <!-- Departure Info -->
-                    <div class="text-center sm:text-left">
-                        <p class="text-sm text-gray-500">Departs From</p>
-                        <p class="font-semibold text-base sm:text-lg text-gray-800">Dwarka (DWK)</p>
-                        <div class="flex items-center justify-center sm:justify-start mt-2 text-gray-600 text-sm sm:text-base">
-                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                            <span>03:55 PM</span>
-                        </div>
-                        <div class="flex items-center justify-center sm:justify-start mt-1 text-gray-600 text-sm sm:text-base">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                            <span>07-Oct-2025</span>
-                        </div>
-                    </div>
+        <!-- Poonam Dates Grid -->
+        <div id="poonam-dates-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+            <!-- Date cards will be injected here by JavaScript -->
+        </div>
+    </main>
 
-                    <!-- Graphical Line -->
-                    <div class="w-full flex items-center my-4 sm:my-0">
-                        <div class="dashed-line hidden sm:block"></div>
-                        <div class="bg-amber-100 text-amber-700 p-2 rounded-full shadow-inner">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.69 2 6 2.5 6 3.5V14c0 1.66 1.34 3 3 3h6c1.66 0 3-1.34 3-3V3.5C18 2.5 15.31 2 12 2zm0 2c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm-4 13.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm8 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM6 10h12v2H6v-2z"/></svg>
+    <!-- Booking Modal -->
+    <div id="booking-modal" class="modal-overlay fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 hidden">
+        <div class="modal-content bg-white w-full max-w-2xl rounded-lg shadow-2xl transform scale-95">
+            <!-- Modal Header -->
+            <div class="flex justify-between items-center p-5 border-b">
+                <h3 class="text-2xl font-semibold">Booking Details</h3>
+                <button id="close-modal-button" class="text-gray-400 hover:text-gray-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            
+            <!-- Modal Body -->
+            <div class="p-6">
+                <p class="text-lg mb-4">You are booking for: <strong id="booking-date-display" class="text-blue-600"></strong></p>
+                
+                <!-- Booking Form -->
+                <form>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="name" class="block text-sm font-medium text-gray-700">Full Name</label>
+                            <input type="text" id="name" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                         </div>
-                        <div class="dashed-line hidden sm:block"></div>
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-gray-700">Email Address</label>
+                            <input type="email" id="email" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                         <div>
+                            <label for="booking-type" class="block text-sm font-medium text-gray-700">Booking Type</label>
+                            <select id="booking-type" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                                <option>Train Ticket</option>
+                                <option>Hotel Reservation</option>
+                                <option>Train + Hotel Package</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="passengers" class="block text-sm font-medium text-gray-700">Number of Passengers</label>
+                            <input type="number" id="passengers" value="1" min="1" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        <div class="md:col-span-2">
+                            <label for="notes" class="block text-sm font-medium text-gray-700">Additional Notes</label>
+                            <textarea id="notes" rows="3" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500" placeholder="e.g., special requests, preferred train class..."></textarea>
+                        </div>
                     </div>
-
-                    <!-- Arrival Info -->
-                    <div class="text-center sm:text-right">
-                        <p class="text-sm text-gray-500">Arrives At</p>
-                        <p class="font-semibold text-base sm:text-lg text-gray-800">Jamnagar (JAM)</p>
-                         <div class="flex items-center justify-center sm:justify-end mt-2 text-gray-600 text-sm sm:text-base">
-                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                            <span>06:33 PM</span>
-                        </div>
-                        <div class="flex items-center justify-center sm:justify-end mt-1 text-gray-600 text-sm sm:text-base">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                            <span>07-Oct-2025</span>
-                        </div>
-                    </div>
-                </div>
+                </form>
             </div>
 
-            <!-- Journey 3: Jamnagar to Surat -->
-            <div class="border border-gray-200 rounded-xl p-4 sm:p-6 transition-shadow hover:shadow-md">
-                <div class="flex flex-col sm:flex-row justify-between sm:items-start mb-6 text-center sm:text-left">
-                    <div>
-                        <h2 class="text-xl sm:text-2xl font-bold text-rose-800">Jamnagar to Surat</h2>
-                        <p class="text-gray-500 text-sm sm:text-base">BDTS Humsafar Express</p>
-                    </div>
-                    <div class="sm:text-right mt-2 sm:mt-0 mx-auto sm:mx-0">
-                        <span class="font-bold text-lg sm:text-xl text-gray-800">22924</span>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] sm:gap-x-4 items-center">
-                    <!-- Departure Info -->
-                    <div class="text-center sm:text-left">
-                        <p class="text-sm text-gray-500">Departs From</p>
-                        <p class="font-semibold text-base sm:text-lg text-gray-800">Jamnagar (JAM)</p>
-                        <div class="flex items-center justify-center sm:justify-start mt-2 text-gray-600 text-sm sm:text-base">
-                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                            <span>08:15 PM</span>
-                        </div>
-                        <div class="flex items-center justify-center sm:justify-start mt-1 text-gray-600 text-sm sm:text-base">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                            <span>07-Oct-2025</span>
-                        </div>
-                    </div>
-
-                    <!-- Graphical Line -->
-                    <div class="w-full flex items-center my-4 sm:my-0">
-                        <div class="dashed-line hidden sm:block"></div>
-                        <div class="bg-rose-100 text-rose-700 p-2 rounded-full shadow-inner">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.69 2 6 2.5 6 3.5V14c0 1.66 1.34 3 3 3h6c1.66 0 3-1.34 3-3V3.5C18 2.5 15.31 2 12 2zm0 2c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm-4 13.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm8 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM6 10h12v2H6v-2z"/></svg>
-                        </div>
-                        <div class="dashed-line hidden sm:block"></div>
-                    </div>
-
-                    <!-- Arrival Info -->
-                    <div class="text-center sm:text-right">
-                        <p class="text-sm text-gray-500">Arrives At</p>
-                        <p class="font-semibold text-base sm:text-lg text-gray-800">Surat (ST)</p>
-                         <div class="flex items-center justify-center sm:justify-end mt-2 text-gray-600 text-sm sm:text-base">
-                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                            <span>05:25 AM</span>
-                        </div>
-                        <div class="flex items-center justify-center sm:justify-end mt-1 text-gray-600 text-sm sm:text-base">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                            <span>08-Oct-2025</span>
-                        </div>
-                    </div>
-                </div>
+            <!-- Modal Footer -->
+            <div class="flex justify-end items-center p-5 border-t bg-gray-50 rounded-b-lg">
+                <button id="cancel-button" class="px-6 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 mr-2">Cancel</button>
+                <button id="confirm-button" class="px-6 py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700">Confirm Booking</button>
             </div>
-
-            <!-- Footer Message -->
-            <div class="text-center pt-4">
-                <div class="inline-flex items-center bg-emerald-100 text-emerald-800 text-sm sm:text-lg font-semibold px-4 py-2 sm:px-6 sm:py-3 rounded-full">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6 mr-2 sm:mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    All set and ready for the journey!
-                </div>
-            </div>
-
-        </main>
+        </div>
+    </div>
+    
+    <!-- Success Message -->
+    <div id="success-message" class="fixed top-5 right-5 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg opacity-0 transform -translate-y-10 transition-all duration-500">
+        Booking Confirmed!
     </div>
 
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // --- DATA: Poonam (Full Moon) Dates ---
+            const poonamDates = [
+                { year: 2025, month: 'August', day: 9 }, { year: 2025, month: 'September', day: 7 },
+                { year: 2025, month: 'October', day: 7 }, { year: 2025, month: 'November', day: 5 },
+                { year: 2025, month: 'December', day: 5 }, { year: 2026, month: 'January', day: 3 },
+                { year: 2026, month: 'February', day: 2 }, { year: 2026, month: 'March', day: 3 },
+                { year: 2026, month: 'April', day: 2 }, { year: 2026, month: 'May', day: 1 },
+                { year: 2026, month: 'May', day: 31, note: 'Second Poonam this month' },
+                { year: 2026, month: 'June', day: 30 }, { year: 2026, month: 'July', day: 29 },
+                { year: 2026, month: 'August', day: 28 }, { year: 2026, month: 'September', day: 26 },
+                { year: 2026, month: 'October', day: 26 }, { year: 2026, month: 'November', day: 24 },
+                { year: 2026, month: 'December', day: 24 }, { year: 2027, month: 'January', day: 22 },
+                { year: 2027, month: 'February', day: 21 }, { year: 2027, month: 'March', day: 22 },
+                { year: 2027, month: 'April', day: 21 }, { year: 2027, month: 'May', day: 20 },
+                { year: 2027, month: 'June', day: 19 }, { year: 2027, month: 'July', day: 18 },
+                { year: 2027, month: 'August', day: 17 },
+            ];
+
+            const grid = document.getElementById('poonam-dates-grid');
+
+            // --- Function to generate date cards ---
+            function generateDateCards() {
+                if (!grid) return;
+
+                // Color schemes for cards
+                const colorSchemes = [
+                    { month: 'text-blue-500', button: { bg: 'bg-blue-600', hover: 'hover:bg-blue-700', ring: 'focus:ring-blue-500' } },
+                    { month: 'text-green-500', button: { bg: 'bg-green-600', hover: 'hover:bg-green-700', ring: 'focus:ring-green-500' } },
+                    { month: 'text-indigo-500', button: { bg: 'bg-indigo-600', hover: 'hover:bg-indigo-700', ring: 'focus:ring-indigo-500' } },
+                    { month: 'text-purple-500', button: { bg: 'bg-purple-600', hover: 'hover:bg-purple-700', ring: 'focus:ring-purple-500' } },
+                    { month: 'text-pink-500', button: { bg: 'bg-pink-600', hover: 'hover:bg-pink-700', ring: 'focus:ring-pink-500' } },
+                    { month: 'text-red-500', button: { bg: 'bg-red-600', hover: 'hover:bg-red-700', ring: 'focus:ring-red-500' } },
+                    { month: 'text-yellow-500', button: { bg: 'bg-yellow-600', hover: 'hover:bg-yellow-700', ring: 'focus:ring-yellow-500' } },
+                ];
+
+                poonamDates.forEach((dateInfo, index) => {
+                    const card = document.createElement('div');
+                    card.className = 'bg-white rounded-xl shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300';
+                    
+                    const fullDate = `${dateInfo.month} ${dateInfo.day}, ${dateInfo.year}`;
+                    const scheme = colorSchemes[index % colorSchemes.length];
+
+                    card.innerHTML = `
+                        <div class="p-6">
+                            <div class="text-sm font-semibold ${scheme.month} uppercase tracking-wider">${dateInfo.month} ${dateInfo.year}</div>
+                            <div class="mt-4 flex items-baseline">
+                                <span class="text-5xl font-extrabold text-gray-900">${String(dateInfo.day).padStart(2, '0')}</span>
+                            </div>
+                            ${dateInfo.note ? `<p class="text-xs text-green-600 mt-1">${dateInfo.note}</p>` : ''}
+                        </div>
+                        <div class="px-6 pb-6 bg-gray-50">
+                            <button data-date="${fullDate}" class="book-now-button w-full ${scheme.button.bg} text-white font-bold py-3 px-4 rounded-lg ${scheme.button.hover} focus:outline-none focus:ring-2 focus:ring-offset-2 ${scheme.button.ring} transition-colors duration-300">
+                                Show Booking
+                            </button>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
+            }
+            
+            generateDateCards();
+
+            // --- Modal Handling ---
+            const bookingModal = document.getElementById('booking-modal');
+            const closeModalButton = document.getElementById('close-modal-button');
+            const cancelButton = document.getElementById('cancel-button');
+            const confirmButton = document.getElementById('confirm-button');
+            const bookingDateDisplay = document.getElementById('booking-date-display');
+            const successMessage = document.getElementById('success-message');
+
+            function openModal(date) {
+                if (!bookingModal || !bookingDateDisplay) return;
+                bookingDateDisplay.textContent = date;
+                bookingModal.classList.remove('hidden');
+                // Animate in
+                setTimeout(() => {
+                    bookingModal.querySelector('.modal-overlay').classList.add('opacity-100');
+                    bookingModal.querySelector('.modal-content').classList.add('scale-100');
+                }, 10);
+            }
+
+            function closeModal() {
+                 if (!bookingModal) return;
+                 // Animate out
+                 bookingModal.querySelector('.modal-overlay').classList.remove('opacity-100');
+                 bookingModal.querySelector('.modal-content').classList.remove('scale-100');
+                 setTimeout(() => {
+                    bookingModal.classList.add('hidden');
+                 }, 300);
+            }
+            
+            function showSuccessMessage() {
+                if (!successMessage) return;
+                successMessage.classList.remove('opacity-0', '-translate-y-10');
+                successMessage.classList.add('opacity-100', 'translate-y-0');
+                setTimeout(() => {
+                    successMessage.classList.remove('opacity-100', 'translate-y-0');
+                    successMessage.classList.add('opacity-0', '-translate-y-10');
+                }, 3000); // Hide after 3 seconds
+            }
+
+            grid.addEventListener('click', function(e) {
+                if (e.target.classList.contains('book-now-button')) {
+                    const date = e.target.dataset.date;
+                    openModal(date);
+                }
+            });
+            
+            closeModalButton.addEventListener('click', closeModal);
+            cancelButton.addEventListener('click', closeModal);
+            bookingModal.addEventListener('click', function(e) {
+                if (e.target.id === 'booking-modal') {
+                    closeModal();
+                }
+            });
+            
+            confirmButton.addEventListener('click', () => {
+                // Here you would typically handle form submission logic
+                closeModal();
+                showSuccessMessage();
+            });
+
+            // --- Header Dropdown ---
+            const dropdownButton = document.getElementById('dropdown-button');
+            const dropdownMenu = document.getElementById('dropdown-menu');
+
+            dropdownButton.addEventListener('click', () => {
+                dropdownMenu.classList.toggle('opacity-0');
+                dropdownMenu.classList.toggle('-translate-y-2');
+                dropdownMenu.classList.toggle('pointer-events-none');
+            });
+            
+            // Close dropdown if clicking outside
+            window.addEventListener('click', function(e) {
+                if (!document.getElementById('dropdown-container').contains(e.target)) {
+                    dropdownMenu.classList.add('opacity-0', '-translate-y-2', 'pointer-events-none');
+                }
+            });
+
+            // --- Mobile Menu Toggle ---
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+
+        });
+    </script>
 </body>
 </html>
