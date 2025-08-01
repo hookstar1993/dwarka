@@ -3,219 +3,257 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Train Journey Plan</title>
+    <title>Dwarka Tour Plan</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Teko:wght@400;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', sans-serif;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+            background-color: #0f172a; /* Fallback for browsers that don't support animation */
         }
+        
+        h1, h2 {
+            font-family: 'Teko', sans-serif;
+            letter-spacing: 0.05em;
+        }
+
+        /* Starry Night Background */
+        @keyframes move-twinkle-back {
+            from { background-position: 0 0; }
+            to { background-position: -10000px 5000px; }
+        }
+
+        .stars, .twinkling {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+        .stars {
+            background: #000 url(https://www.script-tutorials.com/demos/360/images/stars.png) repeat top center;
+            z-index: -3;
+        }
+        .twinkling {
+            background: transparent url(https://www.script-tutorials.com/demos/360/images/twinkling.png) repeat top center;
+            z-index: -2;
+            animation: move-twinkle-back 200s linear infinite;
+        }
+        .celestial-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            z-index: -1;
+        }
+
+        /* Glassmorphism Effect */
+        .glass-card {
+            background: rgba(15, 23, 42, 0.6); /* slate-900 with opacity */
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
         /* Custom styles for the dashed line */
         .dashed-line {
             flex-grow: 1;
-            background-image: linear-gradient(to right, #D1D5DB 33%, rgba(255,255,255,0) 0%);
+            background-image: linear-gradient(to right, #475569 33%, rgba(255,255,255,0) 0%);
             background-position: bottom;
             background-size: 12px 2px;
             background-repeat: repeat-x;
             height: 2px;
             margin: 0 1rem;
         }
+        
+        /* Modal Styles */
+        .modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 40;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-content {
+            width: 90%;
+            height: 90%;
+            max-width: 1000px;
+        }
+        .modal-iframe {
+            width: 100%;
+            height: calc(100% - 60px); /* Adjust height for download button */
+            border: none;
+        }
     </style>
 </head>
-<body class="bg-sky-50 flex items-start justify-center min-h-screen p-2 sm:p-4">
+<body class="text-slate-200">
 
-    <div class="w-full max-w-4xl mx-auto">
-        <!-- Header Section -->
-        <header class="bg-sky-600 text-white rounded-t-xl p-4 sm:p-6 shadow-lg">
-            <div class="flex items-center justify-center space-x-2 sm:space-x-4">
-                <!-- Calendar Icon -->
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 sm:h-8 sm:w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-                <h1 class="text-xl sm:text-2xl md:text-3xl font-bold text-center">Dwarka Poonam</h1>
-                <!-- Globe Icon -->
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 sm:h-8 sm:w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2h1a2 2 0 002-2v-1a2 2 0 012-2h1.945M7.75 4a3 3 0 013.75 0M16.25 4a3 3 0 00-3.75 0M12 19.5a3 3 0 01-3-3V15a3 3 0 013-3h.008v4.5H12zM12 19.5a3 3 0 003-3V15a3 3 0 00-3-3h-.008v4.5H12z" />
-                </svg>
-            </div>
-            <p class="text-center text-sky-100 mt-2 text-sm sm:text-lg px-2">October 2025 (Sharad Poonam & Diwali)</p>
-        </header>
-
-        <!-- Main Content -->
-        <main class="bg-white rounded-b-xl shadow-lg p-3 sm:p-6 md:p-8 space-y-6">
-
-            <!-- Journey 1: Surat to Dwarka -->
-            <div class="border border-gray-200 rounded-xl p-4 sm:p-6 transition-shadow hover:shadow-md">
-                <div class="flex flex-col sm:flex-row justify-between sm:items-start mb-6 text-center sm:text-left">
-                    <div>
-                        <h2 class="text-xl sm:text-2xl font-bold text-sky-800">Surat to Dwarka</h2>
-                        <p class="text-gray-500 text-sm sm:text-base">Puri Okha SF Express</p>
-                    </div>
-                    <div class="sm:text-right mt-2 sm:mt-0 mx-auto sm:mx-0">
-                        <span class="font-bold text-lg sm:text-xl text-gray-800">20819</span>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] sm:gap-x-4 items-center">
-                    <!-- Departure Info -->
-                    <div class="text-center sm:text-left">
-                        <p class="text-sm text-gray-500">Departs From</p>
-                        <p class="font-semibold text-base sm:text-lg text-gray-800">Surat (ST)</p>
-                        <div class="flex items-center justify-center sm:justify-start mt-2 text-gray-600 text-sm sm:text-base">
-                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                            <span>07:38 PM</span>
-                        </div>
-                        <div class="flex items-center justify-center sm:justify-start mt-1 text-gray-600 text-sm sm:text-base">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                            <span>06-Oct-2025</span>
-                        </div>
-                    </div>
-
-                    <!-- Graphical Line -->
-                    <div class="w-full flex items-center my-4 sm:my-0">
-                        <div class="dashed-line hidden sm:block"></div>
-                        <div class="bg-sky-100 text-sky-700 p-2 rounded-full shadow-inner">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.69 2 6 2.5 6 3.5V14c0 1.66 1.34 3 3 3h6c1.66 0 3-1.34 3-3V3.5C18 2.5 15.31 2 12 2zm0 2c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm-4 13.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm8 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM6 10h12v2H6v-2z"/></svg>
-                        </div>
-                        <div class="dashed-line hidden sm:block"></div>
-                    </div>
-
-                    <!-- Arrival Info -->
-                    <div class="text-center sm:text-right">
-                        <p class="text-sm text-gray-500">Arrives At</p>
-                        <p class="font-semibold text-base sm:text-lg text-gray-800">Dwarka (DWK)</p>
-                         <div class="flex items-center justify-center sm:justify-end mt-2 text-gray-600 text-sm sm:text-base">
-                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                            <span>09:03 AM</span>
-                        </div>
-                        <div class="flex items-center justify-center sm:justify-end mt-1 text-gray-600 text-sm sm:text-base">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                            <span>07-Oct-2025</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Journey 2: Dwarka to Jamnagar -->
-            <div class="border border-gray-200 rounded-xl p-4 sm:p-6 transition-shadow hover:shadow-md">
-                <div class="flex flex-col sm:flex-row justify-between sm:items-start mb-6 text-center sm:text-left">
-                    <div>
-                        <h2 class="text-xl sm:text-2xl font-bold text-amber-800">Dwarka to Jamnagar</h2>
-                        <p class="text-gray-500 text-sm sm:text-base">Okha BVC Express</p>
-                    </div>
-                    <div class="sm:text-right mt-2 sm:mt-0 mx-auto sm:mx-0">
-                        <span class="font-bold text-lg sm:text-xl text-gray-800">19210</span>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] sm:gap-x-4 items-center">
-                    <!-- Departure Info -->
-                    <div class="text-center sm:text-left">
-                        <p class="text-sm text-gray-500">Departs From</p>
-                        <p class="font-semibold text-base sm:text-lg text-gray-800">Dwarka (DWK)</p>
-                        <div class="flex items-center justify-center sm:justify-start mt-2 text-gray-600 text-sm sm:text-base">
-                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                            <span>03:55 PM</span>
-                        </div>
-                        <div class="flex items-center justify-center sm:justify-start mt-1 text-gray-600 text-sm sm:text-base">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                            <span>07-Oct-2025</span>
-                        </div>
-                    </div>
-
-                    <!-- Graphical Line -->
-                    <div class="w-full flex items-center my-4 sm:my-0">
-                        <div class="dashed-line hidden sm:block"></div>
-                        <div class="bg-amber-100 text-amber-700 p-2 rounded-full shadow-inner">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.69 2 6 2.5 6 3.5V14c0 1.66 1.34 3 3 3h6c1.66 0 3-1.34 3-3V3.5C18 2.5 15.31 2 12 2zm0 2c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm-4 13.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm8 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM6 10h12v2H6v-2z"/></svg>
-                        </div>
-                        <div class="dashed-line hidden sm:block"></div>
-                    </div>
-
-                    <!-- Arrival Info -->
-                    <div class="text-center sm:text-right">
-                        <p class="text-sm text-gray-500">Arrives At</p>
-                        <p class="font-semibold text-base sm:text-lg text-gray-800">Jamnagar (JAM)</p>
-                         <div class="flex items-center justify-center sm:justify-end mt-2 text-gray-600 text-sm sm:text-base">
-                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                            <span>06:33 PM</span>
-                        </div>
-                        <div class="flex items-center justify-center sm:justify-end mt-1 text-gray-600 text-sm sm:text-base">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                            <span>07-Oct-2025</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Journey 3: Jamnagar to Surat -->
-            <div class="border border-gray-200 rounded-xl p-4 sm:p-6 transition-shadow hover:shadow-md">
-                <div class="flex flex-col sm:flex-row justify-between sm:items-start mb-6 text-center sm:text-left">
-                    <div>
-                        <h2 class="text-xl sm:text-2xl font-bold text-rose-800">Jamnagar to Surat</h2>
-                        <p class="text-gray-500 text-sm sm:text-base">BDTS Humsafar Express</p>
-                    </div>
-                    <div class="sm:text-right mt-2 sm:mt-0 mx-auto sm:mx-0">
-                        <span class="font-bold text-lg sm:text-xl text-gray-800">22924</span>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] sm:gap-x-4 items-center">
-                    <!-- Departure Info -->
-                    <div class="text-center sm:text-left">
-                        <p class="text-sm text-gray-500">Departs From</p>
-                        <p class="font-semibold text-base sm:text-lg text-gray-800">Jamnagar (JAM)</p>
-                        <div class="flex items-center justify-center sm:justify-start mt-2 text-gray-600 text-sm sm:text-base">
-                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                            <span>08:15 PM</span>
-                        </div>
-                        <div class="flex items-center justify-center sm:justify-start mt-1 text-gray-600 text-sm sm:text-base">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                            <span>07-Oct-2025</span>
-                        </div>
-                    </div>
-
-                    <!-- Graphical Line -->
-                    <div class="w-full flex items-center my-4 sm:my-0">
-                        <div class="dashed-line hidden sm:block"></div>
-                        <div class="bg-rose-100 text-rose-700 p-2 rounded-full shadow-inner">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.69 2 6 2.5 6 3.5V14c0 1.66 1.34 3 3 3h6c1.66 0 3-1.34 3-3V3.5C18 2.5 15.31 2 12 2zm0 2c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm-4 13.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm8 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM6 10h12v2H6v-2z"/></svg>
-                        </div>
-                        <div class="dashed-line hidden sm:block"></div>
-                    </div>
-
-                    <!-- Arrival Info -->
-                    <div class="text-center sm:text-right">
-                        <p class="text-sm text-gray-500">Arrives At</p>
-                        <p class="font-semibold text-base sm:text-lg text-gray-800">Surat (ST)</p>
-                         <div class="flex items-center justify-center sm:justify-end mt-2 text-gray-600 text-sm sm:text-base">
-                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                            <span>05:25 AM</span>
-                        </div>
-                        <div class="flex items-center justify-center sm:justify-end mt-1 text-gray-600 text-sm sm:text-base">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                            <span>08-Oct-2025</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Footer Message -->
-            <div class="text-center pt-4">
-                <div class="inline-flex items-center bg-emerald-100 text-emerald-800 text-sm sm:text-lg font-semibold px-4 py-2 sm:px-6 sm:py-3 rounded-full">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6 mr-2 sm:mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    All set and ready for the journey!
-                </div>
-            </div>
-
-        </main>
+    <!-- Background Elements -->
+    <div class="celestial-bg">
+        <div class="stars"></div>
+        <div class="twinkling"></div>
     </div>
+
+    <!-- Main Content Wrapper -->
+    <div class="relative z-10 flex items-start justify-center min-h-screen p-2 sm:p-4 w-full">
+        <div class="w-full max-w-4xl mx-auto pb-8">
+            <!-- Header Section -->
+            <header class="rounded-t-xl p-4 sm:p-6 glass-card">
+                <div class="flex items-center justify-center space-x-3 sm:space-x-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 sm:h-10 sm:w-10 text-amber-300" viewBox="0 0 24 24" fill="currentColor"><path d="M2 20h20v2H2v-2zM12 2L4 6v2h16V6l-8-4zm0 3.5l5.42 2.5H6.58L12 5.5zM5 9v10h2v-5h2v5h2v-5h2v5h2v-5h2v5h2V9H5zm4 2h2v2H9v-2zm6 0h2v2h-2v-2z"/></svg>
+                    <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-center text-amber-300 tracking-wider">|| JAY DWARKADHISH ||</h1>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 sm:h-10 sm:w-10 text-amber-300" viewBox="0 0 24 24" fill="currentColor"><path d="M2 20h20v2H2v-2zM12 2L4 6v2h16V6l-8-4zm0 3.5l5.42 2.5H6.58L12 5.5zM5 9v10h2v-5h2v5h2v-5h2v5h2v-5h2v5h2V9H5zm4 2h2v2H9v-2zm6 0h2v2h-2v-2z"/></svg>
+                </div>
+                <p class="text-center text-sky-200 mt-2 text-base sm:text-lg px-2">Dwarka Poonam Tour: October 2025</p>
+            </header>
+
+            <!-- Main Content -->
+            <main class="glass-card rounded-b-xl p-3 sm:p-6 md:p-8 space-y-6">
+
+                <!-- Journey 1 -->
+                <div class="glass-card rounded-xl p-4 sm:p-6 transition-all duration-300 hover:shadow-amber-300/10 hover:shadow-2xl hover:border-amber-300/30">
+                    <div class="flex flex-col sm:flex-row justify-between sm:items-start mb-4 text-center sm:text-left">
+                        <div>
+                            <h2 class="text-2xl sm:text-3xl font-semibold text-sky-300">Surat to Dwarka</h2>
+                            <p class="text-slate-400 text-sm sm:text-base">Puri Okha SF Express</p>
+                        </div>
+                        <div class="sm:text-right mt-2 sm:mt-0 mx-auto sm:mx-0">
+                            <span class="font-semibold text-lg sm:text-xl text-slate-300 tracking-wider">#20819</span>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] sm:gap-x-4 items-center mb-4">
+                        <div class="text-center sm:text-left"><p class="text-sm text-slate-400">Departure</p><p class="font-semibold text-base sm:text-lg text-slate-200">Surat (ST)</p><p class="mt-1 text-sky-300 text-sm sm:text-base">06-Oct-2025, 07:38 PM</p></div>
+                        <div class="w-full flex items-center my-4 sm:my-0"><div class="dashed-line hidden sm:block"></div><div class="bg-sky-900/80 text-sky-300 p-2 rounded-full shadow-inner border border-sky-400/30"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.69 2 6 2.5 6 3.5V14c0 1.66 1.34 3 3 3h6c1.66 0 3-1.34 3-3V3.5C18 2.5 15.31 2 12 2zm0 2c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm-4 13.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm8 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM6 10h12v2H6v-2z"/></svg></div><div class="dashed-line hidden sm:block"></div></div>
+                        <div class="text-center sm:text-right"><p class="text-sm text-slate-400">Arrival</p><p class="font-semibold text-base sm:text-lg text-slate-200">Dwarka (DWK)</p><p class="mt-1 text-sky-300 text-sm sm:text-base">07-Oct-2025, 09:03 AM</p></div>
+                    </div>
+                    <div class="text-center mt-4">
+                        <!-- REPLACE THE # WITH YOUR PDF LINK -->
+                        <button class="view-ticket-btn bg-sky-500/20 text-sky-300 border border-sky-400/30 px-4 py-2 rounded-lg hover:bg-sky-500/40 transition-all duration-300" data-ticket-url="https://www.princexml.com/samples/icelandic/dictionary.pdf">View Ticket</button>
+                    </div>
+                </div>
+                
+                <!-- Journey 2 -->
+                <div class="glass-card rounded-xl p-4 sm:p-6 transition-all duration-300 hover:shadow-amber-300/10 hover:shadow-2xl hover:border-amber-300/30">
+                    <div class="flex flex-col sm:flex-row justify-between sm:items-start mb-4 text-center sm:text-left">
+                        <div>
+                            <h2 class="text-2xl sm:text-3xl font-semibold text-amber-300">Dwarka to Jamnagar</h2>
+                            <p class="text-slate-400 text-sm sm:text-base">Okha BVC Express</p>
+                        </div>
+                        <div class="sm:text-right mt-2 sm:mt-0 mx-auto sm:mx-0"><span class="font-semibold text-lg sm:text-xl text-slate-300 tracking-wider">#19210</span></div>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] sm:gap-x-4 items-center mb-4">
+                        <div class="text-center sm:text-left"><p class="text-sm text-slate-400">Departure</p><p class="font-semibold text-base sm:text-lg text-slate-200">Dwarka (DWK)</p><p class="mt-1 text-amber-300 text-sm sm:text-base">07-Oct-2025, 03:55 PM</p></div>
+                        <div class="w-full flex items-center my-4 sm:my-0"><div class="dashed-line hidden sm:block"></div><div class="bg-amber-900/80 text-amber-300 p-2 rounded-full shadow-inner border border-amber-400/30"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.69 2 6 2.5 6 3.5V14c0 1.66 1.34 3 3 3h6c1.66 0 3-1.34 3-3V3.5C18 2.5 15.31 2 12 2zm0 2c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm-4 13.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm8 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM6 10h12v2H6v-2z"/></svg></div><div class="dashed-line hidden sm:block"></div></div>
+                        <div class="text-center sm:text-right"><p class="text-sm text-slate-400">Arrival</p><p class="font-semibold text-base sm:text-lg text-slate-200">Jamnagar (JAM)</p><p class="mt-1 text-amber-300 text-sm sm:text-base">07-Oct-2025, 06:33 PM</p></div>
+                    </div>
+                    <div class="text-center mt-4">
+                        <!-- REPLACE THE # WITH YOUR PDF LINK -->
+                        <button class="view-ticket-btn bg-amber-500/20 text-amber-300 border border-amber-400/30 px-4 py-2 rounded-lg hover:bg-amber-500/40 transition-all duration-300" data-ticket-url="https://ontheline.trincoll.edu/images/bookdown/sample-local-pdf.pdf">View Ticket</button>
+                    </div>
+                </div>
+
+                <!-- Journey 3 -->
+                <div class="glass-card rounded-xl p-4 sm:p-6 transition-all duration-300 hover:shadow-amber-300/10 hover:shadow-2xl hover:border-amber-300/30">
+                    <div class="flex flex-col sm:flex-row justify-between sm:items-start mb-4 text-center sm:text-left">
+                        <div>
+                            <h2 class="text-2xl sm:text-3xl font-semibold text-rose-300">Jamnagar to Surat</h2>
+                            <p class="text-slate-400 text-sm sm:text-base">BDTS Humsafar Express</p>
+                        </div>
+                        <div class="sm:text-right mt-2 sm:mt-0 mx-auto sm:mx-0"><span class="font-semibold text-lg sm:text-xl text-slate-300 tracking-wider">#22924</span></div>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] sm:gap-x-4 items-center mb-4">
+                        <div class="text-center sm:text-left"><p class="text-sm text-slate-400">Departure</p><p class="font-semibold text-base sm:text-lg text-slate-200">Jamnagar (JAM)</p><p class="mt-1 text-rose-300 text-sm sm:text-base">07-Oct-2025, 08:15 PM</p></div>
+                        <div class="w-full flex items-center my-4 sm:my-0"><div class="dashed-line hidden sm:block"></div><div class="bg-rose-900/80 text-rose-300 p-2 rounded-full shadow-inner border border-rose-400/30"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.69 2 6 2.5 6 3.5V14c0 1.66 1.34 3 3 3h6c1.66 0 3-1.34 3-3V3.5C18 2.5 15.31 2 12 2zm0 2c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm-4 13.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm8 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM6 10h12v2H6v-2z"/></svg></div><div class="dashed-line hidden sm:block"></div></div>
+                        <div class="text-center sm:text-right"><p class="text-sm text-slate-400">Arrival</p><p class="font-semibold text-base sm:text-lg text-slate-200">Surat (ST)</p><p class="mt-1 text-rose-300 text-sm sm:text-base">08-Oct-2025, 05:25 AM</p></div>
+                    </div>
+                    <div class="text-center mt-4">
+                        <!-- REPLACE THE # WITH YOUR PDF LINK -->
+                        <button class="view-ticket-btn bg-rose-500/20 text-rose-300 border border-rose-400/30 px-4 py-2 rounded-lg hover:bg-rose-500/40 transition-all duration-300" data-ticket-url="#">View Ticket</button>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+    </div>
+
+    <!-- Ticket Viewer Modal -->
+    <div id="ticketModal" class="modal-backdrop hidden">
+        <div class="modal-content glass-card p-2 sm:p-4 relative flex flex-col">
+            <button id="closeModalBtn" class="absolute -top-2 -right-2 sm:-top-3 sm:-right-3 bg-red-600 text-white rounded-full h-8 w-8 flex items-center justify-center text-lg font-bold z-50 hover:bg-red-700 transition-all">&times;</button>
+            <iframe id="ticketViewerIframe" class="modal-iframe flex-grow rounded-t-lg" src="" title="Ticket Viewer"></iframe>
+            <div class="text-center p-2">
+                <a id="downloadBtn" href="#" download="ticket.pdf" class="w-full sm:w-auto inline-block bg-green-500/20 text-green-300 border border-green-400/30 px-6 py-2 rounded-lg hover:bg-green-500/40 transition-all duration-300">Download Ticket</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const modal = document.getElementById('ticketModal');
+        const iframe = document.getElementById('ticketViewerIframe');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+
+        // Handle "View Ticket" clicks
+        document.querySelectorAll('.view-ticket-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                const ticketUrl = button.dataset.ticketUrl;
+                
+                // Check if the link is a placeholder
+                if (ticketUrl && ticketUrl !== '#') {
+                    iframe.src = ticketUrl;
+                    downloadBtn.href = ticketUrl;
+                    
+                    // Try to get a filename from the URL, otherwise use a default
+                    try {
+                        const url = new URL(ticketUrl);
+                        const pathParts = url.pathname.split('/');
+                        downloadBtn.download = pathParts[pathParts.length - 1] || 'ticket.pdf';
+                    } catch (e) {
+                         downloadBtn.download = 'ticket.pdf';
+                    }
+
+                    modal.classList.remove('hidden');
+                } else {
+                    // Notify user to add a link if it's a placeholder
+                    button.textContent = 'Please Add Link';
+                    button.classList.add('bg-red-500/30');
+                    setTimeout(() => {
+                        button.textContent = 'View Ticket';
+                        button.classList.remove('bg-red-500/30');
+                    }, 2500);
+                }
+            });
+        });
+
+        // Function to close the modal
+        const closeModal = () => {
+            modal.classList.add('hidden');
+            iframe.src = ''; // Clear iframe src to stop loading/playing
+        };
+
+        closeModalBtn.addEventListener('click', closeModal);
+        
+        // Close modal if user clicks on the backdrop
+        modal.addEventListener('click', (event) => {
+            if (event.target === modal) {
+                closeModal();
+            }
+        });
+    </script>
 
 </body>
 </html>
