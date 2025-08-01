@@ -12,16 +12,14 @@
         }
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #0c0a1a; /* Dark blue-purple base */
+            background-color: #0c0a1a;
             color: #f0f0f0;
-            overflow-x: hidden; /* Prevent horizontal scroll */
+            overflow-x: hidden;
         }
         h1, h2.page-title {
             font-family: 'Teko', sans-serif;
             letter-spacing: 0.05em;
         }
-
-        /* Animated Aurora Background */
         .aurora-background {
             position: fixed;
             top: 0;
@@ -34,23 +32,18 @@
                         radial-gradient(ellipse at 90% 100%, rgba(236, 72, 153, 0.2) 0%, transparent 70%);
             animation: animate-aurora 15s linear infinite;
         }
-
         @keyframes animate-aurora {
             0% { transform: rotate(0deg) scale(1.5); opacity: 0.5; }
             50% { transform: rotate(180deg) scale(2); opacity: 1; }
             100% { transform: rotate(360deg) scale(1.5); opacity: 0.5; }
         }
-
-        /* Enhanced Glass Effect for Dark UI */
         .glass-effect {
-            background: rgba(12, 10, 26, 0.4); /* Darker base for the glass */
+            background: rgba(12, 10, 26, 0.4);
             -webkit-backdrop-filter: blur(20px);
             backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
         }
-
-        /* Animated Glowing Border Effect for Buttons */
         .animated-glow-border {
             position: relative;
             overflow: hidden;
@@ -66,24 +59,16 @@
             transform: skewX(-25deg);
             animation: animate-glow 4s linear infinite;
         }
-
         @keyframes animate-glow {
             from { left: -150%; }
             to { left: 150%; }
         }
         
-        /* Styles for smooth view transitions (flicker fix) */
+        /* Styles for smooth view transitions */
         #main-view, #details-view {
             transition: opacity 0.3s ease-in-out;
         }
-        .view-hidden {
-            opacity: 0;
-            pointer-events: none;
-            position: absolute; /* Takes the element out of the document flow */
-            width: 100%;
-        }
 
-        /* Modal Styles */
         .modal-backdrop {
             position: fixed;
             top: 0;
@@ -95,6 +80,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: opacity 0.3s ease;
         }
         .modal-content {
             width: 90%;
@@ -106,74 +92,101 @@
             height: calc(100% - 60px);
             border: none;
         }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+        .shake {
+            animation: shake 0.5s ease-in-out;
+        }
     </style>
 </head>
 <body class="flex flex-col min-h-screen">
 
     <div class="aurora-background"></div>
 
-    <!-- Header -->
-    <header class="glass-effect shadow-md sticky top-0 z-40">
-        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <div class="flex items-center text-2xl font-bold tracking-wider text-white" style="text-shadow: 0 0 8px rgba(255,255,255,0.5);">
-                <svg class="w-8 h-8 mr-2 text-amber-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Password Overlay -->
+    <div id="password-overlay" class="fixed inset-0 z-50 flex items-center justify-center p-4 glass-effect transition-opacity duration-500">
+        <div class="w-full max-w-sm text-center">
+            <div class="flex items-center justify-center text-3xl font-bold tracking-wider text-white mb-6" style="text-shadow: 0 0 8px rgba(255,255,255,0.5);">
+                <svg class="w-10 h-10 mr-3 text-amber-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M3 20h18" /><path d="M7 20L12 5l5 15" /><path d="M12 5V2l5 1.5L12 2" /><path d="M8 20v-3h8v3" />
                 </svg>
                 Jay Dwarkadhish
             </div>
-            <div class="hidden md:flex items-center space-x-8">
-                <a href="#" id="home-link" class="text-gray-300 hover:text-white font-medium transition-colors duration-300">Home</a>
-                <a href="#" class="text-gray-300 hover:text-white font-medium transition-colors duration-300">About Us</a>
-                <a href="#" class="text-gray-300 hover:text-white font-medium transition-colors duration-300">Contact</a>
-            </div>
-            <button class="md:hidden" id="mobile-menu-button">
-                 <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
-            </button>
-        </nav>
-        <div id="mobile-menu" class="hidden md:hidden px-6 pb-4 glass-effect">
-            <a href="#" id="mobile-home-link" class="block py-2 text-gray-300 hover:text-white">Home</a>
-            <a href="#" class="block py-2 text-gray-300 hover:text-white">About Us</a>
-            <a href="#" class="block py-2 text-gray-300 hover:text-white">Contact</a>
-        </div>
-    </header>
-
-    <!-- Main Content Area -->
-    <div id="content-area" class="container mx-auto px-6 py-16 flex-grow relative">
-        <!-- Main View (List of Months) -->
-        <div id="main-view">
-            <div class="text-center mb-16">
-                <h1 class="text-3xl md:text-4xl font-black text-white leading-tight" style="text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);">🌟 Our Spiritual Journey to Dwarka Begins!</h1>
-                <p class="text-lg text-gray-400 mt-4 max-w-3xl mx-auto">Our journey on these all special Poonam days! So Stay updated with Dharamshala booking and travel details below.</p>
-            </div>
-            <div id="poonam-dates-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Month cards will be injected here -->
-            </div>
-        </div>
-
-        <!-- Details View (Initially Hidden) -->
-        <div id="details-view" class="view-hidden">
-            <!-- Details content will be injected here -->
+            <p class="text-slate-300 mb-4">Please enter the password to continue</p>
+            <form id="password-form">
+                <input type="password" id="password-input" class="w-full px-4 py-3 bg-slate-800/50 border border-slate-600 rounded-lg text-white text-center text-lg tracking-widest focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all" placeholder="******">
+                <p id="error-message" class="text-red-400 h-6 mt-2 text-sm"></p>
+                <button type="submit" class="w-full mt-2 p-3 rounded-lg bg-gradient-to-r from-pink-500 to-purple-600 text-center font-semibold text-white transition-all duration-300 hover:shadow-xl transform hover:scale-105">Enter</button>
+            </form>
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="glass-effect mt-20">
-        <div class="container mx-auto px-6 py-8">
-            <div class="flex flex-col md:flex-row justify-between items-center">
-                <p class="text-sm text-gray-400 mb-4 md:mb-0">© 2025 Jay Dwarkadhish. All Rights Reserved.</p>
-                <div class="flex space-x-6">
-                    <a href="#" class="text-gray-400 hover:text-white transition-colors"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.04C6.5 2.04 2 6.53 2 12.06c0 4.71 3.21 8.65 7.53 9.79v-6.94H7.01v-2.85h2.52V9.82c0-2.5 1.52-3.88 3.78-3.88 1.08 0 2.02.08 2.29.12v2.54h-1.5c-1.21 0-1.45.58-1.45 1.42v1.86h2.83l-.37 2.85h-2.46v6.94C18.79 20.71 22 16.77 22 12.06c0-5.53-4.5-10.02-10-10.02z"/></svg></a>
-                    <a href="#" class="text-gray-400 hover:text-white transition-colors"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M22.46 6c-.77.35-1.6.58-2.46.67.88-.53 1.56-1.37 1.88-2.38-.83.49-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.98-3.56-.18-6.72-1.88-8.84-4.48-.37.63-.58 1.37-.58 2.15 0 1.49.75 2.81 1.91 3.58-.7-.02-1.37-.22-1.95-.55v.05c0 2.08 1.48 3.82 3.44 4.21a4.22 4.22 0 0 1-1.94.07 4.28 4.28 0 0 0 4 2.98 8.521 8.521 0 0 1-5.33 1.84c-.34 0-.68-.02-1.02-.06C3.44 20.29 5.7 21 8.12 21c7.55 0 11.69-6.25 11.69-11.69v-.53c.8-.58 1.48-1.3 2.02-2.12z"/></svg></a>
-                    <a href="#" class="text-gray-400 hover:text-white transition-colors"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8A3.6 3.6 0 0 0 7.6 20h8.8A3.6 3.6 0 0 0 20 16.4V7.6A3.6 3.6 0 0 0 16.4 4H7.6m9.65 1.5a1.25 1.25 0 1 1-2.5 0 1.25 1.25 0 0 1 2.5 0M12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10m0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/></svg></a>
+    <!-- Welcome Popup -->
+    <div id="welcome-popup" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 transition-opacity duration-500 opacity-0 pointer-events-none">
+        <div class="glass-effect rounded-2xl p-8 text-center transform scale-95 transition-transform duration-500">
+             <h2 class="text-5xl font-bold text-amber-300 page-title" style="text-shadow: 0 0 15px rgba(251, 191, 36, 0.5);">|| Jay Dwarkadhish ||</h2>
+             <p class="text-slate-300 mt-2">Welcome to the sacred journey!</p>
+        </div>
+    </div>
+
+    <!-- Main Site Wrapper (Initially Hidden) -->
+    <div id="site-wrapper" class="opacity-0 transition-opacity duration-500">
+        <header class="glass-effect shadow-md sticky top-0 z-40">
+            <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+                <div class="flex items-center text-2xl font-bold tracking-wider text-white" style="text-shadow: 0 0 8px rgba(255,255,255,0.5);">
+                    <svg class="w-8 h-8 mr-2 text-amber-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 20h18" /><path d="M7 20L12 5l5 15" /><path d="M12 5V2l5 1.5L12 2" /><path d="M8 20v-3h8v3" />
+                    </svg>
+                    Jay Dwarkadhish
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#" id="home-link" class="text-gray-300 hover:text-white font-medium transition-colors duration-300">Home</a>
+                    <a href="#" class="text-gray-300 hover:text-white font-medium transition-colors duration-300">About Us</a>
+                    <a href="#" class="text-gray-300 hover:text-white font-medium transition-colors duration-300">Contact</a>
+                </div>
+                <button class="md:hidden" id="mobile-menu-button">
+                     <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                </button>
+            </nav>
+            <div id="mobile-menu" class="hidden md:hidden px-6 pb-4 glass-effect">
+                <a href="#" id="mobile-home-link" class="block py-2 text-gray-300 hover:text-white">Home</a>
+                <a href="#" class="block py-2 text-gray-300 hover:text-white">About Us</a>
+                <a href="#" class="block py-2 text-gray-300 hover:text-white">Contact</a>
+            </div>
+        </header>
+
+        <div id="content-area" class="container mx-auto px-6 py-16 flex-grow">
+            <div id="main-view">
+                <div class="text-center mb-16">
+                    <h1 class="text-3xl md:text-4xl font-black text-white leading-tight" style="text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);">🌟 Our Spiritual Journey to Dwarka Begins!</h1>
+                    <p class="text-lg text-gray-400 mt-4 max-w-3xl mx-auto">Our journey on these all special Poonam days! So Stay updated with Dharamshala booking and travel details below.</p>
+                </div>
+                <div id="poonam-dates-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+            </div>
+            <div id="details-view" style="display: none; opacity: 0;"></div>
+        </div>
+
+        <footer class="glass-effect mt-20">
+            <div class="container mx-auto px-6 py-8">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <p class="text-sm text-gray-400 mb-4 md:mb-0">© 2025 Jay Dwarkadhish. All Rights Reserved.</p>
+                    <div class="flex space-x-6">
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.04C6.5 2.04 2 6.53 2 12.06c0 4.71 3.21 8.65 7.53 9.79v-6.94H7.01v-2.85h2.52V9.82c0-2.5 1.52-3.88 3.78-3.88 1.08 0 2.02.08 2.29.12v2.54h-1.5c-1.21 0-1.45.58-1.45 1.42v1.86h2.83l-.37 2.85h-2.46v6.94C18.79 20.71 22 16.77 22 12.06c0-5.53-4.5-10.02-10-10.02z"/></svg></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M22.46 6c-.77.35-1.6.58-2.46.67.88-.53 1.56-1.37 1.88-2.38-.83.49-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.98-3.56-.18-6.72-1.88-8.84-4.48-.37.63-.58 1.37-.58 2.15 0 1.49.75 2.81 1.91 3.58-.7-.02-1.37-.22-1.95-.55v.05c0 2.08 1.48 3.82 3.44 4.21a4.22 4.22 0 0 1-1.94.07 4.28 4.28 0 0 0 4 2.98 8.521 8.521 0 0 1-5.33 1.84c-.34 0-.68-.02-1.02-.06C3.44 20.29 5.7 21 8.12 21c7.55 0 11.69-6.25 11.69-11.69v-.53c.8-.58 1.48-1.3 2.02-2.12z"/></svg></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8A3.6 3.6 0 0 0 7.6 20h8.8A3.6 3.6 0 0 0 20 16.4V7.6A3.6 3.6 0 0 0 16.4 4H7.6m9.65 1.5a1.25 1.25 0 1 1-2.5 0 1.25 1.25 0 0 1 2.5 0M12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10m0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/></svg></a>
+                    </div>
+                </div>
+                <div class="text-center text-xs text-gray-500 mt-8 border-t border-white/10 pt-6">
+                    <p>Generated by Gemini</p>
+                    <p>Location: Surat, Gujarat, India</p>
+                    <p>Timestamp: 3:13 PM IST • Friday, August 1, 2025</p>
                 </div>
             </div>
-            <div class="text-center text-xs text-gray-500 mt-8 border-t border-white/10 pt-6">
-                <p>Generated by Gemini</p>
-                <p>Location: Surat, Gujarat, India</p>
-                <p>Timestamp: 3:13 PM IST • Friday, August 1, 2025</p>
-            </div>
-        </div>
-    </footer>
+        </footer>
+    </div>
 
     <!-- Ticket Viewer Modal -->
     <div id="ticketModal" class="modal-backdrop hidden">
@@ -261,15 +274,21 @@
 
             function showMainView() {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
-                detailsView.classList.add('view-hidden');
-                mainView.classList.remove('view-hidden');
+                mainView.style.opacity = 1;
+                detailsView.style.opacity = 0;
+                setTimeout(() => {
+                    mainView.style.display = 'block';
+                    detailsView.style.display = 'none';
+                }, 300); // Match CSS transition
             }
 
             function showDetailsView(monthYear) {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
                 const data = journeyData[monthYear];
+                let detailsContent;
+
                 if (!data) {
-                    detailsView.innerHTML = `
+                    detailsContent = `
                         <div class="text-center">
                             <button id="back-button" class="mb-8 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-purple-600 hover:bg-purple-700">
                                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 17l-5-5m0 0l5-5m-5 5h12"></path></svg>
@@ -298,7 +317,7 @@
                         </div>
                     `).join('');
 
-                    detailsView.innerHTML = `
+                    detailsContent = `
                         <div class="text-center">
                             <button id="back-button" class="mb-8 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-purple-500">
                                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 17l-5-5m0 0l5-5m-5 5h12"></path></svg>
@@ -327,10 +346,17 @@
                     `;
                 }
                 
-                mainView.classList.add('view-hidden');
-                detailsView.classList.remove('view-hidden');
-                document.getElementById('back-button').addEventListener('click', showMainView);
-                attachModalListeners();
+                mainView.style.opacity = 0;
+                setTimeout(() => {
+                    mainView.style.display = 'none';
+                    detailsView.innerHTML = detailsContent;
+                    detailsView.style.display = 'block';
+                    setTimeout(() => {
+                        detailsView.style.opacity = 1;
+                    }, 10);
+                    document.getElementById('back-button').addEventListener('click', showMainView);
+                    attachModalListeners();
+                }, 300);
             }
 
             function generateDateCards() {
@@ -340,10 +366,8 @@
 
                 for (const monthYear in groupedDates) {
                     const monthBlock = document.createElement('div');
-                    monthBlock.className = "fade-in glass-effect rounded-2xl p-6 flex flex-col items-center";
-                    monthBlock.style.animationDelay = `${animationDelay}ms`;
-                    animationDelay += 100;
-
+                    monthBlock.className = "glass-effect rounded-2xl p-6 flex flex-col items-center";
+                    
                     const cardColorClass = cardTextColors[colorIndex % cardTextColors.length];
                     
                     const header = document.createElement('h2');
@@ -402,6 +426,45 @@
             if(closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
             if(modal) modal.addEventListener('click', (event) => {
                 if (event.target === modal) closeModal();
+            });
+
+            // --- Password Logic ---
+            const passwordOverlay = document.getElementById('password-overlay');
+            const passwordForm = document.getElementById('password-form');
+            const passwordInput = document.getElementById('password-input');
+            const errorMessage = document.getElementById('error-message');
+            const siteWrapper = document.getElementById('site-wrapper');
+            const welcomePopup = document.getElementById('welcome-popup');
+
+            passwordForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                if (passwordInput.value.toLowerCase() === 'dwarkadhish') {
+                    passwordOverlay.style.opacity = '0';
+                    setTimeout(() => {
+                        passwordOverlay.classList.add('hidden');
+                        siteWrapper.style.opacity = '1';
+                        
+                        welcomePopup.classList.remove('pointer-events-none');
+                        welcomePopup.style.opacity = '1';
+                        welcomePopup.querySelector('div').style.transform = 'scale(1)';
+
+                        setTimeout(() => {
+                           welcomePopup.style.opacity = '0';
+                           welcomePopup.querySelector('div').style.transform = 'scale(0.95)';
+                           setTimeout(() => {
+                             welcomePopup.classList.add('pointer-events-none');
+                           }, 500);
+                        }, 2500);
+
+                    }, 500);
+                } else {
+                    errorMessage.textContent = 'Incorrect Password. Please try again.';
+                    passwordInput.classList.add('shake');
+                    setTimeout(() => {
+                        passwordInput.classList.remove('shake');
+                        errorMessage.textContent = '';
+                    }, 1500);
+                }
             });
 
             generateDateCards();
