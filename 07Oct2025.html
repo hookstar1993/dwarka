@@ -124,6 +124,35 @@
             <!-- Main Content -->
             <main class="glass-card rounded-b-xl p-3 sm:p-6 md:p-8 space-y-6">
 
+                <!-- Stay Information Card -->
+                <div class="glass-card rounded-xl p-4 sm:p-6 transition-all duration-300 hover:shadow-green-300/10 hover:shadow-2xl hover:border-green-300/30">
+                    <div class="flex flex-col sm:flex-row justify-between sm:items-start mb-4 text-center sm:text-left">
+                        <div>
+                            <h2 class="text-2xl sm:text-3xl font-semibold text-green-300">Stay Information</h2>
+                            <p class="text-slate-400 text-sm sm:text-base">Shree Dutt Dharmashala, Dwarka</p>
+                        </div>
+                        <div class="sm:text-right mt-2 sm:mt-0 mx-auto sm:mx-0">
+                            <div class="bg-green-900/80 text-green-300 p-2 rounded-full shadow-inner border border-green-400/30 inline-block">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3L2 12h3v8h14v-8h3L12 3zm0 2.83L16.17 10H7.83L12 5.83zM17 18H7v-6h10v6z"/></svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-center sm:text-left mb-4">
+                        <div>
+                            <p class="text-sm text-slate-400">Check-in</p>
+                            <p class="font-semibold text-base sm:text-lg text-slate-200">07-Oct-2025, 10:00 AM</p>
+                        </div>
+                        <div class="sm:text-right">
+                            <p class="text-sm text-slate-400">Check-out</p>
+                            <p class="font-semibold text-base sm:text-lg text-slate-200">07-Oct-2025, 03:00 PM</p>
+                        </div>
+                    </div>
+                    <div class="text-center mt-4">
+                        <!-- REPLACE THE # WITH YOUR BOOKING CONFIRMATION PDF LINK -->
+                        <button class="view-ticket-btn bg-green-500/20 text-green-300 border border-green-400/30 px-4 py-2 rounded-lg hover:bg-green-500/40 transition-all duration-300" data-ticket-url="#">Show Booking Info</button>
+                    </div>
+                </div>
+
                 <!-- Journey 1 -->
                 <div class="glass-card rounded-xl p-4 sm:p-6 transition-all duration-300 hover:shadow-amber-300/10 hover:shadow-2xl hover:border-amber-300/30">
                     <div class="flex flex-col sm:flex-row justify-between sm:items-start mb-4 text-center sm:text-left">
@@ -141,7 +170,6 @@
                         <div class="text-center sm:text-right"><p class="text-sm text-slate-400">Arrival</p><p class="font-semibold text-base sm:text-lg text-slate-200">Dwarka (DWK)</p><p class="mt-1 text-sky-300 text-sm sm:text-base">07-Oct-2025, 09:03 AM</p></div>
                     </div>
                     <div class="text-center mt-4">
-                        <!-- REPLACE THE # WITH YOUR PDF LINK -->
                         <button class="view-ticket-btn bg-sky-500/20 text-sky-300 border border-sky-400/30 px-4 py-2 rounded-lg hover:bg-sky-500/40 transition-all duration-300" data-ticket-url="https://www.princexml.com/samples/icelandic/dictionary.pdf">View Ticket</button>
                     </div>
                 </div>
@@ -161,7 +189,6 @@
                         <div class="text-center sm:text-right"><p class="text-sm text-slate-400">Arrival</p><p class="font-semibold text-base sm:text-lg text-slate-200">Jamnagar (JAM)</p><p class="mt-1 text-amber-300 text-sm sm:text-base">07-Oct-2025, 06:33 PM</p></div>
                     </div>
                     <div class="text-center mt-4">
-                        <!-- REPLACE THE # WITH YOUR PDF LINK -->
                         <button class="view-ticket-btn bg-amber-500/20 text-amber-300 border border-amber-400/30 px-4 py-2 rounded-lg hover:bg-amber-500/40 transition-all duration-300" data-ticket-url="https://ontheline.trincoll.edu/images/bookdown/sample-local-pdf.pdf">View Ticket</button>
                     </div>
                 </div>
@@ -181,7 +208,6 @@
                         <div class="text-center sm:text-right"><p class="text-sm text-slate-400">Arrival</p><p class="font-semibold text-base sm:text-lg text-slate-200">Surat (ST)</p><p class="mt-1 text-rose-300 text-sm sm:text-base">08-Oct-2025, 05:25 AM</p></div>
                     </div>
                     <div class="text-center mt-4">
-                        <!-- REPLACE THE # WITH YOUR PDF LINK -->
                         <button class="view-ticket-btn bg-rose-500/20 text-rose-300 border border-rose-400/30 px-4 py-2 rounded-lg hover:bg-rose-500/40 transition-all duration-300" data-ticket-url="#">View Ticket</button>
                     </div>
                 </div>
@@ -232,11 +258,12 @@
                     button.textContent = 'Please Add Link';
                     button.classList.add('bg-red-500/30');
                     setTimeout(() => {
-                        button.textContent = 'View Ticket';
-                        button.classList.remove('bg-red-500/30');
+                        button.textContent = button.dataset.buttonText || 'View Ticket';
                     }, 2500);
                 }
             });
+            // Store original button text
+            button.dataset.buttonText = button.textContent;
         });
 
         // Function to close the modal
