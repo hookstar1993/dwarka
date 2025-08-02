@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jay Dwarkadhish - Poonam Schedule - Views Bookings</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Teko:wght@400;600&family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
@@ -16,7 +16,8 @@
             color: #f0f0f0;
             overflow-x: hidden;
         }
-        h1, h2.page-title {
+        h1,
+        h2.page-title {
             font-family: 'Teko', sans-serif;
             letter-spacing: 0.05em;
         }
@@ -63,15 +64,13 @@
             from { left: -150%; }
             to { left: 150%; }
         }
-        
-        /* Styles for smooth view transitions */
-        #main-view, #details-view {
+        #main-view,
+        #details-view {
             transition: opacity 0.3s ease-in-out;
         }
         .view-hidden {
             display: none;
         }
-
         .modal-backdrop {
             position: fixed;
             top: 0;
@@ -88,6 +87,11 @@
         .modal-content {
             width: 90%;
             max-width: 600px;
+        }
+        .modal-content-ticket {
+            width: 90%;
+            height: 90%;
+            max-width: 1000px;
         }
         .modal-iframe {
             width: 100%;
@@ -129,7 +133,7 @@
     <!-- Welcome Popup -->
     <div id="welcome-popup" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 transition-opacity duration-500 opacity-0 pointer-events-none">
         <div class="glass-effect rounded-2xl p-8 text-center transform scale-95 transition-transform duration-500">
-             <h2 class="text-5xl font-bold text-amber-300 page-title" style="text-shadow: 0 0 15px rgba(251, 191, 36, 0.5);">|| Jay Dwarkadhish ||</h2>
+             <h2 class="text-4xl sm:text-5xl font-bold text-amber-300 page-title" style="text-shadow: 0 0 15px rgba(251, 191, 36, 0.5);">|| Jay Dwarkadhish ||</h2>
              <p class="text-slate-300 mt-2">Welcome to the sacred journey!</p>
         </div>
     </div>
@@ -187,7 +191,7 @@
 
     <!-- Ticket Viewer Modal -->
     <div id="ticketModal" class="modal-backdrop hidden">
-        <div class="modal-content glass-effect p-2 sm:p-4 relative flex flex-col" style="height: 90%; max-height: 800px;">
+        <div class="modal-content-ticket glass-effect p-2 sm:p-4 relative flex flex-col rounded-2xl">
             <button id="closeModalBtn" class="absolute -top-2 -right-2 sm:-top-3 sm:-right-3 bg-red-600 text-white rounded-full h-8 w-8 flex items-center justify-center text-lg font-bold z-50 hover:bg-red-700 transition-all">&times;</button>
             <iframe id="ticketViewerIframe" class="modal-iframe flex-grow rounded-t-lg" src="" title="Ticket Viewer"></iframe>
             <div class="text-center p-2">
@@ -199,7 +203,7 @@
     <!-- About Us Modal -->
     <div id="about-modal" class="modal-backdrop hidden">
         <div class="modal-content glass-effect p-6 sm:p-8 relative flex flex-col rounded-2xl">
-            <button id="close-about-modal" class="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors">&times;</button>
+            <button id="close-about-modal" class="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors text-3xl">&times;</button>
             <h2 class="text-3xl font-bold text-purple-300 page-title mb-4">About Us</h2>
             <div class="text-slate-300 overflow-y-auto pr-4">
                 <p>Here you can write about your group, the purpose of the journey, and any other details you want to share with your members.</p>
@@ -211,7 +215,7 @@
     <!-- Contact Modal -->
     <div id="contact-modal" class="modal-backdrop hidden">
         <div class="modal-content glass-effect p-6 sm:p-8 relative flex flex-col rounded-2xl">
-            <button id="close-contact-modal" class="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors">&times;</button>
+            <button id="close-contact-modal" class="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors text-3xl">&times;</button>
             <h2 class="text-3xl font-bold text-sky-300 page-title mb-4">Contact & Suggestions</h2>
             
             <div class="text-slate-300 mb-6">
