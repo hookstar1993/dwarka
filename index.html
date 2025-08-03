@@ -88,8 +88,8 @@
         .modal-content {
             width: 90%;
             max-width: 600px;
-            max-height: 90vh; /* Added for smaller screens */
-            overflow-y: auto; /* Added for scrollable content */
+            max-height: 90vh;
+            overflow-y: auto;
         }
         .modal-content-ticket {
             width: 90%;
@@ -112,6 +112,11 @@
         .text-high-contrast {
             color: white;
             text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+        /* Highlight for current timing */
+        .current-timing {
+            background-color: rgba(250, 204, 21, 0.15);
+            border-left: 4px solid #facc15; /* amber-400 */
         }
     </style>
 </head>
@@ -157,6 +162,7 @@
                 </div>
                 <div class="hidden md:flex items-center space-x-8">
                     <a href="#" id="home-link" class="text-gray-300 hover:text-white font-medium transition-colors duration-300">Home</a>
+                    <a href="#" id="timing-link" class="text-gray-300 hover:text-white font-medium transition-colors duration-300">Mandir Timing</a>
                     <a href="#" id="about-link" class="text-gray-300 hover:text-white font-medium transition-colors duration-300">About Us</a>
                     <a href="#" id="contact-link" class="text-gray-300 hover:text-white font-medium transition-colors duration-300">Contact</a>
                     <a href="#" id="pay-link" class="bg-green-500/80 hover:bg-green-500/90 text-white font-bold py-2 px-4 rounded-lg transition-all duration-300 transform hover:scale-105">Pay Me Here</a>
@@ -167,6 +173,7 @@
             </nav>
             <div id="mobile-menu" class="hidden md:hidden px-6 pb-4 glass-effect">
                 <a href="#" id="mobile-home-link" class="block py-2 text-gray-300 hover:text-white">Home</a>
+                <a href="#" id="mobile-timing-link" class="block py-2 text-gray-300 hover:text-white">Mandir Timing</a>
                 <a href="#" id="mobile-about-link" class="block py-2 text-gray-300 hover:text-white">About Us</a>
                 <a href="#" id="mobile-contact-link" class="block py-2 text-gray-300 hover:text-white">Contact</a>
                 <a href="#" id="mobile-pay-link" class="block py-2 mt-2 text-center bg-green-500/80 hover:bg-green-500/90 text-white font-bold rounded-lg transition-all duration-300">Pay Me Here</a>
@@ -328,6 +335,17 @@
     <!-- Notification element for copy feedback -->
     <div id="notification" class="fixed bottom-5 right-5 glass-effect bg-green-500/80 border-green-400/50 text-white py-2 px-4 rounded-lg shadow-lg transform translate-y-24 opacity-0 transition-all duration-300">
         Copied to clipboard!
+    </div>
+    
+    <!-- Mandir Timing Modal -->
+    <div id="timing-modal" class="modal-backdrop hidden">
+        <div class="modal-content glass-effect p-6 sm:p-8 relative flex flex-col rounded-2xl">
+            <button id="close-timing-modal" class="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors text-3xl">&times;</button>
+            <h2 class="text-3xl font-bold text-amber-300 page-title mb-4">Dwarkadhish Mandir Timings</h2>
+            <div id="timing-schedule" class="text-slate-300 overflow-y-auto pr-4 space-y-2">
+                <!-- Timings will be injected here by JavaScript -->
+            </div>
+        </div>
     </div>
 
 
@@ -621,6 +639,7 @@
             const aboutModal = document.getElementById('about-modal');
             const contactModal = document.getElementById('contact-modal');
             const paymentModal = document.getElementById('payment-modal');
+            const timingModal = document.getElementById('timing-modal');
             const contactForm = document.getElementById('contact-form');
             const formSuccessMessage = document.getElementById('form-success-message');
 
@@ -650,7 +669,7 @@
                 if (event.target === modal) closeModal();
             });
             
-            // --- About & Contact Modal Logic ---
+            // --- About, Contact, Timing Modal Logic ---
             document.querySelectorAll('#about-link, #mobile-about-link').forEach(link => {
                 link.addEventListener('click', (e) => {
                     e.preventDefault();
@@ -669,13 +688,21 @@
                     paymentModal.classList.remove('hidden');
                 });
             });
+             document.querySelectorAll('#timing-link, #mobile-timing-link').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    timingModal.classList.remove('hidden');
+                });
+            });
 
             document.getElementById('close-about-modal').addEventListener('click', () => aboutModal.classList.add('hidden'));
             document.getElementById('close-contact-modal').addEventListener('click', () => contactModal.classList.add('hidden'));
             document.getElementById('close-payment-modal').addEventListener('click', () => paymentModal.classList.add('hidden'));
+            document.getElementById('close-timing-modal').addEventListener('click', () => timingModal.classList.add('hidden'));
             aboutModal.addEventListener('click', (e) => { if(e.target === aboutModal) aboutModal.classList.add('hidden'); });
             contactModal.addEventListener('click', (e) => { if(e.target === contactModal) contactModal.classList.add('hidden'); });
             paymentModal.addEventListener('click', (e) => { if(e.target === paymentModal) paymentModal.classList.add('hidden'); });
+            timingModal.addEventListener('click', (e) => { if(e.target === timingModal) timingModal.classList.add('hidden'); });
             
             contactForm.addEventListener('submit', function(e) {
                 e.preventDefault();
@@ -735,8 +762,55 @@
                 }
             });
 
+            // --- Mandir Timing Logic ---
+            const timings = [
+                { time: "6:30 AM", event: "Mangla Aarti", type: "open", start: 6.5, end: 8.0 },
+                { time: "8:00 AM - 9:00 AM", event: "Mangla Darshan", type: "open", start: 8.0, end: 9.0 },
+                { time: "9:00 AM - 9:30 AM", event: "Abhishek Pooja (Darshan Closed)", type: "closed", start: 9.0, end: 9.5 },
+                { time: "9:30 AM - 10:15 AM", event: "Shringar Darshan", type: "open", start: 9.5, end: 10.25 },
+                { time: "10:15 AM - 10:30 AM", event: "Shringar Bhog (Darshan Closed)", type: "closed", start: 10.25, end: 10.5 },
+                { time: "10:30 AM - 10:45 AM", event: "Shringar Aarti", type: "open", start: 10.5, end: 10.75 },
+                { time: "11:05 AM - 11:20 AM", event: "Gwal Bhog (Darshan Closed)", type: "closed", start: 11.08, end: 11.33 },
+                { time: "11:20 AM - 12:00 PM", event: "Darshan Open", type: "open", start: 11.33, end: 12.0 },
+                { time: "12:00 PM - 12:20 PM", event: "Rajbhog (Darshan Closed)", type: "closed", start: 12.0, end: 12.33 },
+                { time: "12:20 PM - 1:00 PM", event: "Darshan Open", type: "open", start: 12.33, end: 13.0 },
+                { time: "1:00 PM - 5:00 PM", event: "Anosar (Mandir Closed)", type: "closed", start: 13.0, end: 17.0 },
+                { time: "5:00 PM - 5:30 PM", event: "Uthapan Darshan", type: "open", start: 17.0, end: 17.5 },
+                { time: "5:45 PM - 6:00 PM", event: "Uthapan Bhog (Darshan Closed)", type: "closed", start: 17.75, end: 18.0 },
+                { time: "6:15 PM - 6:45 PM", event: "Darshan Open", type: "open", start: 18.25, end: 18.75 },
+                { time: "7:00 PM - 7:25 PM", event: "Sandhya Bhog (Darshan Closed)", type: "closed", start: 19.0, end: 19.42 },
+                { time: "7:25 PM - 7:45 PM", event: "Sandhya Aarti", type: "open", start: 19.42, end: 19.75 },
+                { time: "8:00 PM - 8:10 PM", event: "Shayan Bhog (Darshan Closed)", type: "closed", start: 20.0, end: 20.17 },
+                { time: "8:10 PM - 8:35 PM", event: "Shayan Darshan", type: "open", start: 20.17, end: 20.58 },
+                { time: "8:35 PM", event: "Shayan Aarti", type: "open", start: 20.58, end: 21.0 },
+                { time: "9:00 PM", event: "Mandir Closed", type: "closed", start: 21.0, end: 24.0 }
+            ];
+
+            function populateTimings() {
+                const scheduleContainer = document.getElementById('timing-schedule');
+                const now = new Date();
+                const currentTime = now.getHours() + now.getMinutes() / 60;
+                let html = '';
+
+                timings.forEach(item => {
+                    const isCurrent = currentTime >= item.start && currentTime < item.end;
+                    const colorClass = item.type === 'open' ? 'text-green-400' : 'text-red-400';
+                    const currentClass = isCurrent ? 'current-timing' : '';
+                    
+                    html += `
+                        <div class="flex justify-between items-center p-3 rounded-lg ${currentClass} transition-all duration-300">
+                            <span class="font-semibold">${item.event}</span>
+                            <span class="${colorClass} font-bold">${item.time}</span>
+                        </div>
+                    `;
+                });
+                scheduleContainer.innerHTML = html;
+            }
+
+
             generateDateCards();
             startCountdown();
+            populateTimings();
             document.getElementById('home-link').addEventListener('click', (e) => { e.preventDefault(); showMainView(); });
             document.getElementById('mobile-home-link').addEventListener('click', (e) => { e.preventDefault(); showMainView(); });
             document.getElementById('mobile-menu-button').addEventListener('click', () => {
