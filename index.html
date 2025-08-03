@@ -65,15 +65,13 @@
             from { left: -150%; }
             to { left: 150%; }
         }
-        
-        /* Styles for smooth view transitions */
-        #main-view, #details-view {
+        #main-view,
+        #details-view {
             transition: opacity 0.3s ease-in-out;
         }
         .view-hidden {
             display: none;
         }
-
         .modal-backdrop {
             position: fixed;
             top: 0;
@@ -90,6 +88,8 @@
         .modal-content {
             width: 90%;
             max-width: 600px;
+            max-height: 90vh; /* Added for smaller screens */
+            overflow-y: auto; /* Added for scrollable content */
         }
         .modal-content-ticket {
             width: 90%;
@@ -108,6 +108,10 @@
         }
         .shake {
             animation: shake 0.5s ease-in-out;
+        }
+        .text-high-contrast {
+            color: white;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
         }
     </style>
 </head>
@@ -155,6 +159,7 @@
                     <a href="#" id="home-link" class="text-gray-300 hover:text-white font-medium transition-colors duration-300">Home</a>
                     <a href="#" id="about-link" class="text-gray-300 hover:text-white font-medium transition-colors duration-300">About Us</a>
                     <a href="#" id="contact-link" class="text-gray-300 hover:text-white font-medium transition-colors duration-300">Contact</a>
+                    <a href="#" id="pay-link" class="bg-green-500/80 hover:bg-green-500/90 text-white font-bold py-2 px-4 rounded-lg transition-all duration-300 transform hover:scale-105">Pay Me Here</a>
                 </div>
                 <button class="md:hidden" id="mobile-menu-button">
                      <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
@@ -164,6 +169,7 @@
                 <a href="#" id="mobile-home-link" class="block py-2 text-gray-300 hover:text-white">Home</a>
                 <a href="#" id="mobile-about-link" class="block py-2 text-gray-300 hover:text-white">About Us</a>
                 <a href="#" id="mobile-contact-link" class="block py-2 text-gray-300 hover:text-white">Contact</a>
+                <a href="#" id="mobile-pay-link" class="block py-2 mt-2 text-center bg-green-500/80 hover:bg-green-500/90 text-white font-bold rounded-lg transition-all duration-300">Pay Me Here</a>
             </div>
         </header>
 
@@ -251,6 +257,77 @@
             </form>
              <p id="form-success-message" class="text-green-400 h-6 mt-2 text-sm text-center"></p>
         </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div id="payment-modal" class="modal-backdrop hidden">
+        <div class="modal-content glass-effect p-6 sm:p-8 relative flex flex-col rounded-2xl">
+            <button id="close-payment-modal" class="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors text-3xl">&times;</button>
+             <div class="text-center">
+                <h1 class="text-2xl sm:text-3xl font-bold text-high-contrast tracking-tight">Make a Secure Payment</h1>
+                <p class="text-gray-300 mt-2 text-high-contrast text-sm sm:text-base">Choose your preferred payment method below.</p>
+            </div>
+
+            <div class="space-y-4 mt-8">
+                <h2 class="text-lg font-semibold text-cyan-300 text-high-contrast">1. Pay Directly via App</h2>
+                <p class="text-center text-sm text-gray-300 text-high-contrast">Click an icon to pay. (Works on mobile only)</p>
+                <div class="grid grid-cols-3 gap-4">
+                    <a href="upi://pay?pa=9824594156@okbizaxis&pn=Your%20Name&cu=INR" class="glass-effect hover:bg-white/10 p-4 rounded-lg flex flex-col items-center justify-center space-y-2 transition-all duration-300 transform hover:scale-105">
+                        <div class="h-8 flex items-center"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Google_Pay_Logo.svg/2560px-Google_Pay_Logo.svg.png" alt="Google Pay" class="h-full w-auto object-contain"></div>
+                        <span class="font-semibold text-gray-200 text-xs text-high-contrast">Google Pay</span>
+                    </a>
+                    <a href="phonepe://pay?pa=9824594156@okbizaxis&pn=Your%20Name&cu=INR" class="glass-effect hover:bg-white/10 p-4 rounded-lg flex flex-col items-center justify-center space-y-2 transition-all duration-300 transform hover:scale-105">
+                        <div class="h-8 flex items-center"><img src="https://upload.wikimedia.org/wikipedia/commons/7/71/PhonePe_Logo.svg" alt="PhonePe" class="h-full w-auto object-contain"></div>
+                        <span class="font-semibold text-gray-200 text-xs text-high-contrast">PhonePe</span>
+                    </a>
+                    <a href="bhim://upi/pay?pa=9824594156@okbizaxis&pn=Your%20Name&cu=INR" class="glass-effect hover:bg-white/10 p-4 rounded-lg flex flex-col items-center justify-center space-y-2 transition-all duration-300 transform hover:scale-105">
+                        <div class="h-8 flex items-center"><img src="https://upload.wikimedia.org/wikipedia/en/6/65/BHIM_SVG_Logo.svg" alt="BHIM UPI" class="h-full w-auto object-contain"></div>
+                        <span class="font-semibold text-gray-200 text-xs text-high-contrast">BHIM</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="relative my-6"><div class="absolute inset-0 flex items-center" aria-hidden="true"><div class="w-full border-t border-white/20"></div></div><div class="relative flex justify-center"><span class="bg-[#0c0a1a] px-2 text-sm text-gray-300 text-high-contrast">OR</span></div></div>
+
+            <div class="space-y-4">
+                <h2 class="text-lg font-semibold text-cyan-300 text-high-contrast">2. Scan & Pay</h2>
+                <div class="bg-white/90 p-4 rounded-lg flex justify-center"><img src="https://hookstar1993.github.io/paymehook/qr-9824594156@okbizaxis.png" alt="QR Code for Payment" class="rounded-md w-full max-w-[200px]"></div>
+            </div>
+            
+            <div class="space-y-4 mt-6">
+                 <h2 class="text-lg font-semibold text-cyan-300 text-high-contrast">3. Pay with UPI ID</h2>
+                 <div class="glass-effect p-4 rounded-lg flex justify-between items-center">
+                     <span id="upiId" class="font-medium text-high-contrast text-sm sm:text-base break-all">9824594156@okbizaxis</span>
+                     <button onclick="copyToClipboard('upiId', this)" title="Copy UPI ID" class="p-2 rounded-lg transition-all duration-200 bg-white/10 hover:bg-white/20 flex-shrink-0 ml-3">
+                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" viewBox="0 0 20 20" fill="currentColor"><path d="M7 9a2 2 0 012-2h6a2 2 0 012 2v6a2 2 0 01-2 2H9a2 2 0 01-2-2V9z" /><path d="M5 3a2 2 0 00-2 2v6a2 2 0 002 2V5h6a2 2 0 00-2-2H5z" /></svg>
+                     </button>
+                 </div>
+            </div>
+            
+            <div class="space-y-4 mt-6">
+                <h2 class="text-lg font-semibold text-cyan-300 text-high-contrast">4. Direct Bank Transfer</h2>
+                <div class="glass-effect p-4 rounded-lg space-y-4 text-sm sm:text-base">
+                    <div class="flex justify-between items-center"><span class="text-gray-200 text-high-contrast">Account Name:</span><div class="flex items-center space-x-3"><span id="accName" class="font-medium text-high-contrast text-right">SAVANI HARDEEP M.</span><button onclick="copyToClipboard('accName', this)" title="Copy Account Name" class="p-1.5 rounded-lg transition-all duration-200 bg-white/10 hover:bg-white/20 flex-shrink-0"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" viewBox="0 0 20 20" fill="currentColor"><path d="M7 9a2 2 0 012-2h6a2 2 0 012 2v6a2 2 0 01-2 2H9a2 2 0 01-2-2V9z" /><path d="M5 3a2 2 0 00-2 2v6a2 2 0 002 2V5h6a2 2 0 00-2-2H5z" /></svg></button></div></div>
+                    <div class="flex justify-between items-center"><span class="text-gray-200 text-high-contrast">Bank Name:</span><div class="flex items-center space-x-3"><span id="bankName" class="font-medium text-high-contrast">STATE BANK OF INDIA</span><button onclick="copyToClipboard('bankName', this)" title="Copy Bank Name" class="p-1.5 rounded-lg transition-all duration-200 bg-white/10 hover:bg-white/20 flex-shrink-0"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" viewBox="0 0 20 20" fill="currentColor"><path d="M7 9a2 2 0 012-2h6a2 2 0 012 2v6a2 2 0 01-2 2H9a2 2 0 01-2-2V9z" /><path d="M5 3a2 2 0 00-2 2v6a2 2 0 002 2V5h6a2 2 0 00-2-2H5z" /></svg></button></div></div>
+                    <div class="flex justify-between items-center"><span class="text-gray-200 text-high-contrast">Account No:</span><div class="flex items-center space-x-3"><span id="accNum" class="font-medium text-high-contrast">40003791171</span><button onclick="copyToClipboard('accNum', this)" title="Copy Account Number" class="p-1.5 rounded-lg transition-all duration-200 bg-white/10 hover:bg-white/20 flex-shrink-0"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" viewBox="0 0 20 20" fill="currentColor"><path d="M7 9a2 2 0 012-2h6a2 2 0 012 2v6a2 2 0 01-2 2H9a2 2 0 01-2-2V9z" /><path d="M5 3a2 2 0 00-2 2v6a2 2 0 002 2V5h6a2 2 0 00-2-2H5z" /></svg></button></div></div>
+                    <div class="flex justify-between items-center"><span class="text-gray-200 text-high-contrast">IFSC Code:</span><div class="flex items-center space-x-3"><span id="ifscCode" class="font-medium text-high-contrast">SBIN0060236</span><button onclick="copyToClipboard('ifscCode', this)" title="Copy IFSC Code" class="p-1.5 rounded-lg transition-all duration-200 bg-white/10 hover:bg-white/20 flex-shrink-0"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" viewBox="0 0 20 20" fill="currentColor"><path d="M7 9a2 2 0 012-2h6a2 2 0 012 2v6a2 2 0 01-2 2H9a2 2 0 01-2-2V9z" /><path d="M5 3a2 2 0 00-2 2v6a2 2 0 002 2V5h6a2 2 0 00-2-2H5z" /></svg></button></div></div>
+                </div>
+            </div>
+            
+            <div class="space-y-4 pt-6">
+                <h2 class="text-lg font-semibold text-cyan-300 text-high-contrast">5. Confirm on WhatsApp</h2>
+                <p class="text-center text-sm text-gray-300 text-high-contrast">After payment, click the button below to send us the screenshot for confirmation.</p>
+                <a href="https://wa.me/919824594156?text=Hello!%20I%20have%20completed%20the%20payment.%20Here%20is%20the%20screenshot." target="_blank" rel="noopener noreferrer" class="w-full bg-green-500/80 hover:bg-green-500/90 text-white font-bold py-3 px-4 rounded-lg flex items-center justify-center space-x-3 transition-all duration-300 transform hover:scale-105 glass-panel border-green-400/50">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.894 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01s-.521.074-.792.372c-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.626.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+                    <span>Send Screenshot on WhatsApp</span>
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Notification element for copy feedback -->
+    <div id="notification" class="fixed bottom-5 right-5 glass-effect bg-green-500/80 border-green-400/50 text-white py-2 px-4 rounded-lg shadow-lg transform translate-y-24 opacity-0 transition-all duration-300">
+        Copied to clipboard!
     </div>
 
 
@@ -381,13 +458,16 @@
 
                     const expenseCardHtml = `
                         <div class="glass-effect rounded-xl p-4 sm:p-6">
-                            <h2 class="text-2xl sm:text-3xl font-semibold text-emerald-300 mb-4">Kharch (Expense Details)</h2>
+                            <h2 class="text-2xl sm:text-3xl font-semibold text-emerald-300 mb-4">Yatra ka Kharch (Expense Details)</h2>
                             <div class="space-y-3 text-left">
                                 <div class="flex justify-between items-center"><p class="text-slate-400">Train:</p><p class="font-semibold text-slate-200">₹ ${data.expenses.train.toFixed(2)}</p></div>
                                 <div class="flex justify-between items-center"><p class="text-slate-400">Stay (Dharamshala):</p><p class="font-semibold text-slate-200">₹ ${data.expenses.stay.toFixed(2)}</p></div>
                                 <div class="flex justify-between items-center"><p class="text-slate-400">Food (Approx.):</p><p class="font-semibold text-slate-200">₹ ${data.expenses.food.toFixed(2)}</p></div>
                                 <div class="border-t border-slate-700 my-2"></div>
                                 <div class="flex justify-between items-center text-lg"><p class="font-bold text-emerald-300">Total Kharch:</p><p class="font-bold text-emerald-300">₹ ${data.expenses.total.toFixed(2)}</p></div>
+                            </div>
+                            <div class="text-center mt-6">
+                                <button id="pay-now-btn" class="animated-glow-border w-full bg-green-500/80 hover:bg-green-500/90 text-white font-bold py-3 px-4 rounded-lg flex items-center justify-center space-x-3 transition-all duration-300 transform hover:scale-105">Pay Now</button>
                             </div>
                         </div>
                     `;
@@ -540,6 +620,7 @@
             const downloadBtn = document.getElementById('downloadBtn');
             const aboutModal = document.getElementById('about-modal');
             const contactModal = document.getElementById('contact-modal');
+            const paymentModal = document.getElementById('payment-modal');
             const contactForm = document.getElementById('contact-form');
             const formSuccessMessage = document.getElementById('form-success-message');
 
@@ -553,6 +634,9 @@
                             modal.classList.remove('hidden');
                         }
                     });
+                });
+                 document.getElementById('pay-now-btn').addEventListener('click', () => {
+                    paymentModal.classList.remove('hidden');
                 });
             }
 
@@ -579,10 +663,19 @@
                     contactModal.classList.remove('hidden');
                 });
             });
+            document.querySelectorAll('#pay-link, #mobile-pay-link').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    paymentModal.classList.remove('hidden');
+                });
+            });
+
             document.getElementById('close-about-modal').addEventListener('click', () => aboutModal.classList.add('hidden'));
             document.getElementById('close-contact-modal').addEventListener('click', () => contactModal.classList.add('hidden'));
+            document.getElementById('close-payment-modal').addEventListener('click', () => paymentModal.classList.add('hidden'));
             aboutModal.addEventListener('click', (e) => { if(e.target === aboutModal) aboutModal.classList.add('hidden'); });
             contactModal.addEventListener('click', (e) => { if(e.target === contactModal) contactModal.classList.add('hidden'); });
+            paymentModal.addEventListener('click', (e) => { if(e.target === paymentModal) paymentModal.classList.add('hidden'); });
             
             contactForm.addEventListener('submit', function(e) {
                 e.preventDefault();
@@ -649,6 +742,61 @@
             document.getElementById('mobile-menu-button').addEventListener('click', () => {
                 document.getElementById('mobile-menu').classList.toggle('hidden');
             });
+            
+            // --- Copy to Clipboard Logic ---
+            function showNotification() {
+                const notification = document.getElementById('notification');
+                notification.classList.remove('translate-y-24', 'opacity-0');
+                notification.classList.add('translate-y-0', 'opacity-100');
+                setTimeout(() => {
+                    notification.classList.add('translate-y-24', 'opacity-0');
+                    notification.classList.remove('translate-y-0', 'opacity-100');
+                }, 2000);
+            }
+
+            function updateButtonState(button) {
+                const originalHTML = button.innerHTML; 
+                button.disabled = true;
+                button.classList.add('bg-green-500/50');
+                button.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>`;
+                
+                setTimeout(() => {
+                    button.innerHTML = originalHTML;
+                    button.disabled = false;
+                    button.classList.remove('bg-green-500/50');
+                }, 2000);
+            }
+
+            window.copyToClipboard = function(elementId, button) {
+                const textToCopy = document.getElementById(elementId).innerText;
+                const fallbackCopy = () => {
+                    const textArea = document.createElement('textarea');
+                    textArea.value = textToCopy;
+                    textArea.style.position = 'fixed';
+                    textArea.style.left = '-9999px';
+                    document.body.appendChild(textArea);
+                    textArea.focus();
+                    textArea.select();
+                    try {
+                        document.execCommand('copy');
+                        showNotification();
+                        updateButtonState(button);
+                    } catch (err) {
+                        console.error('Fallback: Oops, unable to copy', err);
+                    }
+                    document.body.removeChild(textArea);
+                };
+
+                if (navigator.clipboard && window.isSecureContext) {
+                    navigator.clipboard.writeText(textToCopy).then(() => {
+                        showNotification();
+                        updateButtonState(button);
+                    }).catch(fallbackCopy);
+                } else {
+                    fallbackCopy();
+                }
+            }
+
         });
     </script>
 </body>
