@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jay Dwarkadhish - Poonam Schedule - Views Bookings.</title>
+    <title>Jay Dwarkadhish - Poonam Schedule - Views Bookings</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Teko:wght@400;600&family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
     <style>
@@ -50,6 +50,7 @@
             backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            transition: all 0.3s ease-in-out;
         }
 
         .animated-glow-border {
@@ -135,6 +136,23 @@
         .current-timing {
             background-color: rgba(250, 204, 21, 0.15);
             border-left: 4px solid #facc15; /* amber-400 */
+        }
+        
+        /* NEW: Highlight for current month card */
+        .active-month-glow {
+            transform: scale(1.03);
+            animation: pulse-glow 2.5s infinite ease-in-out;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% {
+                box-shadow: 0 0 15px 3px rgba(250, 204, 21, 0.4), 0 0 30px 8px rgba(250, 204, 21, 0.2);
+                border-color: rgba(250, 204, 21, 0.6);
+            }
+            50% {
+                box-shadow: 0 0 25px 8px rgba(250, 204, 21, 0.6), 0 0 40px 12px rgba(250, 204, 21, 0.3);
+                border-color: rgba(250, 204, 21, 0.8);
+            }
         }
     </style>
 </head>
@@ -378,7 +396,6 @@
                 /*
                 // --- COMMENT SHURU: Yahan se comment hatakar aap November 2025 aur aage ke mahino ki details live kar sakte hain. ---
                 "November 2025": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "05-Nov-2025, 10:00 AM", checkOut: "05-Nov-2025, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "3456789012", departure: "04-Nov-2025, 07:38 PM", arrival: "05-Nov-2025, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "3456789013", departure: "05-Nov-2025, 03:55 PM", arrival: "05-Nov-2025, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "3456789014", departure: "05-Nov-2025, 08:15 PM", arrival: "06-Nov-2025, 05:25 AM", ticketUrl: "#" } ] },
-                
                 "December 2025": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "05-Dec-2025, 10:00 AM", checkOut: "05-Dec-2025, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "4567890123", departure: "04-Dec-2025, 07:38 PM", arrival: "05-Dec-2025, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "4567890124", departure: "05-Dec-2025, 03:55 PM", arrival: "05-Dec-2025, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "4567890125", departure: "05-Dec-2025, 08:15 PM", arrival: "06-Dec-2025, 05:25 AM", ticketUrl: "#" } ] },
                 // --- 2026 DATA ---
                 "January 2026": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "03-Jan-2026, 10:00 AM", checkOut: "03-Jan-2026, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "5678901234", departure: "02-Jan-2026, 07:38 PM", arrival: "03-Jan-2026, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "5678901235", departure: "03-Jan-2026, 03:55 PM", arrival: "03-Jan-2026, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "5678901236", departure: "03-Jan-2026, 08:15 PM", arrival: "04-Jan-2026, 05:25 AM", ticketUrl: "#" } ] },
@@ -407,7 +424,6 @@
                 "November 2027": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "13-Nov-2027, 10:00 AM", checkOut: "13-Nov-2027, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "9012376543", departure: "12-Nov-2027, 07:38 PM", arrival: "13-Nov-2027, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "9012376544", departure: "13-Nov-2027, 03:55 PM", arrival: "13-Nov-2027, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "9012376545", departure: "13-Nov-2027, 08:15 PM", arrival: "14-Nov-2027, 05:25 AM", ticketUrl: "#" } ] },
                 "December 2027": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "13-Dec-2027, 10:00 AM", checkOut: "13-Dec-2027, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "1234587654", departure: "12-Dec-2027, 07:38 PM", arrival: "13-Dec-2027, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "1234587655", departure: "13-Dec-2027, 03:55 PM", arrival: "13-Dec-2027, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "1234587656", departure: "13-Dec-2027, 08:15 PM", arrival: "14-Dec-2027, 05:25 AM", ticketUrl: "#" } ] }
                 */
-            
             };
             
             const poonamDates = [
@@ -579,10 +595,18 @@
             function generateDateCards() {
                 if (!datesContainer) return;
                 let colorIndex = 0;
+                const today = new Date();
+                const currentMonthName = today.toLocaleString('default', { month: 'long' });
+                const currentYear = today.getFullYear();
+                const currentMonthYear = `${currentMonthName} ${currentYear}`;
 
                 for (const monthYear in groupedDates) {
                     const monthBlock = document.createElement('div');
                     monthBlock.className = "glass-effect rounded-2xl p-6 flex flex-col items-center";
+                    
+                    if (monthYear === currentMonthYear) {
+                        monthBlock.classList.add('active-month-glow');
+                    }
                     
                     const cardColorClass = cardTextColors[colorIndex % cardTextColors.length];
                     
