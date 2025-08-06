@@ -776,7 +776,7 @@
             const paymentModal = document.getElementById('payment-modal');
             const timingModal = document.getElementById('timing-modal');
             const contactForm = document.getElementById('contact-form');
-            const formSuccessMessage = document.getElementById('form-success-message');
+            const successModal = document.getElementById('success-modal');
 
             function attachModalListeners() {
                 document.querySelectorAll('.view-ticket-btn').forEach(button => {
@@ -855,17 +855,17 @@
                         }
                     });
                     if (response.ok) {
-                        formSuccessMessage.textContent = "Thank you for your message! We will get back to you shortly.";
+                        contactModal.classList.add('hidden');
+                        successModal.classList.remove('hidden');
                         form.reset();
                         setTimeout(() => {
-                            formSuccessMessage.textContent = "";
-                            contactModal.classList.add('hidden');
+                            successModal.classList.add('hidden');
                         }, 3000);
                     } else {
-                        formSuccessMessage.textContent = "Oops! There was a problem submitting your form.";
+                        alert("Oops! There was a problem submitting your form.");
                     }
                 } catch (error) {
-                    formSuccessMessage.textContent = "Oops! There was a problem submitting your form.";
+                    alert("Oops! There was a problem submitting your form.");
                 }
             });
 
