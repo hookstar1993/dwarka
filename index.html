@@ -154,6 +154,58 @@
                 border-color: rgba(74, 222, 128, 0.7);
             }
         }
+        
+        /* Success Animation Styles */
+        .success-animation .checkmark {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            display: block;
+            stroke-width: 3;
+            stroke: #4ade80; /* green-400 */
+            stroke-miterlimit: 10;
+            margin: 10% auto;
+            box-shadow: inset 0px 0px 0px #4ade80;
+            animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
+        }
+
+        .success-animation .checkmark__circle {
+            stroke-dasharray: 166;
+            stroke-dashoffset: 166;
+            stroke-width: 3;
+            stroke-miterlimit: 10;
+            stroke: #4ade80;
+            fill: none;
+            animation: stroke .6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+        }
+
+        .success-animation .checkmark__check {
+            transform-origin: 50% 50%;
+            stroke-dasharray: 48;
+            stroke-dashoffset: 48;
+            animation: stroke .3s cubic-bezier(0.65, 0, 0.45, 1) .8s forwards;
+        }
+
+        @keyframes stroke {
+            100% {
+                stroke-dashoffset: 0;
+            }
+        }
+
+        @keyframes scale {
+            0%, 100% {
+                transform: none;
+            }
+            50% {
+                transform: scale3d(1.1, 1.1, 1);
+            }
+        }
+
+        @keyframes fill {
+            100% {
+                box-shadow: inset 0px 0px 0px 50px #4ade80;
+            }
+        }
     </style>
 </head>
 <body class="flex flex-col min-h-screen">
@@ -298,7 +350,6 @@
                 <textarea name="message" id="contact-message" placeholder="Your Suggestion..." rows="4" class="w-full px-4 py-2 bg-slate-800/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-sky-500" required></textarea>
                 <button type="submit" class="w-full p-3 rounded-lg bg-gradient-to-r from-sky-500 to-indigo-500 text-center font-semibold text-white transition-all duration-300 hover:shadow-xl transform hover:scale-105">Send Suggestion</button>
             </form>
-             <p id="form-success-message" class="text-green-400 h-6 mt-2 text-sm text-center"></p>
         </div>
     </div>
 
@@ -384,6 +435,20 @@
         </div>
     </div>
 
+    <!-- Success Modal -->
+    <div id="success-modal" class="modal-backdrop hidden">
+        <div class="modal-content glass-effect p-6 sm:p-8 relative flex flex-col rounded-2xl text-center">
+            <div class="success-animation">
+                <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                    <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/>
+                    <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+                </svg>
+            </div>
+            <p class="text-lg font-semibold text-green-400">Thank you for your message!</p>
+            <p class="text-slate-300 mt-2">We will get back to you shortly.</p>
+        </div>
+    </div>
+
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -423,7 +488,7 @@
                 "October 2027": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "15-Oct-2027, 10:00 AM", checkOut: "15-Oct-2027, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "8901265432", departure: "14-Oct-2027, 07:38 PM", arrival: "15-Oct-2027, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "8901265433", departure: "15-Oct-2027, 03:55 PM", arrival: "15-Oct-2027, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "8901265434", departure: "15-Oct-2027, 08:15 PM", arrival: "16-Oct-2027, 05:25 AM", ticketUrl: "#" } ] },
                 "November 2027": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "13-Nov-2027, 10:00 AM", checkOut: "13-Nov-2027, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "9012376543", departure: "12-Nov-2027, 07:38 PM", arrival: "13-Nov-2027, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "9012376544", departure: "13-Nov-2027, 03:55 PM", arrival: "13-Nov-2027, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "9012376545", departure: "13-Nov-2027, 08:15 PM", arrival: "14-Nov-2027, 05:25 AM", ticketUrl: "#" } ] },
                 "December 2027": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "13-Dec-2027, 10:00 AM", checkOut: "13-Dec-2027, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "1234587654", departure: "12-Dec-2027, 07:38 PM", arrival: "13-Dec-2027, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "1234587655", departure: "13-Dec-2027, 03:55 PM", arrival: "13-Dec-2027, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "1234587656", departure: "13-Dec-2027, 08:15 PM", arrival: "14-Dec-2027, 05:25 AM", ticketUrl: "#" } ] }
-                 // --- COMMENT KHATAM ---
+                // --- COMMENT KHATAM ---
                 */
             };
             
