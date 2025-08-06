@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jay Dwarkadhish - Poonam Schedule - Views Bookings.</title>
+    <title>Jay Dwarkadhish - Poonam Schedule - Views Bookings</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Teko:wght@400;600&family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
     <style>
@@ -138,7 +138,7 @@
             border-left: 4px solid #facc15; /* amber-400 */
         }
         
-        /* NEW: Highlight for current month card */
+        /* Highlight for current month card */
         .active-month-glow {
             transform: scale(1.03);
             animation: pulse-glow 3s infinite ease-in-out;
@@ -292,10 +292,10 @@
                 </a>
             </div>
 
-            <form id="contact-form" class="space-y-4">
-                <input type="text" id="contact-name" placeholder="Your Name" class="w-full px-4 py-2 bg-slate-800/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-sky-500" required>
-                <input type="email" id="contact-email" placeholder="Your Email" class="w-full px-4 py-2 bg-slate-800/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-sky-500" required>
-                <textarea id="contact-message" placeholder="Your Suggestion..." rows="4" class="w-full px-4 py-2 bg-slate-800/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-sky-500" required></textarea>
+            <form id="contact-form" action="https://formspree.io/f/xovlkbqr" method="POST" class="space-y-4">
+                <input type="text" name="name" id="contact-name" placeholder="Your Name" class="w-full px-4 py-2 bg-slate-800/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-sky-500" required>
+                <input type="email" name="email" id="contact-email" placeholder="Your Email" class="w-full px-4 py-2 bg-slate-800/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-sky-500" required>
+                <textarea name="message" id="contact-message" placeholder="Your Suggestion..." rows="4" class="w-full px-4 py-2 bg-slate-800/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-sky-500" required></textarea>
                 <button type="submit" class="w-full p-3 rounded-lg bg-gradient-to-r from-sky-500 to-indigo-500 text-center font-semibold text-white transition-all duration-300 hover:shadow-xl transform hover:scale-105">Send Suggestion</button>
             </form>
              <p id="form-success-message" class="text-green-400 h-6 mt-2 text-sm text-center"></p>
@@ -389,10 +389,10 @@
         document.addEventListener('DOMContentLoaded', function() {
             // --- DATA STRUCTURE ---
             const journeyData = {
-// --- 2025 DATA ---
+                // --- 2025 DATA ---
                 "August 2025": { yatri: [{name:"Hardeep Savani",to:{coach:"S3",seat:"22 UPPER"},from:{coach:"S5",seat:"28 LOWER"}},{name:"Nilesh Savani",to:{coach:"S3",seat:"21 MIDDLE"},from:{coach:"S5",seat:"32 SIDE UPPER"}}], stay: { name: "No Stay At This Time", checkIn: "09-Aug-2025, 02:00 PM", checkOut: "09-Aug-2025, 07:41 PM", ticketUrl: "#" }, expenses: { train: 1675.40, stay: 0, food: 0, total: 1675.40 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "SAURASHTRA MAIL", trainNo: "#22945", pnr: "8334056450", departure: "09-Aug-2025, 01:07 AM", arrival: "09-Aug-2025, 01:10 PM", ticketUrl: "https://hookstar1993.github.io/dwarka/tickets2025/08-2025/ST-DWRK_09-Aug-2025_-_SAURASHTRA_MAIL_(22945)_-_PNR-8334056450_Seat-S3-21-22.pdf" }, { from: "Dwarka", to: "Surat", trainName: "Okha BSP SF Express", trainNo: "#22939", pnr: "8434098659", departure: "09-Aug-2025, 07:41 PM", arrival: "10-Aug-2025, 08:01 AM", ticketUrl: "https://hookstar1993.github.io/dwarka/tickets2025/08-2025/DWRK-ST_09-Aug-2025_-_OKHA_BSP_SF_EXP_(22939)_-_PNR-8434098659_Seat-S5-28-32.pdf" } ] },
                 "September 2025": { yatri: [{name:"Hardeep Savani",to:{coach:"S3",seat:"23 SIDE LOWER"},from:{coach:"S7",seat:"15 SIDE LOWER"}},{name:"Nilesh Savani",to:{coach:"S3",seat:"24 SIDE UPPER"},from:{coach:"S7",seat:"16 SIDE UPPER"}},{name:"Bharat Rathod",to:{coach:"S3",seat:"17 LOWER"},from:{coach:"S7",seat:"9 LOWER"}}], stay: { name: " Dwarka - Gayatri Shantivan", checkIn: "07-Sep-2025, 01:00 PM", checkOut: "08-Sep-2025, 12:00 PM", ticketUrl: "https://hookstar1993.github.io/dwarka/tickets2025/09-2025/101347153_Stay_Confirmation_Gaytri_Shantivan_07-09-2025_to_08-09-2025.pdf" }, expenses: { train: 2426.30, stay: 880.5, food: 0, total: 3306.8 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "SAURASHTRA MAIL", trainNo: "#22945", pnr: "8335174786", departure: "07-Sep-2025, 01:07 AM", arrival: "07-Sep-2025, 01:10 AM", ticketUrl: "https://hookstar1993.github.io/dwarka/tickets2025/09-2025/ST-DWRK_07-Sept-2025_-_SAURASHTRA_MAIL_(22945)_-_PNR-8335174786_Seat-S3-17-23-24.pdf" }, { from: "Dwarka", to: "Surat", trainName: "Okha ERS Express", trainNo: "#16337", pnr: "8335256036", departure: "08-Sep-2025, 07:16 AM", arrival: "08-Sep-2025, 07:24 PM", ticketUrl: "https://hookstar1993.github.io/dwarka/tickets2025/09-2025/DWRK-ST_08-Sept-2025_-_OKHA_ERS_EXP_(16337)_-_PNR-8335256036_Seat-S7-9-15-16.pdf" } ] },
-                "October 2025": { yatri: [{name:"Hardeep Savani",to:{coach:"S4",seat:"42 MIDDLE BIRTH"},from:{coach:"TBD",seat:"TBD"}},{name:"Nilesh Savani",to:{coach:"S4",seat:"48 SIDE UPPER"},from:{coach:"TBD",seat:"TBD"}}], stay: { name: "FOR FRESH ONLY - Swaminarayan Bhakti Dham", checkIn: "06-Oct-2025, 09:00 AM", checkOut: "07-Oct-2025, 11:00 PM", ticketUrl: "#" }, expenses: { train: 862.70, stay: 0, food: 0, total: 0 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "PURI OKHA SF", trainNo: "#20819", pnr: "6156459766", departure: "06-Oct-2025, 07:38 PM (Evening)", arrival: "07-Oct-2025, 09:03 AM (Morning)", ticketUrl: "https://app.box.com/s/dlgrtin14piipfy3jof2w19k4eesf7f8" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "NOT BOOKED", departure: "07-Oct-2025, 03:55 PM", arrival: "07-Oct-2025, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "NOT BOOKED", departure: "07-Oct-2025, 08:15 PM (Evening)", arrival: "08-Oct-2025, 05:25 AM(Morning)", ticketUrl: "#" } ] },
+                "October 2025": { yatri: [{name:"Hardeep Savani",to:{coach:"S4",seat:"42 MIDDLE BIRTH"},from:{coach:"TBD",seat:"TBD"}},{name:"Nilesh Savani",to:{coach:"S4",seat:"48 SIDE UPPER"},from:{coach:"TBD",seat:"TBD"}}], stay: { name: "FOR FRESH ONLY - Swaminarayan Bhakti Dham", checkIn: "06-Oct-2025, 09:00 AM", checkOut: "07-Oct-2025, 11:00 PM", ticketUrl: "#" }, expenses: { train: 862.70, stay: 0, food: 0, total: 862.70 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "PURI OKHA SF", trainNo: "#20819", pnr: "6156459766", departure: "06-Oct-2025, 07:38 PM (Evening)", arrival: "07-Oct-2025, 09:03 AM (Morning)", ticketUrl: "https://hookstar1993.github.io/dwarka/tickets2025/10-2025/ST_DWRK_06_OCT_2025_PURI_OKHA_20819_CS4_S_42_48_066156459766.pdf" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "NOT BOOKED", departure: "07-Oct-2025, 03:55 PM", arrival: "07-Oct-2025, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "NOT BOOKED", departure: "07-Oct-2025, 08:15 PM (Evening)", arrival: "08-Oct-2025, 05:25 AM(Morning)", ticketUrl: "#" } ] },
                 /*
                 // --- COMMENT SHURU: Yahan se comment hatakar aap November 2025 aur aage ke mahino ki details live kar sakte hain. ---
                 "November 2025": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "05-Nov-2025, 10:00 AM", checkOut: "05-Nov-2025, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "3456789012", departure: "04-Nov-2025, 07:38 PM", arrival: "05-Nov-2025, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "3456789013", departure: "05-Nov-2025, 03:55 PM", arrival: "05-Nov-2025, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "3456789014", departure: "05-Nov-2025, 08:15 PM", arrival: "06-Nov-2025, 05:25 AM", ticketUrl: "#" } ] },
@@ -423,8 +423,9 @@
                 "October 2027": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "15-Oct-2027, 10:00 AM", checkOut: "15-Oct-2027, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "8901265432", departure: "14-Oct-2027, 07:38 PM", arrival: "15-Oct-2027, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "8901265433", departure: "15-Oct-2027, 03:55 PM", arrival: "15-Oct-2027, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "8901265434", departure: "15-Oct-2027, 08:15 PM", arrival: "16-Oct-2027, 05:25 AM", ticketUrl: "#" } ] },
                 "November 2027": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "13-Nov-2027, 10:00 AM", checkOut: "13-Nov-2027, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "9012376543", departure: "12-Nov-2027, 07:38 PM", arrival: "13-Nov-2027, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "9012376544", departure: "13-Nov-2027, 03:55 PM", arrival: "13-Nov-2027, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "9012376545", departure: "13-Nov-2027, 08:15 PM", arrival: "14-Nov-2027, 05:25 AM", ticketUrl: "#" } ] },
                 "December 2027": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "13-Dec-2027, 10:00 AM", checkOut: "13-Dec-2027, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "1234587654", departure: "12-Dec-2027, 07:38 PM", arrival: "13-Dec-2027, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "1234587655", departure: "13-Dec-2027, 03:55 PM", arrival: "13-Dec-2027, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "1234587656", departure: "13-Dec-2027, 08:15 PM", arrival: "14-Dec-2027, 05:25 AM", ticketUrl: "#" } ] }
-                */           
-                };
+                 // --- COMMENT KHATAM ---
+                */
+            };
             
             const poonamDates = [
                 { year: 2025, month: 'August', day: 9 }, { year: 2025, month: 'September', day: 7 },
@@ -776,22 +777,31 @@
             paymentModal.addEventListener('click', (e) => { if(e.target === paymentModal) paymentModal.classList.add('hidden'); });
             timingModal.addEventListener('click', (e) => { if(e.target === timingModal) timingModal.classList.add('hidden'); });
             
-            contactForm.addEventListener('submit', function(e) {
+            contactForm.addEventListener('submit', async function(e) {
                 e.preventDefault();
-                const name = document.getElementById('contact-name').value;
-                const email = document.getElementById('contact-email').value;
-                const message = document.getElementById('contact-message').value;
-                const subject = `Suggestion from ${name}`;
-                const body = `Name: ${name}%0D%0AEmail: ${email}%0D%0A%0D%0AMessage:%0D%0A${message}`;
-                const mailtoLink = `mailto:hookstar1993@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-                window.location.href = mailtoLink;
-
-                formSuccessMessage.textContent = "Thank you! Your email client has been opened.";
-                setTimeout(() => {
-                    formSuccessMessage.textContent = "";
-                    contactModal.classList.add('hidden');
-                    contactForm.reset();
-                }, 3000);
+                const form = e.target;
+                const data = new FormData(form);
+                try {
+                    const response = await fetch(form.action, {
+                        method: form.method,
+                        body: data,
+                        headers: {
+                            'Accept': 'application/json'
+                        }
+                    });
+                    if (response.ok) {
+                        formSuccessMessage.textContent = "Thank you for your message! We will get back to you shortly.";
+                        form.reset();
+                        setTimeout(() => {
+                            formSuccessMessage.textContent = "";
+                            contactModal.classList.add('hidden');
+                        }, 3000);
+                    } else {
+                        formSuccessMessage.textContent = "Oops! There was a problem submitting your form.";
+                    }
+                } catch (error) {
+                    formSuccessMessage.textContent = "Oops! There was a problem submitting your form.";
+                }
             });
 
 
