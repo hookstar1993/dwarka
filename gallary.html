@@ -1,1 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery - Jay Dwarkadhish</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Teko:wght@400;600&family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        /* General body and typography styles from your main page */
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0c0a1a;
+            color: #f0f0f0;
+            overflow-x: hidden;
+        }
+        h1, h2.page-title, #countdown-timer span {
+            font-family: 'Teko', sans-serif;
+            letter-spacing: 0.05em;
+        }
+
+        /* Aurora background and glass effect from your main page */
+        .aurora-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(ellipse at 50% 0%, rgba(56, 189, 248, 0.2) 0%, transparent 70%),
+                        radial-gradient(ellipse at 10% 100%, rgba(168, 85, 247, 0.2) 0%, transparent 70%),
+                        radial-gradient(ellipse at 90% 100%, rgba(236, 72, 153, 0.2) 0%, transparent 70%);
+            animation: animate-aurora 15s linear infinite;
+        }
+        @keyframes animate-aurora {
+            0% { transform: rotate(0deg) scale(1.5); opacity: 0.5; }
+            50% { transform: rotate(180deg) scale(2); opacity: 1; }
+            100% { transform: rotate(360deg) scale(1.5); opacity: 0.5; }
+        }
+        .glass-effect {
+            background: rgba(12, 10, 26, 0.4);
+            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        /* Gallery-specific styles */
+        .gallery-image-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: 0.75rem; /* rounded-lg */
+            transition: transform 0.3s ease-in-out;
+            cursor: pointer;
+        }
+        .gallery-image-container:hover {
+            transform: scale(1.03); /* Slight scale on hover for effect */
+        }
+        .gallery-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: opacity 0.3s ease-in-out;
+        }
+        /* Modal for full-screen image view */
+        .modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .modal-visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .modal-content-img {
+            max-width: 90%;
+            max-height: 90vh;
+            border-radius: 1rem; /* rounded-lg */
+            overflow: hidden;
+            position: relative;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <div class="aurora-background"></div>
+
+    <!-- Header section, copied from your main site but with updated links -->
+    <header class="glass-effect shadow-md sticky top-0 z-40">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="index.html" class="flex items-center text-2xl font-bold tracking-wider text-white" style="text-shadow: 0 0 8px rgba(255,255,255,0.5);">
+                <svg class="w-8 h-8 mr-2 text-amber-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 20h18" /><path d="M7 20L12 5l5 15" /><path d="M12 5V2l5 1.5L12 2" /><path d="M8 20v-3h8v3" />
+                </svg>
+                Jay Dwarkadhish
+            </a>
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="index.html" class="text-gray-300 hover:text-white font-medium transition-colors duration-300">Home</a>
+                <a href="gallery.html" class="text-white font-medium transition-colors duration-300">Gallery</a>
+                <a href="index.html#timing-link" class="text-gray-300 hover:text-white font-medium transition-colors duration-300">Mandir Timing</a>
+                <a href="index.html#about-link" class="text-gray-300 hover:text-white font-medium transition-colors duration-300">About Us</a>
+                <a href="index.html#contact-link" class="text-gray-300 hover:text-white font-medium transition-colors duration-300">Contact</a>
+                <a href="index.html#pay-link" class="bg-green-500/80 hover:bg-green-500/90 text-white font-bold py-2 px-4 rounded-lg transition-all duration-300 transform hover:scale-105">Pay Me Here</a>
+            </div>
+            <button class="md:hidden" id="mobile-menu-button">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+            </button>
+        </nav>
+        <div id="mobile-menu" class="hidden md:hidden px-6 pb-4 glass-effect">
+            <a href="index.html" class="block py-2 text-gray-300 hover:text-white">Home</a>
+            <a href="gallery.html" class="block py-2 text-white">Gallery</a>
+            <a href="index.html#timing-link" class="block py-2 text-gray-300 hover:text-white">Mandir Timing</a>
+            <a href="index.html#about-link" class="block py-2 text-gray-300 hover:text-white">About Us</a>
+            <a href="index.html#contact-link" class="block py-2 text-gray-300 hover:text-white">Contact</a>
+            <a href="index.html#pay-link" class="block py-2 mt-2 text-center bg-green-500/80 hover:bg-green-500/90 text-white font-bold rounded-lg transition-all duration-300">Pay Me Here</a>
+        </div>
+    </header>
+
+    <!-- Main Gallery Content -->
+    <div class="container mx-auto px-6 py-16 flex-grow">
+        <div class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-black text-white leading-tight" style="text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);">🙏 Journey Captured</h1>
+            <p class="text-lg text-gray-400 mt-4 max-w-3xl mx-auto">A visual chronicle of our sacred pilgrimages and memorable moments.</p>
+        </div>
+
+        <!-- Responsive grid for images -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+            <!-- Example image card. Add more by duplicating this block. -->
+            <div class="gallery-image-container glass-effect">
+                <img src="img/001.jpg" alt="Dwarka Yatra Image" class="gallery-image">
+            </div>
+            <div class="gallery-image-container glass-effect">
+                <img src="img/002.jpg" alt="Dwarka Yatra Image" class="gallery-image">
+            </div>
+            <div class="gallery-image-container glass-effect">
+                <img src="img/003.jpg" alt="Dwarka Yatra Image" class="gallery-image">
+            </div>
+            <div class="gallery-image-container glass-effect">
+                <img src="img/004.jpg" alt="Dwarka Yatra Image" class="gallery-image">
+            </div>
+            <div class="gallery-image-container glass-effect">
+                <img src="img/005.jpg" alt="Dwarka Yatra Image" class="gallery-image">
+            </div>
+            <div class="gallery-image-container glass-effect">
+                <img src="img/006.jpg" alt="Dwarka Yatra Image" class="gallery-image">
+            </div>
+            <div class="gallery-image-container glass-effect">
+                <img src="img/007.jpg" alt="Dwarka Yatra Image" class="gallery-image">
+            </div>
+            <div class="gallery-image-container glass-effect">
+                <img src="img/008.jpg" alt="Dwarka Yatra Image" class="gallery-image">
+            </div>
+            <div class="gallery-image-container glass-effect">
+                <img src="img/009.jpg" alt="Dwarka Yatra Image" class="gallery-image">
+            </div>
+            <div class="gallery-image-container glass-effect">
+                <img src="img/010.jpg" alt="Dwarka Yatra Image" class="gallery-image">
+            </div>
+            <div class="gallery-image-container glass-effect">
+                <img src="img/011.jpg" alt="Dwarka Yatra Image" class="gallery-image">
+            </div>
+            <div class="gallery-image-container glass-effect">
+                <img src="img/012.jpg" alt="Dwarka Yatra Image" class="gallery-image">
+            </div>
+        </div>
+    </div>
+    
+    <!-- Image Modal for enlarged view -->
+    <div id="image-modal" class="modal-backdrop hidden">
+        <div class="modal-content-img relative">
+            <!-- Close button for the modal -->
+            <button id="close-image-modal" class="absolute -top-3 -right-3 sm:-top-4 sm:-right-4 bg-red-600 text-white rounded-full h-8 w-8 flex items-center justify-center text-lg font-bold z-50 hover:bg-red-700 transition-all">&times;</button>
+            <!-- The image that will be shown in the modal -->
+            <img id="modal-image" src="" alt="Enlarged Image" class="rounded-lg">
+        </div>
+    </div>
+
+    <!-- Footer, copied from your main site -->
+    <footer class="glass-effect mt-20">
+        <div class="container mx-auto px-6 py-8">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <p class="text-sm text-gray-400 mb-4 md:mb-0">© 2025 Jay Dwarkadhish. All Rights Reserved.</p>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.04C6.5 2.04 2 6.53 2 12.06c0 4.71 3.21 8.65 7.53 9.79v-6.94H7.01v-2.85h2.52V9.82c0-2.5 1.52-3.88 3.78-3.88 1.08 0 2.02.08 2.29.12v2.54h-1.5c-1.21 0-1.45.58-1.45 1.42v1.86h2.83l-.37 2.85h-2.46v6.94C18.79 20.71 22 16.77 22 12.06c0-5.53-4.5-10.02-10-10.02z"/></svg></a>
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M22.46 6c-.77.35-1.6.58-2.46.67.88-.53 1.56-1.37 1.88-2.38-.83.49-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.98-3.56-.18-6.72-1.88-8.84-4.48-.37.63-.58 1.37-.58 2.15 0 1.49.75 2.81 1.91 3.58-.7-.02-1.37-.22-1.95-.55v.05c0 2.08 1.48 3.82 3.44 4.21a4.22 4.22 0 0 1-1.94.07 4.28 4.28 0 0 0 4 2.98 8.521 8.521 0 0 1-5.33 1.84c-.34 0-.68-.02-1.02-.06C3.44 20.29 5.7 21 8.12 21c7.55 0 11.69-6.25 11.69-11.69v-.53c.8-.58 1.48-1.3 2.02-2.12z"/></svg></a>
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8A3.6 3.6 0 0 0 7.6 20h8.8A3.6 3.6 0 0 0 20 16.4V7.6A3.6 3.6 0 0 0 16.4 4H7.6m9.65 1.5a1.25 1.25 0 1 1-2.5 0 1.25 1.25 0 0 1 2.5 0M12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10m0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/></svg></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile menu toggle logic
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            if (mobileMenuButton) {
+                mobileMenuButton.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
+
+            // Image modal functionality
+            const imageModal = document.getElementById('image-modal');
+            const modalImage = document.getElementById('modal-image');
+            const closeModalBtn = document.getElementById('close-image-modal');
+            const galleryImages = document.querySelectorAll('.gallery-image');
+
+            // Open modal when an image is clicked
+            galleryImages.forEach(image => {
+                image.addEventListener('click', () => {
+                    modalImage.src = image.src; // Set the modal's image source to the clicked image
+                    imageModal.classList.remove('hidden');
+                    // We can add a delay to smoothly fade in the modal
+                    setTimeout(() => imageModal.classList.add('modal-visible'), 10);
+                });
+            });
+
+            // Close modal when the close button or backdrop is clicked
+            const closeImageModal = () => {
+                imageModal.classList.remove('modal-visible');
+                setTimeout(() => imageModal.classList.add('hidden'), 300); // Hide after transition
+            };
+            if (closeModalBtn) {
+                closeModalBtn.addEventListener('click', closeImageModal);
+            }
+            if (imageModal) {
+                imageModal.addEventListener('click', (event) => {
+                    if (event.target === imageModal) {
+                        closeImageModal();
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
 
