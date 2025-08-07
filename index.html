@@ -154,6 +154,95 @@
                 border-color: rgba(74, 222, 128, 0.7);
             }
         }
+        
+        /* Success Animation Styles */
+        .success-animation .checkmark {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            display: block;
+            stroke-width: 3;
+            stroke: #4ade80; /* green-400 */
+            stroke-miterlimit: 10;
+            margin: 10% auto;
+            box-shadow: inset 0px 0px 0px #4ade80;
+            animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
+        }
+
+        .success-animation .checkmark__circle {
+            stroke-dasharray: 166;
+            stroke-dashoffset: 166;
+            stroke-width: 3;
+            stroke-miterlimit: 10;
+            stroke: #4ade80;
+            fill: none;
+            animation: stroke .6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+        }
+
+        .success-animation .checkmark__check {
+            transform-origin: 50% 50%;
+            stroke-dasharray: 48;
+            stroke-dashoffset: 48;
+            animation: stroke .3s cubic-bezier(0.65, 0, 0.45, 1) .8s forwards;
+        }
+
+        @keyframes stroke {
+            100% {
+                stroke-dashoffset: 0;
+            }
+        }
+
+        @keyframes scale {
+            0%, 100% {
+                transform: none;
+            }
+            50% {
+                transform: scale3d(1.1, 1.1, 1);
+            }
+        }
+
+        @keyframes fill {
+            100% {
+                box-shadow: inset 0px 0px 0px 50px #4ade80;
+            }
+        }
+        
+        /* New Welcome Popup Animations */
+        .welcome-popup-container {
+            display: none; /* Initially hidden */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .welcome-popup-visible {
+            opacity: 1;
+        }
+
+        .welcome-content {
+            background: rgba(12, 10, 26, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 1.5rem;
+            text-align: center;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+            transform: scale(0.9);
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .welcome-content-visible {
+            transform: scale(1);
+        }
     </style>
 </head>
 <body class="flex flex-col min-h-screen">
@@ -161,7 +250,7 @@
     <div class="aurora-background"></div>
 
     <!-- Password Overlay -->
-    <div id="password-overlay" class="fixed inset-0 z-50 flex items-center justify-center p-4 glass-effect transition-opacity duration-500">
+    <div id="password-overlay" class="fixed inset-0 z-50 flex items-center justify-center p-4 glass-effect transition-opacity duration-500 hidden">
         <div class="w-full max-w-sm text-center">
             <div class="flex items-center justify-center text-3xl font-bold tracking-wider text-white mb-6" style="text-shadow: 0 0 8px rgba(255,255,255,0.5);">
                 <svg class="w-10 h-10 mr-3 text-amber-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -169,7 +258,7 @@
                 </svg>
                 Jay Dwarkadhish
             </div>
-            <p class="text-slate-300 mb-4">Please enter the password to continue</p>
+            <p class="text-slate-300 mb-4">Please enter the password to view bookings</p>
             <form id="password-form">
                 <input type="password" id="password-input" class="w-full px-4 py-3 bg-slate-800/50 border border-slate-600 rounded-lg text-white text-center text-lg tracking-widest focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all" placeholder="******">
                 <p id="error-message" class="text-red-400 h-6 mt-2 text-sm"></p>
@@ -178,16 +267,18 @@
         </div>
     </div>
 
-    <!-- Welcome Popup -->
-    <div id="welcome-popup" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 transition-opacity duration-500 opacity-0 pointer-events-none">
-        <div class="glass-effect rounded-2xl p-8 text-center transform scale-95 transition-transform duration-500">
-             <h2 class="text-4xl sm:text-5xl font-bold text-amber-300 page-title" style="text-shadow: 0 0 15px rgba(251, 191, 36, 0.5);">|| Jay Dwarkadhish ||</h2>
-             <p class="text-slate-300 mt-2">Welcome to the sacred journey!</p>
+    <!-- Welcome Popup - With new writing animation -->
+    <div id="welcome-popup" class="welcome-popup-container">
+        <div class="welcome-content">
+            <h2 class="text-4xl sm:text-5xl font-bold text-amber-300 page-title" style="text-shadow: 0 0 15px rgba(251, 191, 36, 0.5);">Jay Dwarkadhish 🙏</h2>
+            <p id="slogan-text" class="text-slate-300 mt-2 text-xl font-bold min-h-[3rem] flex items-center justify-center">
+                <!-- Slogans will be injected here by JavaScript -->
+            </p>
         </div>
     </div>
 
-    <!-- Main Site Wrapper (Initially Hidden) -->
-    <div id="site-wrapper" class="opacity-0 transition-opacity duration-500">
+    <!-- Main Site Wrapper (Visible by default now) -->
+    <div id="site-wrapper" class="opacity-100 transition-opacity duration-500">
         <header class="glass-effect shadow-md sticky top-0 z-40">
             <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
                 <div class="flex items-center text-2xl font-bold tracking-wider text-white" style="text-shadow: 0 0 8px rgba(255,255,255,0.5);">
@@ -204,7 +295,7 @@
                     <a href="#" id="pay-link" class="bg-green-500/80 hover:bg-green-500/90 text-white font-bold py-2 px-4 rounded-lg transition-all duration-300 transform hover:scale-105">Pay Me Here</a>
                 </div>
                 <button class="md:hidden" id="mobile-menu-button">
-                     <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                       <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
                 </button>
             </nav>
             <div id="mobile-menu" class="hidden md:hidden px-6 pb-4 glass-effect">
@@ -283,11 +374,11 @@
 
             <div class="flex items-center justify-center space-x-6 mb-8">
                 <a href="https://wa.me/919824594156" target="_blank" class="flex items-center space-x-2 text-green-400 hover:text-green-300 transition-colors">
-                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.886-.001 2.269.654 4.542 1.916 6.448l-.29 2.021 2.094-.554z"/></svg>
+                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.894 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.886-.001 2.269.654 4.542 1.916 6.448l-.29 2.021 2.094-.554z"/></svg>
                     <span class="font-semibold">WhatsApp</span>
                 </a>
                 <a href="https://instagram.com/hookstar.fx" target="_blank" class="flex items-center space-x-2 text-pink-400 hover:text-pink-300 transition-colors">
-                     <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8A3.6 3.6 0 0 0 7.6 20h8.8A3.6 3.6 0 0 0 20 16.4V7.6A3.6 3.6 0 0 0 16.4 4H7.6m9.65 1.5a1.25 1.25 0 1 1-2.5 0 1.25 1.25 0 0 1 2.5 0M12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10m0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/></svg>
+                       <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8A3.6 3.6 0 0 0 7.6 20h8.8A3.6 3.6 0 0 0 20 16.4V7.6A3.6 3.6 0 0 0 16.4 4H7.6m9.65 1.5a1.25 1.25 0 1 1-2.5 0 1.25 1.25 0 0 1 2.5 0M12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10m0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/></svg>
                     <span class="font-semibold">Instagram</span>
                 </a>
             </div>
@@ -305,7 +396,7 @@
     <div id="payment-modal" class="modal-backdrop hidden">
         <div class="modal-content glass-effect p-6 sm:p-8 relative flex flex-col rounded-2xl">
             <button id="close-payment-modal" class="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors text-3xl">&times;</button>
-             <div class="text-center">
+               <div class="text-center">
                 <h1 class="text-2xl sm:text-3xl font-bold text-high-contrast tracking-tight">Make a Secure Payment</h1>
                 <p class="text-gray-300 mt-2 text-high-contrast text-sm sm:text-base">Choose your preferred payment method below.</p>
             </div>
@@ -337,13 +428,13 @@
             </div>
             
             <div class="space-y-4 mt-6">
-                 <h2 class="text-lg font-semibold text-cyan-300 text-high-contrast">3. Pay with UPI ID</h2>
-                 <div class="glass-effect p-4 rounded-lg flex justify-between items-center">
-                     <span id="upiId" class="font-medium text-high-contrast text-sm sm:text-base break-all">9824594156@okbizaxis</span>
-                     <button onclick="copyToClipboard('upiId', this)" title="Copy UPI ID" class="p-2 rounded-lg transition-all duration-200 bg-white/10 hover:bg-white/20 flex-shrink-0 ml-3">
-                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" viewBox="0 0 20 20" fill="currentColor"><path d="M7 9a2 2 0 012-2h6a2 2 0 012 2v6a2 2 0 01-2 2H9a2 2 0 01-2-2V9z" /><path d="M5 3a2 2 0 00-2 2v6a2 2 0 002 2V5h6a2 2 0 00-2-2H5z" /></svg>
-                     </button>
-                 </div>
+                <h2 class="text-lg font-semibold text-cyan-300 text-high-contrast">3. Pay with UPI ID</h2>
+                <div class="glass-effect p-4 rounded-lg flex justify-between items-center">
+                    <span id="upiId" class="font-medium text-high-contrast text-sm sm:text-base break-all">9824594156@okbizaxis</span>
+                    <button onclick="copyToClipboard('upiId', this)" title="Copy UPI ID" class="p-2 rounded-lg transition-all duration-200 bg-white/10 hover:bg-white/20 flex-shrink-0 ml-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" viewBox="0 0 20 20" fill="currentColor"><path d="M7 9a2 2 0 012-2h6a2 2 0 012 2v6a2 2 0 01-2 2H9a2 2 0 01-2-2V9z" /><path d="M5 3a2 2 0 00-2 2v6a2 2 0 002 2V5h6a2 2 0 00-2-2H5z" /></svg>
+                    </button>
+                </div>
             </div>
             
             <div class="space-y-4 mt-6">
@@ -396,363 +487,525 @@
 
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // --- DATA STRUCTURE ---
-            const journeyData = {
-                // --- 2025 DATA ---
-                "August 2025": { yatri: [{name:"Hardeep Savani",to:{coach:"S3",seat:"22 UPPER"},from:{coach:"S5",seat:"28 LOWER"}},{name:"Nilesh Savani",to:{coach:"S3",seat:"21 MIDDLE"},from:{coach:"S5",seat:"32 SIDE UPPER"}}], stay: { name: "No Stay At This Time", checkIn: "09-Aug-2025, 02:00 PM", checkOut: "09-Aug-2025, 07:41 PM", ticketUrl: "#" }, expenses: { train: 1675.40, stay: 0, food: 0, total: 1675.40 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "SAURASHTRA MAIL", trainNo: "#22945", pnr: "8334056450", departure: "09-Aug-2025, 01:07 AM", arrival: "09-Aug-2025, 01:10 PM", ticketUrl: "https://hookstar1993.github.io/dwarka/tickets2025/08-2025/ST-DWRK_09-Aug-2025_-_SAURASHTRA_MAIL_(22945)_-_PNR-8334056450_Seat-S3-21-22.pdf" }, { from: "Dwarka", to: "Surat", trainName: "Okha BSP SF Express", trainNo: "#22939", pnr: "8434098659", departure: "09-Aug-2025, 07:41 PM", arrival: "10-Aug-2025, 08:01 AM", ticketUrl: "https://hookstar1993.github.io/dwarka/tickets2025/08-2025/DWRK-ST_09-Aug-2025_-_OKHA_BSP_SF_EXP_(22939)_-_PNR-8434098659_Seat-S5-28-32.pdf" } ] },
-                "September 2025": { yatri: [{name:"Hardeep Savani",to:{coach:"S3",seat:"23 SIDE LOWER"},from:{coach:"S7",seat:"15 SIDE LOWER"}},{name:"Nilesh Savani",to:{coach:"S3",seat:"24 SIDE UPPER"},from:{coach:"S7",seat:"16 SIDE UPPER"}},{name:"Bharat Rathod",to:{coach:"S3",seat:"17 LOWER"},from:{coach:"S7",seat:"9 LOWER"}}], stay: { name: " Dwarka - Gayatri Shantivan", checkIn: "07-Sep-2025, 01:00 PM", checkOut: "08-Sep-2025, 12:00 PM", ticketUrl: "https://hookstar1993.github.io/dwarka/tickets2025/09-2025/101347153_Stay_Confirmation_Gaytri_Shantivan_07-09-2025_to_08-09-2025.pdf" }, expenses: { train: 2426.30, stay: 880.5, food: 0, total: 3306.8 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "SAURASHTRA MAIL", trainNo: "#22945", pnr: "8335174786", departure: "07-Sep-2025, 01:07 AM", arrival: "07-Sep-2025, 01:10 AM", ticketUrl: "https://hookstar1993.github.io/dwarka/tickets2025/09-2025/ST-DWRK_07-Sept-2025_-_SAURASHTRA_MAIL_(22945)_-_PNR-8335174786_Seat-S3-17-23-24.pdf" }, { from: "Dwarka", to: "Surat", trainName: "Okha ERS Express", trainNo: "#16337", pnr: "8335256036", departure: "08-Sep-2025, 07:16 AM", arrival: "08-Sep-2025, 07:24 PM", ticketUrl: "https://hookstar1993.github.io/dwarka/tickets2025/09-2025/DWRK-ST_08-Sept-2025_-_OKHA_ERS_EXP_(16337)_-_PNR-8335256036_Seat-S7-9-15-16.pdf" } ] },
-                "October 2025": { yatri: [{name:"Hardeep Savani",to:{coach:"S4",seat:"42 MIDDLE BIRTH"},from:{coach:"TBD",seat:"TBD"}},{name:"Nilesh Savani",to:{coach:"S4",seat:"48 SIDE UPPER"},from:{coach:"TBD",seat:"TBD"}}], stay: { name: "FOR FRESH ONLY - Swaminarayan Bhakti Dham", checkIn: "06-Oct-2025, 09:00 AM", checkOut: "07-Oct-2025, 11:00 PM", ticketUrl: "#" }, expenses: { train: 862.70, stay: 0, food: 0, total: 862.70 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "PURI OKHA SF", trainNo: "#20819", pnr: "6156459766", departure: "06-Oct-2025, 07:38 PM (Evening)", arrival: "07-Oct-2025, 09:03 AM (Morning)", ticketUrl: "https://hookstar1993.github.io/dwarka/tickets2025/10-2025/SURAT_DWARKA_06_OCT_2025_PURI_OKHA_20819_Coach-S4_Seat_42_48_PNR-066156459766.pdf" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "NOT BOOKED", departure: "07-Oct-2025, 03:55 PM", arrival: "07-Oct-2025, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "NOT BOOKED", departure: "07-Oct-2025, 08:15 PM (Evening)", arrival: "08-Oct-2025, 05:25 AM(Morning)", ticketUrl: "#" } ] },
-                /*
-                // --- COMMENT SHURU: Yahan se comment hatakar aap November 2025 aur aage ke mahino ki details live kar sakte hain. ---
-                "November 2025": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "05-Nov-2025, 10:00 AM", checkOut: "05-Nov-2025, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "3456789012", departure: "04-Nov-2025, 07:38 PM", arrival: "05-Nov-2025, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "3456789013", departure: "05-Nov-2025, 03:55 PM", arrival: "05-Nov-2025, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "3456789014", departure: "05-Nov-2025, 08:15 PM", arrival: "06-Nov-2025, 05:25 AM", ticketUrl: "#" } ] },
-                "December 2025": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "05-Dec-2025, 10:00 AM", checkOut: "05-Dec-2025, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "4567890123", departure: "04-Dec-2025, 07:38 PM", arrival: "05-Dec-2025, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "4567890124", departure: "05-Dec-2025, 03:55 PM", arrival: "05-Dec-2025, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "4567890125", departure: "05-Dec-2025, 08:15 PM", arrival: "06-Dec-2025, 05:25 AM", ticketUrl: "#" } ] },
-                // --- 2026 DATA ---
-                "January 2026": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "03-Jan-2026, 10:00 AM", checkOut: "03-Jan-2026, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "5678901234", departure: "02-Jan-2026, 07:38 PM", arrival: "03-Jan-2026, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "5678901235", departure: "03-Jan-2026, 03:55 PM", arrival: "03-Jan-2026, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "5678901236", departure: "03-Jan-2026, 08:15 PM", arrival: "04-Jan-2026, 05:25 AM", ticketUrl: "#" } ] },
-                "February 2026": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "02-Feb-2026, 10:00 AM", checkOut: "02-Feb-2026, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "6789012345", departure: "01-Feb-2026, 07:38 PM", arrival: "02-Feb-2026, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "6789012346", departure: "02-Feb-2026, 03:55 PM", arrival: "02-Feb-2026, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "6789012347", departure: "02-Feb-2026, 08:15 PM", arrival: "03-Feb-2026, 05:25 AM", ticketUrl: "#" } ] },
-                "March 2026": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "03-Mar-2026, 10:00 AM", checkOut: "03-Mar-2026, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "7890123456", departure: "02-Mar-2026, 07:38 PM", arrival: "03-Mar-2026, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "7890123457", departure: "03-Mar-2026, 03:55 PM", arrival: "03-Mar-2026, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "7890123458", departure: "03-Mar-2026, 08:15 PM", arrival: "04-Mar-2026, 05:25 AM", ticketUrl: "#" } ] },
-                "April 2026": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "02-Apr-2026, 10:00 AM", checkOut: "02-Apr-2026, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "8901234567", departure: "01-Apr-2026, 07:38 PM", arrival: "02-Apr-2026, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "8901234568", departure: "02-Apr-2026, 03:55 PM", arrival: "02-Apr-2026, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "8901234569", departure: "02-Apr-2026, 08:15 PM", arrival: "03-Apr-2026, 05:25 AM", ticketUrl: "#" } ] },
-                "May 2026": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "01-May-2026, 10:00 AM", checkOut: "01-May-2026, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "9012345678", departure: "30-Apr-2026, 07:38 PM", arrival: "01-May-2026, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "9012345679", departure: "01-May-2026, 03:55 PM", arrival: "01-May-2026, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "9012345680", departure: "01-May-2026, 08:15 PM", arrival: "02-May-2026, 05:25 AM", ticketUrl: "#" } ] },
-                "June 2026": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "30-Jun-2026, 10:00 AM", checkOut: "30-Jun-2026, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "1234509876", departure: "29-Jun-2026, 07:38 PM", arrival: "30-Jun-2026, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "1234509877", departure: "30-Jun-2026, 03:55 PM", arrival: "30-Jun-2026, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "1234509878", departure: "30-Jun-2026, 08:15 PM", arrival: "01-Jul-2026, 05:25 AM", ticketUrl: "#" } ] },
-                "July 2026": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "29-Jul-2026, 10:00 AM", checkOut: "29-Jul-2026, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "2345610987", departure: "28-Jul-2026, 07:38 PM", arrival: "29-Jul-2026, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "2345610988", departure: "29-Jul-2026, 03:55 PM", arrival: "29-Jul-2026, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "2345610989", departure: "29-Jul-2026, 08:15 PM", arrival: "30-Jul-2026, 05:25 AM", ticketUrl: "#" } ] },
-                "August 2026": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "28-Aug-2026, 10:00 AM", checkOut: "28-Aug-2026, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "3456721098", departure: "27-Aug-2026, 07:38 PM", arrival: "28-Aug-2026, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "3456721099", departure: "28-Aug-2026, 03:55 PM", arrival: "28-Aug-2026, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "3456721100", departure: "28-Aug-2026, 08:15 PM", arrival: "29-Aug-2026, 05:25 AM", ticketUrl: "#" } ] },
-                "September 2026": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "26-Sep-2026, 10:00 AM", checkOut: "26-Sep-2026, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "4567832109", departure: "25-Sep-2026, 07:38 PM", arrival: "26-Sep-2026, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "4567832110", departure: "26-Sep-2026, 03:55 PM", arrival: "26-Sep-2026, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "4567832111", departure: "26-Sep-2026, 08:15 PM", arrival: "27-Sep-2026, 05:25 AM", ticketUrl: "#" } ] },
-                "October 2026": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "26-Oct-2026, 10:00 AM", checkOut: "26-Oct-2026, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "5678943210", departure: "25-Oct-2026, 07:38 PM", arrival: "26-Oct-2026, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "5678943211", departure: "26-Oct-2026, 03:55 PM", arrival: "26-Oct-2026, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "5678943212", departure: "26-Oct-2026, 08:15 PM", arrival: "27-Oct-2026, 05:25 AM", ticketUrl: "#" } ] },
-                "November 2026": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "24-Nov-2026, 10:00 AM", checkOut: "24-Nov-2026, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "6789054321", departure: "23-Nov-2026, 07:38 PM", arrival: "24-Nov-2026, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "6789054322", departure: "24-Nov-2026, 03:55 PM", arrival: "24-Nov-2026, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "6789054323", departure: "24-Nov-2026, 08:15 PM", arrival: "25-Nov-2026, 05:25 AM", ticketUrl: "#" } ] },
-                "December 2026": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "24-Dec-2026, 10:00 AM", checkOut: "24-Dec-2026, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "7890165432", departure: "23-Dec-2026, 07:38 PM", arrival: "24-Dec-2026, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "7890165433", departure: "24-Dec-2026, 03:55 PM", arrival: "24-Dec-2026, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "7890165434", departure: "24-Dec-2026, 08:15 PM", arrival: "25-Dec-2026, 05:25 AM", ticketUrl: "#" } ] },
-                // --- 2027 DATA ---
-                "January 2027": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "22-Jan-2027, 10:00 AM", checkOut: "22-Jan-2027, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "8901276543", departure: "21-Jan-2027, 07:38 PM", arrival: "22-Jan-2027, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "8901276544", departure: "22-Jan-2027, 03:55 PM", arrival: "22-Jan-2027, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "8901276545", departure: "22-Jan-2027, 08:15 PM", arrival: "23-Jan-2027, 05:25 AM", ticketUrl: "#" } ] },
-                "February 2027": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "21-Feb-2027, 10:00 AM", checkOut: "21-Feb-2027, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "9012387654", departure: "20-Feb-2027, 07:38 PM", arrival: "21-Feb-2027, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "9012387655", departure: "21-Feb-2027, 03:55 PM", arrival: "21-Feb-2027, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "9012387656", departure: "21-Feb-2027, 08:15 PM", arrival: "22-Feb-2027, 05:25 AM", ticketUrl: "#" } ] },
-                "March 2027": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "22-Mar-2027, 10:00 AM", checkOut: "22-Mar-2027, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "1234598765", departure: "21-Mar-2027, 07:38 PM", arrival: "22-Mar-2027, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "1234598766", departure: "22-Mar-2027, 03:55 PM", arrival: "22-Mar-2027, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "1234598767", departure: "22-Mar-2027, 08:15 PM", arrival: "23-Mar-2027, 05:25 AM", ticketUrl: "#" } ] },
-                "April 2027": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "21-Apr-2027, 10:00 AM", checkOut: "21-Apr-2027, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "2345609876", departure: "20-Apr-2027, 07:38 PM", arrival: "21-Apr-2027, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "2345609877", departure: "21-Apr-2027, 03:55 PM", arrival: "21-Apr-2027, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "2345609878", departure: "21-Apr-2027, 08:15 PM", arrival: "22-Apr-2027, 05:25 AM", ticketUrl: "#" } ] },
-                "May 2027": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "20-May-2027, 10:00 AM", checkOut: "20-May-2027, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "3456710987", departure: "19-May-2027, 07:38 PM", arrival: "20-May-2027, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "3456710988", departure: "20-May-2027, 03:55 PM", arrival: "20-May-2027, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "3456710989", departure: "20-May-2027, 08:15 PM", arrival: "21-May-2027, 05:25 AM", ticketUrl: "#" } ] },
-                "June 2027": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "19-Jun-2027, 10:00 AM", checkOut: "19-Jun-2027, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "4567821098", departure: "18-Jun-2027, 07:38 PM", arrival: "19-Jun-2027, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "4567821099", departure: "19-Jun-2027, 03:55 PM", arrival: "19-Jun-2027, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "4567821100", departure: "19-Jun-2027, 08:15 PM", arrival: "20-Jun-2027, 05:25 AM", ticketUrl: "#" } ] },
-                "July 2027": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "18-Jul-2027, 10:00 AM", checkOut: "18-Jul-2027, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "5678932109", departure: "17-Jul-2027, 07:38 PM", arrival: "18-Jul-2027, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "5678932110", departure: "18-Jul-2027, 03:55 PM", arrival: "18-Jul-2027, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "5678932111", departure: "18-Jul-2027, 08:15 PM", arrival: "19-Jul-2027, 05:25 AM", ticketUrl: "#" } ] },
-                "August 2027": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "17-Aug-2027, 10:00 AM", checkOut: "17-Aug-2027, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "6789043210", departure: "16-Aug-2027, 07:38 PM", arrival: "17-Aug-2027, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "6789043211", departure: "17-Aug-2027, 03:55 PM", arrival: "17-Aug-2027, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "6789043212", departure: "17-Aug-2027, 08:15 PM", arrival: "18-Aug-2027, 05:25 AM", ticketUrl: "#" } ] },
-                "September 2027": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "15-Sep-2027, 10:00 AM", checkOut: "15-Sep-2027, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "7890154321", departure: "14-Sep-2027, 07:38 PM", arrival: "15-Sep-2027, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "7890154322", departure: "15-Sep-2027, 03:55 PM", arrival: "15-Sep-2027, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "7890154323", departure: "15-Sep-2027, 08:15 PM", arrival: "16-Sep-2027, 05:25 AM", ticketUrl: "#" } ] },
-                "October 2027": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "15-Oct-2027, 10:00 AM", checkOut: "15-Oct-2027, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "8901265432", departure: "14-Oct-2027, 07:38 PM", arrival: "15-Oct-2027, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "8901265433", departure: "15-Oct-2027, 03:55 PM", arrival: "15-Oct-2027, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "8901265434", departure: "15-Oct-2027, 08:15 PM", arrival: "16-Oct-2027, 05:25 AM", ticketUrl: "#" } ] },
-                "November 2027": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "13-Nov-2027, 10:00 AM", checkOut: "13-Nov-2027, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "9012376543", departure: "12-Nov-2027, 07:38 PM", arrival: "13-Nov-2027, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "9012376544", departure: "13-Nov-2027, 03:55 PM", arrival: "13-Nov-2027, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "9012376545", departure: "13-Nov-2027, 08:15 PM", arrival: "14-Nov-2027, 05:25 AM", ticketUrl: "#" } ] },
-                "December 2027": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "13-Dec-2027, 10:00 AM", checkOut: "13-Dec-2027, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "1234587654", departure: "12-Dec-2027, 07:38 PM", arrival: "13-Dec-2027, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "1234587655", departure: "13-Dec-2027, 03:55 PM", arrival: "13-Dec-2027, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "1234587656", departure: "13-Dec-2027, 08:15 PM", arrival: "14-Dec-2027, 05:25 AM", ticketUrl: "#" } ] }
-                // --- COMMENT KHATAM ---
-                */
-            };
+        // --- The password for accessing booking details. It's best practice to keep this secure. ---
+        const bookingPassword = 'dwarkadhish';
+
+        // --- DATA STRUCTURE ---
+        const journeyData = {
+            // --- 2025 DATA ---
+            "August 2025": { yatri: [{name:"Hardeep Savani",to:{coach:"S3",seat:"22 UPPER"},from:{coach:"S5",seat:"28 LOWER"}},{name:"Nilesh Savani",to:{coach:"S3",seat:"21 MIDDLE"},from:{coach:"S5",seat:"32 SIDE UPPER"}}], stay: { name: "No Stay At This Time", checkIn: "09-Aug-2025, 02:00 PM", checkOut: "09-Aug-2025, 07:41 PM", ticketUrl: "#" }, expenses: { train: 1675.40, stay: 0, food: 0, total: 1675.40 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "SAURASHTRA MAIL", trainNo: "#22945", pnr: "8334056450", departure: "09-Aug-2025, 01:07 AM", arrival: "09-Aug-2025, 01:10 PM", ticketUrl: "https://hookstar1993.github.io/dwarka/tickets2025/08-2025/ST-DWRK_09-Aug-2025_-_SAURASHTRA_MAIL_(22945)_-_PNR-8334056450_Seat-S3-21-22.pdf" }, { from: "Dwarka", to: "Surat", trainName: "Okha BSP SF Express", trainNo: "#22939", pnr: "8434098659", departure: "09-Aug-2025, 07:41 PM", arrival: "10-Aug-2025, 08:01 AM", ticketUrl: "https://hookstar1993.github.io/dwarka/tickets2025/08-2025/DWRK-ST_09-Aug-2025_-_OKHA_BSP_SF_EXP_(22939)_-_PNR-8434098659_Seat-S5-28-32.pdf" } ] },
+            "September 2025": { yatri: [{name:"Hardeep Savani",to:{coach:"S3",seat:"23 SIDE LOWER"},from:{coach:"S7",seat:"15 SIDE LOWER"}},{name:"Nilesh Savani",to:{coach:"S3",seat:"24 SIDE UPPER"},from:{coach:"S7",seat:"16 SIDE UPPER"}},{name:"Bharat Rathod",to:{coach:"S3",seat:"17 LOWER"},from:{coach:"S7",seat:"9 LOWER"}}], stay: { name: " Dwarka - Gayatri Shantivan", checkIn: "07-Sep-2025, 01:00 PM", checkOut: "08-Sep-2025, 12:00 PM", ticketUrl: "https://hookstar1993.github.io/dwarka/tickets2025/09-2025/101347153_Stay_Confirmation_Gaytri_Shantivan_07-09-2025_to_08-09-2025.pdf" }, expenses: { train: 2426.30, stay: 880.5, food: 0, total: 3306.8 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "SAURASHTRA MAIL", trainNo: "#22945", pnr: "8335174786", departure: "07-Sep-2025, 01:07 AM", arrival: "07-Sep-2025, 01:10 AM", ticketUrl: "https://hookstar1993.github.io/dwarka/tickets2025/09-2025/ST-DWRK_07-Sept-2025_-_SAURASHTRA_MAIL_(22945)_-_PNR-8335174786_Seat-S3-17-23-24.pdf" }, { from: "Dwarka", to: "Surat", trainName: "Okha ERS Express", trainNo: "#16337", pnr: "8335256036", departure: "08-Sep-2025, 07:16 AM", arrival: "08-Sep-2025, 07:24 PM", ticketUrl: "https://hookstar1993.github.io/dwarka/tickets2025/09-2025/DWRK-ST_08-Sept-2025_-_OKHA_ERS_EXP_(16337)_-_PNR-8335256036_Seat-S7-9-15-16.pdf" } ] },
+            "October 2025": { yatri: [{name:"Hardeep Savani",to:{coach:"S4",seat:"42 MIDDLE BIRTH"},from:{coach:"TBD",seat:"TBD"}},{name:"Nilesh Savani",to:{coach:"S4",seat:"48 SIDE UPPER"},from:{coach:"TBD",seat:"TBD"}}], stay: { name: "FOR FRESH ONLY - Swaminarayan Bhakti Dham", checkIn: "06-Oct-2025, 09:00 AM", checkOut: "07-Oct-2025, 11:00 PM", ticketUrl: "#" }, expenses: { train: 862.70, stay: 0, food: 0, total: 862.70 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "PURI OKHA SF", trainNo: "#20819", pnr: "6156459766", departure: "06-Oct-2025, 07:38 PM (Evening)", arrival: "07-Oct-2025, 09:03 AM (Morning)", ticketUrl: "https://hookstar1993.github.io/dwarka/tickets2025/10-2025/ST_DWRK_06_OCT_2025_PURI_OKHA_20819_CS4_S_42_48_066156459766.pdf" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "NOT BOOKED", departure: "07-Oct-2025, 03:55 PM", arrival: "07-Oct-2025, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "NOT BOOKED", departure: "07-Oct-2025, 08:15 PM (Evening)", arrival: "08-Oct-2025, 05:25 AM(Morning)", ticketUrl: "#" } ] },
+            /*
+            // --- COMMENT SHURU: Yahan se comment hatakar aap November 2025 aur aage ke mahino ki details live kar sakte hain. ---
+            "November 2025": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "05-Nov-2025, 10:00 AM", checkOut: "05-Nov-2025, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "3456789012", departure: "04-Nov-2025, 07:38 PM", arrival: "05-Nov-2025, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "3456789013", departure: "05-Nov-2025, 03:55 PM", arrival: "05-Nov-2025, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "3456789014", departure: "05-Nov-2025, 08:15 PM", arrival: "06-Nov-2025, 05:25 AM", ticketUrl: "#" } ] },
+            "December 2025": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "05-Dec-2025, 10:00 AM", checkOut: "05-Dec-2025, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "4567890123", departure: "04-Dec-2025, 07:38 PM", arrival: "05-Dec-2025, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "4567890124", departure: "05-Dec-2025, 03:55 PM", arrival: "05-Dec-2025, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "4567890125", departure: "05-Dec-2025, 08:15 PM", arrival: "06-Dec-2025, 05:25 AM", ticketUrl: "#" } ] },
+            // --- 2026 DATA ---
+            "January 2026": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "03-Jan-2026, 10:00 AM", checkOut: "03-Jan-2026, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "5678901234", departure: "02-Jan-2026, 07:38 PM", arrival: "03-Jan-2026, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "5678901235", departure: "03-Jan-2026, 03:55 PM", arrival: "03-Jan-2026, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "5678901236", departure: "03-Jan-2026, 08:15 PM", arrival: "04-Jan-2026, 05:25 AM", ticketUrl: "#" } ] },
+            "February 2026": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "02-Feb-2026, 10:00 AM", checkOut: "02-Feb-2026, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "6789012345", departure: "01-Feb-2026, 07:38 PM", arrival: "02-Feb-2026, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "6789012346", departure: "02-Feb-2026, 03:55 PM", arrival: "02-Feb-2026, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "6789012347", departure: "02-Feb-2026, 08:15 PM", arrival: "03-Feb-2026, 05:25 AM", ticketUrl: "#" } ] },
+            "March 2026": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "03-Mar-2026, 10:00 AM", checkOut: "03-Mar-2026, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "7890123456", departure: "02-Mar-2026, 07:38 PM", arrival: "03-Mar-2026, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "7890123457", departure: "03-Mar-2026, 03:55 PM", arrival: "03-Mar-2026, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "7890123458", departure: "03-Mar-2026, 08:15 PM", arrival: "04-Mar-2026, 05:25 AM", ticketUrl: "#" } ] },
+            "April 2026": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "02-Apr-2026, 10:00 AM", checkOut: "02-Apr-2026, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "8901234567", departure: "01-Apr-2026, 07:38 PM", arrival: "02-Apr-2026, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "8901234568", departure: "02-Apr-2026, 03:55 PM", arrival: "02-Apr-2026, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "8901234569", departure: "02-Apr-2026, 08:15 PM", arrival: "03-Apr-2026, 05:25 AM", ticketUrl: "#" } ] },
+            "May 2026": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "01-May-2026, 10:00 AM", checkOut: "01-May-2026, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "9012345678", departure: "30-Apr-2026, 07:38 PM", arrival: "01-May-2026, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "9012345679", departure: "01-May-2026, 03:55 PM", arrival: "01-May-2026, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "9012345680", departure: "01-May-2026, 08:15 PM", arrival: "02-May-2026, 05:25 AM", ticketUrl: "#" } ] },
+            "June 2026": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "30-Jun-2026, 10:00 AM", checkOut: "30-Jun-2026, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "1234509876", departure: "29-Jun-2026, 07:38 PM", arrival: "30-Jun-2026, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "1234509877", departure: "30-Jun-2026, 03:55 PM", arrival: "30-Jun-2026, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "1234509878", departure: "30-Jun-2026, 08:15 PM", arrival: "01-Jul-2026, 05:25 AM", ticketUrl: "#" } ] },
+            "July 2026": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "29-Jul-2026, 10:00 AM", checkOut: "29-Jul-2026, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "2345610987", departure: "28-Jul-2026, 07:38 PM", arrival: "29-Jul-2026, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "2345610988", departure: "29-Jul-2026, 03:55 PM", arrival: "29-Jul-2026, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "2345610989", departure: "29-Jul-2026, 08:15 PM", arrival: "30-Jul-2026, 05:25 AM", ticketUrl: "#" } ] },
+            "August 2026": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "28-Aug-2026, 10:00 AM", checkOut: "28-Aug-2026, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "3456721098", departure: "27-Aug-2026, 07:38 PM", arrival: "28-Aug-2026, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "3456721099", departure: "28-Aug-2026, 03:55 PM", arrival: "28-Aug-2026, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "3456721100", departure: "28-Aug-2026, 08:15 PM", arrival: "29-Aug-2026, 05:25 AM", ticketUrl: "#" } ] },
+            "September 2026": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "26-Sep-2026, 10:00 AM", checkOut: "26-Sep-2026, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "4567832109", departure: "25-Sep-2026, 07:38 PM", arrival: "26-Sep-2026, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "4567832110", departure: "26-Sep-2026, 03:55 PM", arrival: "26-Sep-2026, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "4567832111", departure: "26-Sep-2026, 08:15 PM", arrival: "27-Sep-2026, 05:25 AM", ticketUrl: "#" } ] },
+            "October 2026": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "26-Oct-2026, 10:00 AM", checkOut: "26-Oct-2026, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "5678943210", departure: "25-Oct-2026, 07:38 PM", arrival: "26-Oct-2026, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "5678943211", departure: "26-Oct-2026, 03:55 PM", arrival: "26-Oct-2026, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "5678943212", departure: "26-Oct-2026, 08:15 PM", arrival: "27-Oct-2026, 05:25 AM", ticketUrl: "#" } ] },
+            "November 2026": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "24-Nov-2026, 10:00 AM", checkOut: "24-Nov-2026, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "6789054321", departure: "23-Nov-2026, 07:38 PM", arrival: "24-Nov-2026, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "6789054322", departure: "24-Nov-2026, 03:55 PM", arrival: "24-Nov-2026, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "6789054323", departure: "24-Nov-2026, 08:15 PM", arrival: "25-Nov-2026, 05:25 AM", ticketUrl: "#" } ] },
+            "December 2026": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "24-Dec-2026, 10:00 AM", checkOut: "24-Dec-2026, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "7890165432", departure: "23-Dec-2026, 07:38 PM", arrival: "24-Dec-2026, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "7890165433", departure: "24-Dec-2026, 03:55 PM", arrival: "24-Dec-2026, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "7890165434", departure: "24-Dec-2026, 08:15 PM", arrival: "25-Dec-2026, 05:25 AM", ticketUrl: "#" } ] },
+            // --- 2027 DATA ---
+            "January 2027": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "22-Jan-2027, 10:00 AM", checkOut: "22-Jan-2027, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "8901276543", departure: "21-Jan-2027, 07:38 PM", arrival: "22-Jan-2027, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "8901276544", departure: "22-Jan-2027, 03:55 PM", arrival: "22-Jan-2027, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "8901276545", departure: "22-Jan-2027, 08:15 PM", arrival: "23-Jan-2027, 05:25 AM", ticketUrl: "#" } ] },
+            "February 2027": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "21-Feb-2027, 10:00 AM", checkOut: "21-Feb-2027, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "9012387654", departure: "20-Feb-2027, 07:38 PM", arrival: "21-Feb-2027, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "9012387655", departure: "21-Feb-2027, 03:55 PM", arrival: "21-Feb-2027, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "9012387656", departure: "21-Feb-2027, 08:15 PM", arrival: "22-Feb-2027, 05:25 AM", ticketUrl: "#" } ] },
+            "March 2027": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "22-Mar-2027, 10:00 AM", checkOut: "22-Mar-2027, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "1234598765", departure: "21-Mar-2027, 07:38 PM", arrival: "22-Mar-2027, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "1234598766", departure: "22-Mar-2027, 03:55 PM", arrival: "22-Mar-2027, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "1234598767", departure: "22-Mar-2027, 08:15 PM", arrival: "23-Mar-2027, 05:25 AM", ticketUrl: "#" } ] },
+            "April 2027": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "21-Apr-2027, 10:00 AM", checkOut: "21-Apr-2027, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "2345609876", departure: "20-Apr-2027, 07:38 PM", arrival: "21-Apr-2027, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "2345609877", departure: "21-Apr-2027, 03:55 PM", arrival: "21-Apr-2027, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "2345609878", departure: "21-Apr-2027, 08:15 PM", arrival: "22-Apr-2027, 05:25 AM", ticketUrl: "#" } ] },
+            "May 2027": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "20-May-2027, 10:00 AM", checkOut: "20-May-2027, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "3456710987", departure: "19-May-2027, 07:38 PM", arrival: "20-May-2027, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "3456710988", departure: "20-May-2027, 03:55 PM", arrival: "20-May-2027, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "3456710989", departure: "20-May-2027, 08:15 PM", arrival: "21-May-2027, 05:25 AM", ticketUrl: "#" } ] },
+            "June 2027": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "19-Jun-2027, 10:00 AM", checkOut: "19-Jun-2027, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "4567821098", departure: "18-Jun-2027, 07:38 PM", arrival: "19-Jun-2027, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "4567821099", departure: "19-Jun-2027, 03:55 PM", arrival: "19-Jun-2027, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "4567821100", departure: "19-Jun-2027, 08:15 PM", arrival: "20-Jun-2027, 05:25 AM", ticketUrl: "#" } ] },
+            "July 2027": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "18-Jul-2027, 10:00 AM", checkOut: "18-Jul-2027, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "5678932109", departure: "17-Jul-2027, 07:38 PM", arrival: "18-Jul-2027, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "5678932110", departure: "18-Jul-2027, 03:55 PM", arrival: "18-Jul-2027, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "5678932111", departure: "18-Jul-2027, 08:15 PM", arrival: "19-Jul-2027, 05:25 AM", ticketUrl: "#" } ] },
+            "August 2027": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "17-Aug-2027, 10:00 AM", checkOut: "17-Aug-2027, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "6789043210", departure: "16-Aug-2027, 07:38 PM", arrival: "17-Aug-2027, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "6789043211", departure: "17-Aug-2027, 03:55 PM", arrival: "17-Aug-2027, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "6789043212", departure: "17-Aug-2027, 08:15 PM", arrival: "18-Aug-2027, 05:25 AM", ticketUrl: "#" } ] },
+            "September 2027": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "15-Sep-2027, 10:00 AM", checkOut: "15-Sep-2027, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "7890154321", departure: "14-Sep-2027, 07:38 PM", arrival: "15-Sep-2027, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "7890154322", departure: "15-Sep-2027, 03:55 PM", arrival: "15-Sep-2027, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "7890154323", departure: "15-Sep-2027, 08:15 PM", arrival: "16-Sep-2027, 05:25 AM", ticketUrl: "#" } ] },
+            "October 2027": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "15-Oct-2027, 10:00 AM", checkOut: "15-Oct-2027, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "8901265432", departure: "14-Oct-2027, 07:38 PM", arrival: "15-Oct-2027, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "8901265433", departure: "15-Oct-2027, 03:55 PM", arrival: "15-Oct-2027, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "8901265434", departure: "15-Oct-2027, 08:15 PM", arrival: "16-Oct-2027, 05:25 AM", ticketUrl: "#" } ] },
+            "November 2027": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "13-Nov-2027, 10:00 AM", checkOut: "13-Nov-2027, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "9012376543", departure: "12-Nov-2027, 07:38 PM", arrival: "13-Nov-2027, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "9012376544", departure: "13-Nov-2027, 03:55 PM", arrival: "13-Nov-2027, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "9012376545", departure: "13-Nov-2027, 08:15 PM", arrival: "14-Nov-2027, 05:25 AM", ticketUrl: "#" } ] },
+            "December 2027": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "13-Dec-2027, 10:00 AM", checkOut: "13-Dec-2027, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "1234587654", departure: "12-Dec-2027, 07:38 PM", arrival: "13-Dec-2027, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "1234587655", departure: "13-Dec-2027, 03:55 PM", arrival: "13-Dec-2027, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "1234587656", departure: "13-Dec-2027, 08:15 PM", arrival: "14-Dec-2027, 05:25 AM", ticketUrl: "#" } ] }
+            // --- COMMENT KHATAM ---
+            */
+        };
+        
+        const poonamDates = [
+            { year: 2025, month: 'August', day: 9 }, { year: 2025, month: 'September', day: 7 },
+            { year: 2025, month: 'October', day: 7 }, { year: 2025, month: 'November', day: 5 },
+            { year: 2025, month: 'December', day: 5 }, { year: 2026, month: 'January', day: 3 },
+            { year: 2026, month: 'February', day: 2 }, { year: 2026, month: 'March', day: 3 },
+            { year: 2026, month: 'April', day: 2 }, { year: 2026, month: 'May', day: 1 },
+            { year: 2026, month: 'May', day: 31 }, { year: 2026, month: 'June', day: 30 },
+            { year: 2026, month: 'July', day: 29 }, { year: 2026, month: 'August', day: 28 },
+            { year: 2026, month: 'September', day: 26 }, { year: 2026, month: 'October', day: 26 },
+            { year: 2026, month: 'November', day: 24 }, { year: 2026, month: 'December', day: 24 },
+            { year: 2027, month: 'January', day: 22 }, { year: 2027, month: 'February', day: 21 },
+            { year: 2027, month: 'March', day: 22 }, { year: 2027, month: 'April', day: 21 },
+            { year: 2027, month: 'May', day: 20 }, { year: 2027, month: 'June', day: 19 },
+            { year: 2027, month: 'July', day: 18 }, { year: 2027, month: 'August', day: 17 },
+            { year: 2027, month: 'September', day: 15 }, { year: 2027, month: 'October', day: 15 },
+            { year: 2027, month: 'November', day: 13 }, { year: 2027, month: 'December', day: 13 }
+        ];
+
+        const slogans = [
+            'Welcome to the sacred journey!', // you can add a more slogans in below line wit 
+            // 'the eternal abode of Shri Krishna awaits you.',
+        ];
+
+        let currentSloganIndex = 0;
+        let sloganInterval;
+
+        const welcomePopup = document.getElementById('welcome-popup');
+        const sloganText = document.getElementById('slogan-text');
+
+        function updateSlogan() {
+            if (sloganText) {
+                sloganText.textContent = slogans[currentSloganIndex];
+                currentSloganIndex = (currentSloganIndex + 1) % slogans.length;
+            }
+        }
+        
+        function showWelcomePopup() {
+            welcomePopup.classList.remove('hidden');
+            setTimeout(() => {
+                welcomePopup.classList.add('welcome-popup-visible');
+                welcomePopup.querySelector('.welcome-content').classList.add('welcome-content-visible');
+            }, 10);
             
-            const poonamDates = [
-                { year: 2025, month: 'August', day: 9 }, { year: 2025, month: 'September', day: 7 },
-                { year: 2025, month: 'October', day: 7 }, { year: 2025, month: 'November', day: 5 },
-                { year: 2025, month: 'December', day: 5 }, { year: 2026, month: 'January', day: 3 },
-                { year: 2026, month: 'February', day: 2 }, { year: 2026, month: 'March', day: 3 },
-                { year: 2026, month: 'April', day: 2 }, { year: 2026, month: 'May', day: 1 },
-                { year: 2026, month: 'May', day: 31 }, { year: 2026, month: 'June', day: 30 },
-                { year: 2026, month: 'July', day: 29 }, { year: 2026, month: 'August', day: 28 },
-                { year: 2026, month: 'September', day: 26 }, { year: 2026, month: 'October', day: 26 },
-                { year: 2026, month: 'November', day: 24 }, { year: 2026, month: 'December', day: 24 },
-                { year: 2027, month: 'January', day: 22 }, { year: 2027, month: 'February', day: 21 },
-                { year: 2027, month: 'March', day: 22 }, { year: 2027, month: 'April', day: 21 },
-                { year: 2027, month: 'May', day: 20 }, { year: 2027, month: 'June', day: 19 },
-                { year: 2027, month: 'July', day: 18 }, { year: 2027, month: 'August', day: 17 },
-                { year: 2027, month: 'September', day: 15 }, { year: 2027, month: 'October', day: 15 },
-                { year: 2027, month: 'November', day: 13 }, { year: 2027, month: 'December', day: 13 }
-            ];
+            updateSlogan();
+            sloganInterval = setInterval(updateSlogan, 1000);
 
-            const mainView = document.getElementById('main-view');
-            const detailsView = document.getElementById('details-view');
-            const datesContainer = document.getElementById('poonam-dates-container');
-            const countdownContainer = document.getElementById('countdown-container');
-            
-            const groupedDates = poonamDates.reduce((acc, date) => {
-                const monthYear = `${date.month} ${date.year}`;
-                if (!acc[monthYear]) acc[monthYear] = [];
-                acc[monthYear].push(date);
-                return acc;
-            }, {});
-
-            const cardTextColors = [
-                'text-sky-300', 'text-fuchsia-400', 'text-emerald-300', 
-                'text-amber-300', 'text-red-400', 'text-violet-400', 'text-lime-300'
-            ];
-
-            function showMainView() {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-                detailsView.style.opacity = 0;
+            setTimeout(() => {
+                clearInterval(sloganInterval);
+                welcomePopup.classList.remove('welcome-popup-visible');
+                welcomePopup.querySelector('.welcome-content').classList.remove('welcome-content-visible');
                 setTimeout(() => {
-                    detailsView.classList.add('view-hidden');
-                    mainView.classList.remove('view-hidden');
-                    mainView.style.opacity = 1;
-                }, 300);
-            }
+                    welcomePopup.classList.add('hidden');
+                }, 500); // Wait for the fade-out to complete
+            }, 1800); // Total popup duration
+        }
 
-            function showDetailsView(monthYear) {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-                const data = journeyData[monthYear];
-                let detailsContent;
 
-                if (!data) {
-                    detailsContent = `
-                        <div class="text-center">
-                            <button id="back-button" class="mb-8 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-purple-600 hover:bg-purple-700">
-                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 17l-5-5m0 0l5-5m-5 5h12"></path></svg>
-                                Back to Calendar
-                            </button>
-                            <div class="glass-effect rounded-xl p-8">
-                                <h2 class="text-3xl font-bold text-amber-300">Details Coming Soon!</h2>
-                                <p class="text-slate-300 mt-4">Information for ${monthYear} is not yet available. Please check back later.</p>
-                            </div>
-                        </div>`;
-                } else {
-                    const journeyCardsHtml = data.journeys.map((j, index) => `
-                        <div class="glass-effect rounded-xl p-4 sm:p-6">
-                            <div class="flex flex-col sm:flex-row justify-between sm:items-start mb-4 text-center sm:text-left">
-                                <div><h2 class="text-2xl sm:text-3xl font-semibold text-sky-300">${j.from.toUpperCase()} to ${j.to.toUpperCase()}</h2><p class="text-amber-300 font-semibold text-base">${j.trainName} (${j.trainNo})</p></div>
-                                <div class="sm:text-right mt-2 sm:mt-0 mx-auto sm:mx-0">
-                                    <p class="text-lg text-slate-400">PNR: <span class="font-semibold text-slate-200 text-xl">${j.pnr}</span></p>
-                                </div>
-                            </div>
-                            <div class="grid grid-cols-1 sm:grid-cols-[1fr_auto_1fr] sm:gap-x-4 items-center mb-4">
-                                <div class="text-center sm:text-left"><p class="text-sm text-slate-400">Departure</p><p class="font-semibold text-base sm:text-lg text-slate-200">${j.from.toUpperCase()}</p><p class="mt-1 text-violet-400 text-sm sm:text-base">${j.departure}</p></div>
-                                <div class="w-full flex items-center my-4 sm:my-0"><div class="flex-grow h-px bg-slate-700"></div><div class="bg-sky-900/80 text-sky-300 p-3 rounded-full shadow-inner border border-sky-400/30 mx-4"><svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c-4 0-8 .5-8 4v10c0 .83.67 1.5 1.5 1.5S7 20.83 7 20v-2h10v2c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5V6c0-3.5-4-4-8-4zm0 2c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm-4 13.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm8 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM6 10h12v2H6v-2z"/></svg></div><div class="flex-grow h-px bg-slate-700"></div></div>
-                                <div class="text-center sm:text-right"><p class="text-sm text-slate-400">Arrival</p><p class="font-semibold text-base sm:text-lg text-slate-200">${j.to.toUpperCase()}</p><p class="mt-1 text-violet-400 text-sm sm:text-base">${j.arrival}</p></div>
-                            </div>
-                            <div class="text-center mt-4">
-                                <button class="view-ticket-btn animated-glow-border bg-sky-500/10 text-sky-300 border border-sky-400/30 px-6 py-2 rounded-lg hover:bg-sky-500/20 transition-all duration-300" data-ticket-url="${j.ticketUrl}">View Ticket</button>
-                            </div>
-                        </div>
-                    `).join('');
+        const mainView = document.getElementById('main-view');
+        const detailsView = document.getElementById('details-view');
+        const datesContainer = document.getElementById('poonam-dates-container');
+        const countdownContainer = document.getElementById('countdown-container');
+        const passwordOverlay = document.getElementById('password-overlay');
+        const passwordForm = document.getElementById('password-form');
+        const passwordInput = document.getElementById('password-input');
+        const errorMessage = document.getElementById('error-message');
+        const modal = document.getElementById('ticketModal');
+        const iframe = document.getElementById('ticketViewerIframe');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const aboutModal = document.getElementById('about-modal');
+        const contactModal = document.getElementById('contact-modal');
+        const paymentModal = document.getElementById('payment-modal');
+        const timingModal = document.getElementById('timing-modal');
+        const contactForm = document.getElementById('contact-form');
+        const successModal = document.getElementById('success-modal');
 
-                    const expenseCardHtml = `
-                        <div class="glass-effect rounded-xl p-4 sm:p-6">
-                            <h2 class="text-2xl sm:text-3xl font-semibold text-emerald-300 mb-4">Yatra ka Kharch (Expense Details)</h2>
-                            <div class="space-y-3 text-left">
-                                <div class="flex justify-between items-center"><p class="text-slate-400">Train:</p><p class="font-semibold text-slate-200">₹ ${data.expenses.train.toFixed(2)}</p></div>
-                                <div class="flex justify-between items-center"><p class="text-slate-400">Stay (Dharamshala):</p><p class="font-semibold text-slate-200">₹ ${data.expenses.stay.toFixed(2)}</p></div>
-                                <div class="flex justify-between items-center"><p class="text-slate-400">Food (Approx.):</p><p class="font-semibold text-slate-200">₹ ${data.expenses.food.toFixed(2)}</p></div>
-                                <div class="border-t border-slate-700 my-2"></div>
-                                <div class="flex justify-between items-center text-lg"><p class="font-bold text-emerald-300">Total Kharch:</p><p class="font-bold text-emerald-300">₹ ${data.expenses.total.toFixed(2)}</p></div>
-                            </div>
-                            <div class="text-center mt-6">
-                                <button id="pay-now-btn" class="animated-glow-border w-full bg-green-500/80 hover:bg-green-500/90 text-white font-bold py-3 px-4 rounded-lg flex items-center justify-center space-x-3 transition-all duration-300 transform hover:scale-105">Pay Now</button>
-                            </div>
-                        </div>
-                    `;
-                    
-                    const yatriListHtml = data.yatri ? `
-                        <div class="glass-effect rounded-xl p-4 sm:p-6">
-                            <h2 class="text-2xl sm:text-3xl font-semibold text-cyan-300 mb-4">Yatri List (List of Travelers)</h2>
-                            <div class="overflow-x-auto">
-                                <table class="w-full text-sm text-left text-slate-300">
-                                    <thead class="text-xs text-slate-400 uppercase bg-white/5">
-                                        <tr>
-                                            <th scope="col" class="px-4 py-3 text-fuchsia-400">Yatri Name</th>
-                                            <th scope="col" class="px-4 py-3 text-sky-400">To Dwarka (Coach/Seat)</th>
-                                            <th scope="col" class="px-4 py-3 text-sky-400">From Dwarka (Coach/Seat)</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        ${data.yatri.map(yatri => `
-                                            <tr class="border-b border-slate-700">
-                                                <td class="px-4 py-3 font-medium text-white">${yatri.name}</td>
-                                                <td class="px-4 py-3">${yatri.to.coach} / ${yatri.to.seat}</td>
-                                                <td class="px-4 py-3">${yatri.from.coach} / ${yatri.from.seat}</td>
-                                            </tr>
-                                        `).join('')}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    ` : '';
+        const groupedDates = poonamDates.reduce((acc, date) => {
+            const monthYear = `${date.month} ${date.year}`;
+            if (!acc[monthYear]) acc[monthYear] = [];
+            acc[monthYear].push(date);
+            return acc;
+        }, {});
 
-                    detailsContent = `
-                        <div class="text-center">
-                            <button id="back-button" class="mb-8 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-purple-500">
-                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 17l-5-5m0 0l5-5m-5 5h12"></path></svg>
-                                Back to Calendar
-                            </button>
-                            <div class="flex justify-center items-center gap-4 mb-12">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 sm:h-10 sm:w-10 text-amber-300" viewBox="0 0 24 24" fill="currentColor"><path d="M2 20h20v2H2v-2zM12 2L4 6v2h16V6l-8-4zm0 3.5l5.42 2.5H6.58L12 5.5zM5 9v10h2v-5h2v5h2v-5h2v5h2v-5h2v5h2V9H5zm4 2h2v2H9v-2zm6 0h2v2h-2v-2z"/></svg>
-                                <h1 class="page-title text-4xl sm:text-5xl md:text-6xl font-bold text-center text-amber-300 tracking-wider" style="text-shadow: 0 0 15px rgba(251, 191, 36, 0.5);">|| JAY DWARKADHISH ||</h1>
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 sm:h-10 sm:w-10 text-amber-300" viewBox="0 0 24 24" fill="currentColor"><path d="M2 20h20v2H2v-2zM12 2L4 6v2h16V6l-8-4zm0 3.5l5.42 2.5H6.58L12 5.5zM5 9v10h2v-5h2v5h2v-5h2v5h2v-5h2v5h2V9H5zm4 2h2v2H9v-2zm6 0h2v2h-2v-2z"/></svg>
-                            </div>
-                            <main class="space-y-8">
-                                <div class="glass-effect rounded-xl p-4 sm:p-6">
-                                    <div class="flex flex-col sm:flex-row justify-between sm:items-start mb-4 text-center sm:text-left">
-                                        <div><h2 class="text-2xl sm:text-3xl font-semibold text-purple-300">Stay Information</h2><p class="text-slate-400 text-sm sm:text-base">${data.stay.name}</p></div>
-                                        <div class="sm:text-right mt-2 sm:mt-0 mx-auto sm:mx-0"><div class="bg-purple-900/80 text-purple-300 p-3 rounded-full shadow-inner border border-purple-400/30"><svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3L2 12h3v8h5z"/></svg></div></div>
-                                    </div>
-                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left mb-4">
-                                        <div><p class="text-sm text-slate-400">Check-in</p><p class="font-semibold text-base sm:text-lg text-violet-400">${data.stay.checkIn}</p></div>
-                                        <div class="mt-4 sm:mt-0 sm:text-right"><p class="text-sm text-slate-400">Check-out</p><p class="font-semibold text-base sm:text-lg text-violet-400">${data.stay.checkOut}</p></div>
-                                    </div>
-                                    <div class="text-center mt-4"><button class="view-ticket-btn animated-glow-border bg-purple-500/10 text-purple-300 border border-purple-400/30 px-6 py-2 rounded-lg hover:bg-purple-500/20" data-ticket-url="${data.stay.ticketUrl}">Show Booking Info</button></div>
-                                </div>
-                                ${journeyCardsHtml}
-                                ${yatriListHtml}
-                                ${expenseCardHtml}
-                            </main>
-                        </div>
-                    `;
-                }
-                
-                mainView.style.opacity = 0;
-                mainView.classList.add('view-hidden');
-                detailsView.innerHTML = detailsContent;
-                detailsView.classList.remove('view-hidden');
-                setTimeout(() => {
-                    detailsView.style.opacity = 1;
-                }, 10);
-                document.getElementById('back-button').addEventListener('click', showMainView);
-                attachModalListeners();
-            }
+        const cardTextColors = [
+            'text-sky-300', 'text-fuchsia-400', 'text-emerald-300', 
+            'text-amber-300', 'text-red-400', 'text-violet-400', 'text-lime-300'
+        ];
 
-            function generateDateCards() {
-                if (!datesContainer) return;
-                let colorIndex = 0;
-                const today = new Date();
-                const currentMonthName = today.toLocaleString('default', { month: 'long' });
-                const currentYear = today.getFullYear();
-                const currentMonthYear = `${currentMonthName} ${currentYear}`;
+        // Functions are now in the global scope to be accessible
+        function showMainView() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            detailsView.style.opacity = 0;
+            setTimeout(() => {
+                detailsView.classList.add('view-hidden');
+                mainView.classList.remove('view-hidden');
+                mainView.style.opacity = 1;
+            }, 300);
+        }
 
-                for (const monthYear in groupedDates) {
-                    const monthBlock = document.createElement('div');
-                    monthBlock.className = "glass-effect rounded-2xl p-6 flex flex-col items-center";
-                    
-                    if (monthYear === currentMonthYear) {
-                        monthBlock.classList.add('active-month-glow');
-                    }
-                    
-                    const cardColorClass = cardTextColors[colorIndex % cardTextColors.length];
-                    
-                    const header = document.createElement('h2');
-                    header.className = `text-xl font-bold ${cardColorClass} text-center mb-4`;
-                    header.textContent = monthYear;
-                    monthBlock.appendChild(header);
+        function showDetailsView(monthYear) {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            const data = journeyData[monthYear];
+            let detailsContent;
 
-                    const datesGrid = document.createElement('div');
-                    datesGrid.className = 'flex flex-wrap justify-center gap-3 min-h-[6rem] content-center';
-                    groupedDates[monthYear].forEach(dateInfo => {
-                        const dateCircle = document.createElement('div');
-                        dateCircle.className = `w-12 h-12 rounded-full bg-white/10 flex items-center justify-center font-bold text-lg ${cardColorClass} shadow-md`;
-                        dateCircle.textContent = String(dateInfo.day).padStart(2, '0');
-                        datesGrid.appendChild(dateCircle);
-                    });
-                    monthBlock.appendChild(datesGrid);
-
-                    const bookingButton = document.createElement('button');
-                    bookingButton.className = 'animated-glow-border relative block w-full mt-4 p-3 rounded-lg bg-gradient-to-r from-pink-500 to-purple-600 text-center font-semibold text-white';
-                    bookingButton.textContent = 'SHOW BOOKINGS';
-                    bookingButton.dataset.monthyear = monthYear;
-
-                    bookingButton.addEventListener('click', function() {
-                        showDetailsView(this.dataset.monthyear);
-                    });
-                    
-                    monthBlock.appendChild(bookingButton);
-                    datesContainer.appendChild(monthBlock);
-                    colorIndex++;
-                }
-            }
-            
-            // --- Countdown Timer Logic ---
-            function startCountdown() {
-                const now = new Date();
-                let nextPoonamDate = null;
-
-                for (const date of poonamDates) {
-                    const monthIndex = new Date(Date.parse(date.month +" 1, 2012")).getMonth();
-                    const poonamDateTime = new Date(date.year, monthIndex, date.day);
-                    if (poonamDateTime > now) {
-                        nextPoonamDate = poonamDateTime;
-                        break;
-                    }
-                }
-
-                if (!nextPoonamDate) {
-                    countdownContainer.innerHTML = `<h2 class="text-2xl text-center text-amber-300">All scheduled journeys for this period are complete.</h2>`;
-                    return;
-                }
-
-                const nextPoonamMonthYear = `${nextPoonamDate.toLocaleString('default', { month: 'long' })} ${nextPoonamDate.getFullYear()}`;
-                countdownContainer.innerHTML = `
+            if (!data) {
+                detailsContent = `
                     <div class="text-center">
-                        <h2 class="text-2xl sm:text-3xl font-semibold text-amber-300 page-title">Next Journey Countdown: ${nextPoonamMonthYear}</h2>
-                        <div id="countdown-timer" class="flex justify-center space-x-4 sm:space-x-8 mt-4 text-white">
-                            <div><span id="days" class="text-4xl sm:text-6xl">00</span><p class="text-sm text-slate-400">Days</p></div>
-                            <div><span id="hours" class="text-4xl sm:text-6xl">00</span><p class="text-sm text-slate-400">Hours</p></div>
-                            <div><span id="minutes" class="text-4xl sm:text-6xl">00</span><p class="text-sm text-slate-400">Minutes</p></div>
-                            <div><span id="seconds" class="text-4xl sm:text-6xl">00</span><p class="text-sm text-slate-400">Seconds</p></div>
+                        <button id="back-button" class="mb-8 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-purple-600 hover:bg-purple-700">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 17l-5-5m0 0l5-5m-5 5h12"></path></svg>
+                            Back to Calendar
+                        </button>
+                        <div class="glass-effect rounded-xl p-8">
+                            <h2 class="text-3xl font-bold text-amber-300">Details Coming Soon!</h2>
+                            <p class="text-slate-300 mt-4">Information for ${monthYear} is not yet available. Please check back later.</p>
+                        </div>
+                    </div>`;
+            } else {
+                const journeyCardsHtml = data.journeys.map((j, index) => `
+                    <div class="glass-effect rounded-xl p-4 sm:p-6">
+                        <div class="flex flex-col sm:flex-row justify-between sm:items-start mb-4 text-center sm:text-left">
+                            <div><h2 class="text-2xl sm:text-3xl font-semibold text-sky-300">${j.from.toUpperCase()} to ${j.to.toUpperCase()}</h2><p class="text-amber-300 font-semibold text-base">${j.trainName} (${j.trainNo})</p></div>
+                            <div class="sm:text-right mt-2 sm:mt-0 mx-auto sm:mx-0">
+                                <p class="text-lg text-slate-400">PNR: <span class="font-semibold text-slate-200 text-xl">${j.pnr}</span></p>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-[1fr_auto_1fr] sm:gap-x-4 items-center mb-4">
+                            <div class="text-center sm:text-left"><p class="text-sm text-slate-400">Departure</p><p class="font-semibold text-base sm:text-lg text-slate-200">${j.from.toUpperCase()}</p><p class="mt-1 text-violet-400 text-sm sm:text-base">${j.departure}</p></div>
+                            <div class="w-full flex items-center my-4 sm:my-0"><div class="flex-grow h-px bg-slate-700"></div><div class="bg-sky-900/80 text-sky-300 p-3 rounded-full shadow-inner border border-sky-400/30 mx-4"><svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c-4 0-8 .5-8 4v10c0 .83.67 1.5 1.5 1.5S7 20.83 7 20v-2h10v2c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5V6c0-3.5-4-4-8-4zm0 2c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm-4 13.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm8 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM6 10h12v2H6v-2z"/></svg></div><div class="flex-grow h-px bg-slate-700"></div></div>
+                            <div class="text-center sm:text-right"><p class="text-sm text-slate-400">Arrival</p><p class="font-semibold text-base sm:text-lg text-slate-200">${j.to.toUpperCase()}</p><p class="mt-1 text-violet-400 text-sm sm:text-base">${j.arrival}</p></div>
+                        </div>
+                        <div class="text-center mt-4">
+                            <button class="view-ticket-btn animated-glow-border bg-sky-500/10 text-sky-300 border border-sky-400/30 px-6 py-2 rounded-lg hover:bg-sky-500/20 transition-all duration-300" data-ticket-url="${j.ticketUrl}">View Ticket</button>
+                        </div>
+                    </div>
+                `).join('');
+
+                const expenseCardHtml = `
+                    <div class="glass-effect rounded-xl p-4 sm:p-6">
+                        <h2 class="text-2xl sm:text-3xl font-semibold text-emerald-300 mb-4">Yatra ka Kharch (Expense Details)</h2>
+                        <div class="space-y-3 text-left">
+                            <div class="flex justify-between items-center"><p class="text-slate-400">Train:</p><p class="font-semibold text-slate-200">₹ ${data.expenses.train.toFixed(2)}</p></div>
+                            <div class="flex justify-between items-center"><p class="text-slate-400">Stay (Dharamshala):</p><p class="font-semibold text-slate-200">₹ ${data.expenses.stay.toFixed(2)}</p></div>
+                            <div class="flex justify-between items-center"><p class="text-slate-400">Food (Approx.):</p><p class="font-semibold text-slate-200">₹ ${data.expenses.food.toFixed(2)}</p></div>
+                            <div class="border-t border-slate-700 my-2"></div>
+                            <div class="flex justify-between items-center text-lg"><p class="font-bold text-emerald-300">Total Kharch:</p><p class="font-bold text-emerald-300">₹ ${data.expenses.total.toFixed(2)}</p></div>
+                        </div>
+                        <div class="text-center mt-6">
+                            <button id="pay-now-btn" class="animated-glow-border w-full bg-green-500/80 hover:bg-green-500/90 text-white font-bold py-3 px-4 rounded-lg flex items-center justify-center space-x-3 transition-all duration-300 transform hover:scale-105">Pay Now</button>
                         </div>
                     </div>
                 `;
+                
+                const yatriListHtml = data.yatri ? `
+                    <div class="glass-effect rounded-xl p-4 sm:p-6">
+                        <h2 class="text-2xl sm:text-3xl font-semibold text-cyan-300 mb-4">Yatri List (List of Travelers)</h2>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm text-left text-slate-300">
+                                <thead class="text-xs text-slate-400 uppercase bg-white/5">
+                                    <tr>
+                                        <th scope="col" class="px-4 py-3 text-fuchsia-400">Yatri Name</th>
+                                        <th scope="col" class="px-4 py-3 text-sky-400">To Dwarka (Coach/Seat)</th>
+                                        <th scope="col" class="px-4 py-3 text-sky-400">From Dwarka (Coach/Seat)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${data.yatri.map(yatri => `
+                                        <tr class="border-b border-slate-700">
+                                            <td class="px-4 py-3 font-medium text-white">${yatri.name}</td>
+                                            <td class="px-4 py-3">${yatri.to.coach} / ${yatri.to.seat}</td>
+                                            <td class="px-4 py-3">${yatri.from.coach} / ${yatri.from.seat}</td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                ` : '';
 
-                const daysEl = document.getElementById('days');
-                const hoursEl = document.getElementById('hours');
-                const minutesEl = document.getElementById('minutes');
-                const secondsEl = document.getElementById('seconds');
-
-                const timerInterval = setInterval(() => {
-                    const now = new Date().getTime();
-                    const distance = nextPoonamDate - now;
-
-                    if (distance < 0) {
-                        clearInterval(timerInterval);
-                        startCountdown(); 
-                        return;
-                    }
-
-                    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-                    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-                    daysEl.textContent = String(days).padStart(2, '0');
-                    hoursEl.textContent = String(hours).padStart(2, '0');
-                    minutesEl.textContent = String(minutes).padStart(2, '0');
-                    secondsEl.textContent = String(seconds).padStart(2, '0');
-
-                }, 1000);
+                detailsContent = `
+                    <div class="text-center">
+                        <button id="back-button" class="mb-8 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-purple-500">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 17l-5-5m0 0l5-5m-5 5h12"></path></svg>
+                            Back to Calendar
+                        </button>
+                        <div class="flex justify-center items-center gap-4 mb-12">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 sm:h-10 sm:w-10 text-amber-300" viewBox="0 0 24 24" fill="currentColor"><path d="M2 20h20v2H2v-2zM12 2L4 6v2h16V6l-8-4zm0 3.5l5.42 2.5H6.58L12 5.5zM5 9v10h2v-5h2v5h2v-5h2v5h2v-5h2v5h2V9H5zm4 2h2v2H9v-2zm6 0h2v2h-2v-2z"/></svg>
+                            <h1 class="page-title text-4xl sm:text-5xl md:text-6xl font-bold text-center text-amber-300 tracking-wider" style="text-shadow: 0 0 15px rgba(251, 191, 36, 0.5);">|| JAY DWARKADHISH ||</h1>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 sm:h-10 sm:w-10 text-amber-300" viewBox="0 0 24 24" fill="currentColor"><path d="M2 20h20v2H2v-2zM12 2L4 6v2h16V6l-8-4zm0 3.5l5.42 2.5H6.58L12 5.5zM5 9v10h2v-5h2v5h2v-5h2v5h2v-5h2v5h2V9H5zm4 2h2v2H9v-2zm6 0h2v2h-2v-2z"/></svg>
+                        </div>
+                        <main class="space-y-8">
+                            <div class="glass-effect rounded-xl p-4 sm:p-6">
+                                <div class="flex flex-col sm:flex-row justify-between sm:items-start mb-4 text-center sm:text-left">
+                                    <div><h2 class="text-2xl sm:text-3xl font-semibold text-purple-300">Stay Information</h2><p class="text-slate-400 text-sm sm:text-base">${data.stay.name}</p></div>
+                                    <div class="sm:text-right mt-2 sm:mt-0 mx-auto sm:mx-0"><div class="bg-purple-900/80 text-purple-300 p-3 rounded-full shadow-inner border border-purple-400/30"><svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3L2 12h3v8h5z"/></svg></div></div>
+                                </div>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left mb-4">
+                                    <div><p class="text-sm text-slate-400">Check-in</p><p class="font-semibold text-base sm:text-lg text-violet-400">${data.stay.checkIn}</p></div>
+                                    <div class="mt-4 sm:mt-0 sm:text-right"><p class="text-sm text-slate-400">Check-out</p><p class="font-semibold text-base sm:text-lg text-violet-400">${data.stay.checkOut}</p></div>
+                                </div>
+                                <div class="text-center mt-4"><button class="view-ticket-btn animated-glow-border bg-purple-500/10 text-purple-300 border border-purple-400/30 px-6 py-2 rounded-lg hover:bg-purple-500/20" data-ticket-url="${data.stay.ticketUrl}">Show Booking Info</button></div>
+                            </div>
+                            ${journeyCardsHtml}
+                            ${yatriListHtml}
+                            ${expenseCardHtml}
+                        </main>
+                    </div>
+                `;
             }
+            
+            mainView.style.opacity = 0;
+            mainView.classList.add('view-hidden');
+            detailsView.innerHTML = detailsContent;
+            detailsView.classList.remove('view-hidden');
+            setTimeout(() => {
+                detailsView.style.opacity = 1;
+            }, 10);
+            document.getElementById('back-button').addEventListener('click', showMainView);
+            attachModalListeners();
+        }
 
+        function generateDateCards() {
+            if (!datesContainer) return;
+            let colorIndex = 0;
+            const today = new Date();
+            const currentMonthName = today.toLocaleString('default', { month: 'long' });
+            const currentYear = today.getFullYear();
+            const currentMonthYear = `${currentMonthName} ${currentYear}`;
 
-            const modal = document.getElementById('ticketModal');
-            const iframe = document.getElementById('ticketViewerIframe');
-            const closeModalBtn = document.getElementById('closeModalBtn');
-            const downloadBtn = document.getElementById('downloadBtn');
-            const aboutModal = document.getElementById('about-modal');
-            const contactModal = document.getElementById('contact-modal');
-            const paymentModal = document.getElementById('payment-modal');
-            const timingModal = document.getElementById('timing-modal');
-            const contactForm = document.getElementById('contact-form');
-            const successModal = document.getElementById('success-modal');
+            for (const monthYear in groupedDates) {
+                const monthBlock = document.createElement('div');
+                monthBlock.className = "glass-effect rounded-2xl p-6 flex flex-col items-center";
+                
+                if (monthYear === currentMonthYear) {
+                    monthBlock.classList.add('active-month-glow');
+                }
+                
+                const cardTextColors = [
+                    'text-sky-300', 'text-fuchsia-400', 'text-emerald-300', 
+                    'text-amber-300', 'text-red-400', 'text-violet-400', 'text-lime-300'
+                ];
+                const cardColorClass = cardTextColors[colorIndex % cardTextColors.length];
+                
+                const header = document.createElement('h2');
+                header.className = `text-xl font-bold ${cardColorClass} text-center mb-4`;
+                header.textContent = monthYear;
+                monthBlock.appendChild(header);
 
-            function attachModalListeners() {
-                document.querySelectorAll('.view-ticket-btn').forEach(button => {
-                    button.addEventListener('click', () => {
-                        const ticketUrl = button.dataset.ticketUrl;
-                        if (ticketUrl && ticketUrl !== '#') {
-                            iframe.src = ticketUrl;
-                            downloadBtn.href = ticketUrl;
-                            modal.classList.remove('hidden');
-                        }
-                    });
+                const datesGrid = document.createElement('div');
+                datesGrid.className = 'flex flex-wrap justify-center gap-3 min-h-[6rem] content-center';
+                groupedDates[monthYear].forEach(dateInfo => {
+                    const dateCircle = document.createElement('div');
+                    dateCircle.className = `w-12 h-12 rounded-full bg-white/10 flex items-center justify-center font-bold text-lg ${cardColorClass} shadow-md`;
+                    dateCircle.textContent = String(dateInfo.day).padStart(2, '0');
+                    datesGrid.appendChild(dateCircle);
                 });
-                const payNowBtn = document.getElementById('pay-now-btn');
-                if (payNowBtn) {
-                    payNowBtn.addEventListener('click', () => {
-                        paymentModal.classList.remove('hidden');
-                    });
+                monthBlock.appendChild(datesGrid);
+
+                const bookingButton = document.createElement('button');
+                bookingButton.className = 'animated-glow-border relative block w-full mt-4 p-3 rounded-lg bg-gradient-to-r from-pink-500 to-purple-600 text-center font-semibold text-white';
+                bookingButton.textContent = 'SHOW BOOKINGS';
+                bookingButton.dataset.monthyear = monthYear;
+
+                bookingButton.addEventListener('click', function() {
+                    const clickedMonthYear = this.dataset.monthyear;
+                    // Check if password is already verified for this session
+                    if (sessionStorage.getItem('passwordVerified') === 'true') {
+                        showDetailsView(clickedMonthYear);
+                    } else {
+                        // Store the monthYear to retrieve after password entry
+                        passwordForm.dataset.monthyear = clickedMonthYear;
+                        passwordOverlay.classList.remove('hidden');
+                    }
+                });
+                
+                monthBlock.appendChild(bookingButton);
+                datesContainer.appendChild(monthBlock);
+                colorIndex++;
+            }
+        }
+        
+        // --- Countdown Timer Logic ---
+        function startCountdown() {
+            const now = new Date();
+            let nextPoonamDate = null;
+
+            for (const date of poonamDates) {
+                const monthIndex = new Date(Date.parse(date.month +" 1, 2012")).getMonth();
+                const poonamDateTime = new Date(date.year, monthIndex, date.day);
+                if (poonamDateTime > now) {
+                    nextPoonamDate = poonamDateTime;
+                    break;
                 }
             }
 
-            const closeModal = () => {
-                if(modal) modal.classList.add('hidden');
-                if(iframe) iframe.src = '';
+            if (!nextPoonamDate) {
+                countdownContainer.innerHTML = `<h2 class="text-2xl text-center text-amber-300">All scheduled journeys for this period are complete.</h2>`;
+                return;
+            }
+
+            const nextPoonamMonthYear = `${nextPoonamDate.toLocaleString('default', { month: 'long' })} ${nextPoonamDate.getFullYear()}`;
+            countdownContainer.innerHTML = `
+                <div class="text-center">
+                    <h2 class="text-2xl sm:text-3xl font-semibold text-amber-300 page-title">Next Journey Countdown: ${nextPoonamMonthYear}</h2>
+                    <div id="countdown-timer" class="flex justify-center space-x-4 sm:space-x-8 mt-4 text-white">
+                        <div><span id="days" class="text-4xl sm:text-6xl">00</span><p class="text-sm text-slate-400">Days</p></div>
+                        <div><span id="hours" class="text-4xl sm:text-6xl">00</span><p class="text-sm text-slate-400">Hours</p></div>
+                        <div><span id="minutes" class="text-4xl sm:text-6xl">00</span><p class="text-sm text-slate-400">Minutes</p></div>
+                        <div><span id="seconds" class="text-4xl sm:text-6xl">00</span><p class="text-sm text-slate-400">Seconds</p></div>
+                    </div>
+                </div>
+            `;
+
+            const daysEl = document.getElementById('days');
+            const hoursEl = document.getElementById('hours');
+            const minutesEl = document.getElementById('minutes');
+            const secondsEl = document.getElementById('seconds');
+
+            const timerInterval = setInterval(() => {
+                const now = new Date().getTime();
+                const distance = nextPoonamDate - now;
+
+                if (distance < 0) {
+                    clearInterval(timerInterval);
+                    startCountdown();
+                    return;
+                }
+
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                daysEl.textContent = String(days).padStart(2, '0');
+                hoursEl.textContent = String(hours).padStart(2, '0');
+                minutesEl.textContent = String(minutes).padStart(2, '0');
+                secondsEl.textContent = String(seconds).padStart(2, '0');
+
+            }, 1000);
+        }
+
+        // Functions for modals and utilities are also moved to global scope
+        const attachModalListeners = () => {
+            document.querySelectorAll('.view-ticket-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    const ticketUrl = button.dataset.ticketUrl;
+                    if (ticketUrl && ticketUrl !== '#') {
+                        iframe.src = ticketUrl;
+                        downloadBtn.href = ticketUrl;
+                        modal.classList.remove('hidden');
+                    }
+                });
+            });
+            const payNowBtn = document.getElementById('pay-now-btn');
+            if (payNowBtn) {
+                payNowBtn.addEventListener('click', () => {
+                    paymentModal.classList.remove('hidden');
+                });
+            }
+        };
+
+        const closeModal = () => {
+            if(modal) modal.classList.add('hidden');
+            if(iframe) iframe.src = '';
+        };
+
+        const closePasswordModal = () => {
+            passwordOverlay.classList.add('hidden');
+            passwordInput.value = '';
+            errorMessage.textContent = '';
+        };
+
+        const showNotification = () => {
+            const notification = document.getElementById('notification');
+            notification.classList.remove('translate-y-24', 'opacity-0');
+            notification.classList.add('translate-y-0', 'opacity-100');
+            setTimeout(() => {
+                notification.classList.add('translate-y-24', 'opacity-0');
+                notification.classList.remove('translate-y-0', 'opacity-100');
+            }, 2000);
+        };
+
+        const updateButtonState = (button) => {
+            const originalHTML = button.innerHTML; 
+            button.disabled = true;
+            button.classList.add('bg-green-500/50');
+            button.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>`;
+            
+            setTimeout(() => {
+                button.innerHTML = originalHTML;
+                button.disabled = false;
+                button.classList.remove('bg-green-500/50');
+            }, 2000);
+        };
+
+        window.copyToClipboard = function(elementId, button) {
+            const textToCopy = document.getElementById(elementId).innerText;
+            const fallbackCopy = () => {
+                const textArea = document.createElement('textarea');
+                textArea.value = textToCopy;
+                textArea.style.position = 'fixed';
+                textArea.style.left = '-9999px';
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                    showNotification();
+                    updateButtonState(button);
+                } catch (err) {
+                    console.error('Fallback: Oops, unable to copy', err);
+                }
+                document.body.removeChild(textArea);
             };
 
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(textToCopy).then(() => {
+                    showNotification();
+                    updateButtonState(button);
+                }).catch(fallbackCopy);
+            } else {
+                fallbackCopy();
+            }
+        };
+        
+        const populateTimings = () => {
+            const scheduleContainer = document.getElementById('timing-schedule');
+            const now = new Date();
+            const currentTime = now.getHours() + now.getMinutes() / 60;
+            let html = '';
+
+            const timings = [
+                { time: "6:30 AM", event: "Mangla Aarti", type: "open", start: 6.5, end: 8.0 },
+                { time: "8:00 AM - 9:00 AM", event: "Mangla Darshan", type: "open", start: 8.0, end: 9.0 },
+                { time: "9:00 AM - 9:30 AM", event: "Abhishek Pooja (Darshan Closed)", type: "closed", start: 9.0, end: 9.5 },
+                { time: "9:30 AM - 10:15 AM", event: "Shringar Darshan", type: "open", start: 9.5, end: 10.25 },
+                { time: "10:15 AM - 10:30 AM", event: "Shringar Bhog (Darshan Closed)", type: "closed", start: 10.25, end: 10.5 },
+                { time: "10:30 AM - 10:45 AM", event: "Shringar Aarti", type: "open", start: 10.5, end: 10.75 },
+                { time: "11:05 AM - 11:20 AM", event: "Gwal Bhog (Darshan Closed)", type: "closed", start: 11.08, end: 11.33 },
+                { time: "11:20 AM - 12:00 PM", event: "Darshan Open", type: "open", start: 11.33, end: 12.0 },
+                { time: "12:00 PM - 12:20 PM", event: "Rajbhog (Darshan Closed)", type: "closed", start: 12.0, end: 12.33 },
+                { time: "12:20 PM - 1:00 PM", event: "Darshan Open", type: "open", start: 12.33, end: 13.0 },
+                { time: "1:00 PM - 5:00 PM", event: "Anosar (Mandir Closed)", type: "closed", start: 13.0, end: 17.0 },
+                { time: "5:00 PM - 5:30 PM", event: "Uthapan Darshan", type: "open", start: 17.0, end: 17.5 },
+                { time: "5:45 PM - 6:00 PM", event: "Uthapan Bhog (Darshan Closed)", type: "closed", start: 17.75, end: 18.0 },
+                { time: "6:15 PM - 6:45 PM", event: "Darshan Open", type: "open", start: 18.25, end: 18.75 },
+                { time: "7:00 PM - 7:25 PM", event: "Sandhya Bhog (Darshan Closed)", type: "closed", start: 19.0, end: 19.42 },
+                { time: "7:25 PM - 7:45 PM", event: "Sandhya Aarti", type: "open", start: 19.42, end: 19.75 },
+                { time: "8:00 PM - 8:10 PM", event: "Shayan Bhog (Darshan Closed)", type: "closed", start: 20.0, end: 20.17 },
+                { time: "8:10 PM - 8:35 PM", event: "Shayan Darshan", type: "open", start: 20.17, end: 20.58 },
+                { time: "8:35 PM", event: "Shayan Aarti", type: "open", start: 20.58, end: 21.0 },
+                { time: "9:00 PM", event: "Mandir Closed", type: "closed", start: 21.0, end: 24.0 }
+            ];
+
+            timings.forEach(item => {
+                const isCurrent = currentTime >= item.start && currentTime < item.end;
+                const colorClass = item.type === 'open' ? 'text-green-400' : 'text-red-400';
+                const currentClass = isCurrent ? 'current-timing' : '';
+                
+                html += `
+                    <div class="flex justify-between items-center p-3 rounded-lg ${currentClass} transition-all duration-300">
+                        <span class="font-semibold">${item.event}</span>
+                        <span class="${colorClass} font-bold">${item.time}</span>
+                    </div>
+                `;
+            });
+            scheduleContainer.innerHTML = html;
+        };
+
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Event listeners
             if(closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
             if(modal) modal.addEventListener('click', (event) => {
                 if (event.target === modal) closeModal();
             });
             
-            // --- About, Contact, Timing Modal Logic ---
             document.querySelectorAll('#about-link, #mobile-about-link').forEach(link => {
                 link.addEventListener('click', (e) => {
                     e.preventDefault();
@@ -771,7 +1024,7 @@
                     paymentModal.classList.remove('hidden');
                 });
             });
-             document.querySelectorAll('#timing-link, #mobile-timing-link').forEach(link => {
+            document.querySelectorAll('#timing-link, #mobile-timing-link').forEach(link => {
                 link.addEventListener('click', (e) => {
                     e.preventDefault();
                     timingModal.classList.remove('hidden');
@@ -807,43 +1060,25 @@
                             successModal.classList.add('hidden');
                         }, 3000);
                     } else {
-                        alert("Oops! There was a problem submitting your form.");
+                        // Use a modal-like message box instead of alert
+                        console.error("Oops! There was a problem submitting your form.");
                     }
                 } catch (error) {
-                    alert("Oops! There was a problem submitting your form.");
+                    console.error("Oops! There was a problem submitting your form.");
                 }
             });
 
-
-            // --- Password Logic ---
-            const passwordOverlay = document.getElementById('password-overlay');
-            const passwordForm = document.getElementById('password-form');
-            const passwordInput = document.getElementById('password-input');
-            const errorMessage = document.getElementById('error-message');
-            const siteWrapper = document.getElementById('site-wrapper');
-            const welcomePopup = document.getElementById('welcome-popup');
-
             passwordForm.addEventListener('submit', function(e) {
                 e.preventDefault();
-                if (passwordInput.value.toLowerCase() === 'dwarkadhish') {
-                    passwordOverlay.style.opacity = '0';
+                const monthYearToDisplay = passwordForm.dataset.monthyear;
+
+                if (passwordInput.value.toLowerCase() === bookingPassword) {
+                    sessionStorage.setItem('passwordVerified', 'true');
+                    closePasswordModal();
+                    showWelcomePopup();
                     setTimeout(() => {
-                        passwordOverlay.classList.add('hidden');
-                        siteWrapper.style.opacity = '1';
-                        
-                        welcomePopup.classList.remove('pointer-events-none');
-                        welcomePopup.style.opacity = '1';
-                        welcomePopup.querySelector('div').style.transform = 'scale(1)';
-
-                        setTimeout(() => {
-                           welcomePopup.style.opacity = '0';
-                           welcomePopup.querySelector('div').style.transform = 'scale(0.95)';
-                           setTimeout(() => {
-                             welcomePopup.classList.add('pointer-events-none');
-                           }, 500);
-                        }, 2500);
-
-                    }, 500);
+                        showDetailsView(monthYearToDisplay);
+                    }, 500); // Wait for the welcome popup to start fading out
                 } else {
                     errorMessage.textContent = 'Incorrect Password. Please try again.';
                     passwordInput.classList.add('shake');
@@ -853,115 +1088,23 @@
                     }, 1500);
                 }
             });
+            
+            passwordOverlay.addEventListener('click', (e) => {
+                if (e.target === passwordOverlay) closePasswordModal();
+            });
 
-            // --- Mandir Timing Logic ---
-            const timings = [
-                { time: "6:30 AM", event: "Mangla Aarti", type: "open", start: 6.5, end: 8.0 },
-                { time: "8:00 AM - 9:00 AM", event: "Mangla Darshan", type: "open", start: 8.0, end: 9.0 },
-                { time: "9:00 AM - 9:30 AM", event: "Abhishek Pooja (Darshan Closed)", type: "closed", start: 9.0, end: 9.5 },
-                { time: "9:30 AM - 10:15 AM", event: "Shringar Darshan", type: "open", start: 9.5, end: 10.25 },
-                { time: "10:15 AM - 10:30 AM", event: "Shringar Bhog (Darshan Closed)", type: "closed", start: 10.25, end: 10.5 },
-                { time: "10:30 AM - 10:45 AM", event: "Shringar Aarti", type: "open", start: 10.5, end: 10.75 },
-                { time: "11:05 AM - 11:20 AM", event: "Gwal Bhog (Darshan Closed)", type: "closed", start: 11.08, end: 11.33 },
-                { time: "11:20 AM - 12:00 PM", event: "Darshan Open", type: "open", start: 11.33, end: 12.0 },
-                { time: "12:00 PM - 12:20 PM", event: "Rajbhog (Darshan Closed)", type: "closed", start: 12.0, end: 12.33 },
-                { time: "12:20 PM - 1:00 PM", event: "Darshan Open", type: "open", start: 12.33, end: 13.0 },
-                { time: "1:00 PM - 5:00 PM", event: "Anosar (Mandir Closed)", type: "closed", start: 13.0, end: 17.0 },
-                { time: "5:00 PM - 5:30 PM", event: "Uthapan Darshan", type: "open", start: 17.0, end: 17.5 },
-                { time: "5:45 PM - 6:00 PM", event: "Uthapan Bhog (Darshan Closed)", type: "closed", start: 17.75, end: 18.0 },
-                { time: "6:15 PM - 6:45 PM", event: "Darshan Open", type: "open", start: 18.25, end: 18.75 },
-                { time: "7:00 PM - 7:25 PM", event: "Sandhya Bhog (Darshan Closed)", type: "closed", start: 19.0, end: 19.42 },
-                { time: "7:25 PM - 7:45 PM", event: "Sandhya Aarti", type: "open", start: 19.42, end: 19.75 },
-                { time: "8:00 PM - 8:10 PM", event: "Shayan Bhog (Darshan Closed)", type: "closed", start: 20.0, end: 20.17 },
-                { time: "8:10 PM - 8:35 PM", event: "Shayan Darshan", type: "open", start: 20.17, end: 20.58 },
-                { time: "8:35 PM", event: "Shayan Aarti", type: "open", start: 20.58, end: 21.0 },
-                { time: "9:00 PM", event: "Mandir Closed", type: "closed", start: 21.0, end: 24.0 }
-            ];
-
-            function populateTimings() {
-                const scheduleContainer = document.getElementById('timing-schedule');
-                const now = new Date();
-                const currentTime = now.getHours() + now.getMinutes() / 60;
-                let html = '';
-
-                timings.forEach(item => {
-                    const isCurrent = currentTime >= item.start && currentTime < item.end;
-                    const colorClass = item.type === 'open' ? 'text-green-400' : 'text-red-400';
-                    const currentClass = isCurrent ? 'current-timing' : '';
-                    
-                    html += `
-                        <div class="flex justify-between items-center p-3 rounded-lg ${currentClass} transition-all duration-300">
-                            <span class="font-semibold">${item.event}</span>
-                            <span class="${colorClass} font-bold">${item.time}</span>
-                        </div>
-                    `;
-                });
-                scheduleContainer.innerHTML = html;
-            }
-
-            generateDateCards();
-            startCountdown();
-            populateTimings();
-            document.getElementById('home-link').addEventListener('click', (e) => { e.preventDefault(); showMainView(); });
-            document.getElementById('mobile-home-link').addEventListener('click', (e) => { e.preventDefault(); showMainView(); });
             document.getElementById('mobile-menu-button').addEventListener('click', () => {
                 document.getElementById('mobile-menu').classList.toggle('hidden');
             });
             
-            // --- Copy to Clipboard Logic ---
-            function showNotification() {
-                const notification = document.getElementById('notification');
-                notification.classList.remove('translate-y-24', 'opacity-0');
-                notification.classList.add('translate-y-0', 'opacity-100');
-                setTimeout(() => {
-                    notification.classList.add('translate-y-24', 'opacity-0');
-                    notification.classList.remove('translate-y-0', 'opacity-100');
-                }, 2000);
-            }
+            document.getElementById('home-link').addEventListener('click', (e) => { e.preventDefault(); showMainView(); });
+            document.getElementById('mobile-home-link').addEventListener('click', (e) => { e.preventDefault(); showMainView(); });
 
-            function updateButtonState(button) {
-                const originalHTML = button.innerHTML; 
-                button.disabled = true;
-                button.classList.add('bg-green-500/50');
-                button.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>`;
-                
-                setTimeout(() => {
-                    button.innerHTML = originalHTML;
-                    button.disabled = false;
-                    button.classList.remove('bg-green-500/50');
-                }, 2000);
-            }
-
-            window.copyToClipboard = function(elementId, button) {
-                const textToCopy = document.getElementById(elementId).innerText;
-                const fallbackCopy = () => {
-                    const textArea = document.createElement('textarea');
-                    textArea.value = textToCopy;
-                    textArea.style.position = 'fixed';
-                    textArea.style.left = '-9999px';
-                    document.body.appendChild(textArea);
-                    textArea.focus();
-                    textArea.select();
-                    try {
-                        document.execCommand('copy');
-                        showNotification();
-                        updateButtonState(button);
-                    } catch (err) {
-                        console.error('Fallback: Oops, unable to copy', err);
-                    }
-                    document.body.removeChild(textArea);
-                };
-
-                if (navigator.clipboard && window.isSecureContext) {
-                    navigator.clipboard.writeText(textToCopy).then(() => {
-                        showNotification();
-                        updateButtonState(button);
-                    }).catch(fallbackCopy);
-                } else {
-                    fallbackCopy();
-                }
-            }
-
+            // Initial calls to set up the site
+            generateDateCards();
+            startCountdown();
+            populateTimings();
+            showWelcomePopup(); // Show welcome popup when the site loads
         });
     </script>
 </body>
