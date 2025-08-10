@@ -3,254 +3,1081 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gallery - Jay Dwarkadhish</title>
+    <title>Expense Tracker & Splitter</title>
+    <!-- Inter font from Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Teko:wght@400;600&family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+    <!-- jsPDF for PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- jsPDF-AutoTable plugin for table generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+    
     <style>
-        /* General body and typography styles from your main page */
-        html {
-            scroll-behavior: smooth;
-        }
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #0c0a1a;
-            color: #f0f0f0;
-            overflow-x: hidden;
-        }
-        h1, h2.page-title, #countdown-timer span {
-            font-family: 'Teko', sans-serif;
-            letter-spacing: 0.05em;
+            background-attachment: fixed;
+            transition: all 0.3s ease;
         }
 
-        /* Aurora background and glass effect from your main page */
-        .aurora-background {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            background: radial-gradient(ellipse at 50% 0%, rgba(56, 189, 248, 0.2) 0%, transparent 70%),
-                        radial-gradient(ellipse at 10% 100%, rgba(168, 85, 247, 0.2) 0%, transparent 70%),
-                        radial-gradient(ellipse at 90% 100%, rgba(236, 72, 153, 0.2) 0%, transparent 70%);
-            animation: animate-aurora 15s linear infinite;
+        /* Light mode styling */
+        body {
+            background-color: #f3f4f6;
+            color: #1f2937;
         }
-        @keyframes animate-aurora {
-            0% { transform: rotate(0deg) scale(1.5); opacity: 0.5; }
-            50% { transform: rotate(180deg) scale(2); opacity: 1; }
-            100% { transform: rotate(360deg) scale(1.5); opacity: 0.5; }
+        .main-container {
+            background-color: white;
+            border: 1px solid #e5e7eb;
+            color: #1f2937;
         }
-        .glass-effect {
-            background: rgba(12, 10, 26, 0.4);
-            -webkit-backdrop-filter: blur(20px);
-            backdrop-filter: blur(20px);
+        .card {
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            color: #1f2937;
+        }
+        .text-gray-900 { color: #1f2937; }
+        .text-gray-300 { color: #4b5563; }
+        .text-gray-400 { color: #6b7280; }
+        .text-gray-700 { color: #374151; }
+        input, select {
+            background-color: white;
+            color: #1f2937;
+            border-color: #e5e7eb;
+        }
+        .light .bg-gray-700 {
+            background-color: #f3f4f6;
+        }
+        .light .text-gray-200 {
+            color: #1f2937;
+        }
+        .light .data-button-text {
+            color: #1f2937;
+        }
+
+
+        /* Dark mode styling */
+        body.dark {
+            background-image: linear-gradient(to bottom right, #1f2937, #111827, #0d121c, #1f2937);
+            background-color: transparent;
+            color: #d1d5db;
+        }
+        body.dark .main-container {
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            background-color: rgba(31, 41, 55, 0.5);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+            color: #d1d5db;
+        }
+        body.dark .card {
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            background-color: rgba(31, 41, 55, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            color: #d1d5db;
+        }
+        body.dark .text-gray-900 { color: #d1d5db; }
+        body.dark .text-gray-300 { color: #d1d5db; }
+        body.dark .text-gray-400 { color: #9ca3af; }
+        body.dark .text-gray-700 { color: #d1d5db; }
+        body.dark input, body.dark select {
+            background-color: #1f2937;
+            color: #d1d5db;
+            border-color: #4b5563;
+        }
+        body.dark .bg-gray-100 {
+            background-color: #1f2937;
+        }
+        body.dark .divide-gray-300 {
+            border-color: #374151;
         }
 
-        /* Gallery-specific styles */
-        .gallery-image-container {
-            position: relative;
-            overflow: hidden;
-            border-radius: 0.75rem; /* rounded-lg */
-            transition: transform 0.3s ease-in-out;
-            cursor: pointer;
+        /* Custom button styling with glass effect for dark mode */
+        body.dark .glass-button {
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            background-color: rgba(55, 65, 81, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.2s ease-in-out;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
         }
-        .gallery-image-container:hover {
-            transform: scale(1.03); /* Slight scale on hover for effect */
+        body.dark .glass-button:hover {
+            background-color: rgba(75, 85, 99, 0.8);
+            border-color: rgba(255, 255, 255, 0.2);
         }
-        .gallery-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: opacity 0.3s ease-in-out;
+        body.dark .glass-button:disabled {
+            background-color: rgba(75, 85, 99, 0.5);
+            border-color: rgba(255, 255, 255, 0.05);
+            cursor: not-allowed;
         }
-        /* Modal for full-screen image view */
-        .modal-backdrop {
+        
+        /* Custom scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 0, 0, 0.4);
+        }
+        body.dark ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        body.dark ::-webkit-scrollbar-thumb {
+            background: rgba(156, 163, 175, 0.5);
+        }
+        body.dark ::-webkit-scrollbar-thumb:hover {
+            background: rgba(107, 114, 128, 0.5);
+        }
+
+        /* Theme Toggle Button */
+        #themeToggle {
             position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            z-index: 50;
+            padding: 0.5rem;
+            border-radius: 9999px;
+            cursor: pointer;
+            transition: all 0.2s;
+            backdrop-filter: blur(10px);
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        body.dark #themeToggle {
+            background-color: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        #themeToggle:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        body.dark #themeToggle:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Slider Styling */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            z-index: 50;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
+            right: 0;
+            bottom: 0;
+            background-color: #4b5563;
+            transition: .4s;
+            border-radius: 34px;
         }
-        .modal-visible {
-            opacity: 1;
-            pointer-events: auto;
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
         }
-        .modal-content-img {
-            max-width: 90%;
-            max-height: 90vh;
-            border-radius: 1rem; /* rounded-lg */
-            overflow: hidden;
-            position: relative;
-            animation: fadeIn 0.3s ease-in-out;
+        input:checked + .slider {
+            background-color: #2196F3;
         }
-        @keyframes fadeIn {
-            from { transform: scale(0.9); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
+        input:checked + .slider:before {
+            transform: translateX(26px);
         }
+        
+        .light-mode-icon { color: #facc15; }
+        .dark-mode-icon { color: #60a5fa; }
+
     </style>
 </head>
-<body class="flex flex-col min-h-screen">
+<body class="p-4 sm:p-8">
 
-    <div class="aurora-background"></div>
-
-    <!-- Header section, copied from your main site but with updated links -->
-    <header class="glass-effect shadow-md sticky top-0 z-40">
-        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <a href="index.html" class="flex items-center text-2xl font-bold tracking-wider text-white" style="text-shadow: 0 0 8px rgba(255,255,255,0.5);">
-                <svg class="w-8 h-8 mr-2 text-amber-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M3 20h18" /><path d="M7 20L12 5l5 15" /><path d="M12 5V2l5 1.5L12 2" /><path d="M8 20v-3h8v3" />
-                </svg>
-                Jay Dwarkadhish
-            </a>
-            <div class="hidden md:flex items-center space-x-8">
-                <a href="index.html" class="text-gray-300 hover:text-white font-medium transition-colors duration-300">Home</a>
-                <a href="gallery.html" class="text-white font-medium transition-colors duration-300">Gallery</a>
-                <a href="index.html#timing-link" class="text-gray-300 hover:text-white font-medium transition-colors duration-300">Mandir Timing</a>
-                <a href="index.html#about-link" class="text-gray-300 hover:text-white font-medium transition-colors duration-300">About Us</a>
-                <a href="index.html#contact-link" class="text-gray-300 hover:text-white font-medium transition-colors duration-300">Contact</a>
-                <a href="index.html#pay-link" class="bg-green-500/80 hover:bg-green-500/90 text-white font-bold py-2 px-4 rounded-lg transition-all duration-300 transform hover:scale-105">Pay Me Here</a>
-            </div>
-            <button class="md:hidden" id="mobile-menu-button">
-                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
-            </button>
-        </nav>
-        <div id="mobile-menu" class="hidden md:hidden px-6 pb-4 glass-effect">
-            <a href="index.html" class="block py-2 text-gray-300 hover:text-white">Home</a>
-            <a href="gallery.html" class="block py-2 text-white">Gallery</a>
-            <a href="index.html#timing-link" class="block py-2 text-gray-300 hover:text-white">Mandir Timing</a>
-            <a href="index.html#about-link" class="block py-2 text-gray-300 hover:text-white">About Us</a>
-            <a href="index.html#contact-link" class="block py-2 text-gray-300 hover:text-white">Contact</a>
-            <a href="index.html#pay-link" class="block py-2 mt-2 text-center bg-green-500/80 hover:bg-green-500/90 text-white font-bold rounded-lg transition-all duration-300">Pay Me Here</a>
+    <div class="max-w-4xl mx-auto main-container p-6 sm:p-8 rounded-2xl shadow-xl">
+        <div class="flex justify-between items-center mb-6">
+            <h1 id="mainTitle" class="text-3xl sm:text-4xl font-bold text-gray-900 text-center flex-grow">Expense Splitter</h1>
         </div>
-    </header>
-
-    <!-- Main Gallery Content -->
-    <div class="container mx-auto px-6 py-16 flex-grow">
-        <div class="text-center mb-12">
-            <h1 class="text-4xl md:text-5xl font-black text-white leading-tight" style="text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);">🙏 Journey Captured</h1>
-            <p class="text-lg text-gray-400 mt-4 max-w-3xl mx-auto">A visual chronicle of our sacred pilgrimages and memorable moments.</p>
+        <div class="mb-8 space-y-4">
+            <div>
+                <label for="tourNameInput" class="block text-sm font-medium text-gray-900 mb-2">Tour/Travel Name</label>
+                <input type="text" id="tourNameInput" placeholder="e.g., Goa Trip 2023" class="block w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 transition-colors">
+            </div>
+            <div>
+                <label for="tripStartDate" class="block text-sm font-medium text-gray-900 mb-2">Trip Dates</label>
+                <div class="flex flex-wrap gap-4">
+                    <input type="date" id="tripStartDate" required class="flex-1 min-w-[120px] block px-4 py-2 border rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 transition-colors">
+                    <input type="date" id="tripEndDate" required class="flex-1 min-w-[120px] block px-4 py-2 border rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 transition-colors">
+                </div>
+            </div>
         </div>
 
-        <!-- Responsive grid for images -->
-        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-            <!-- Example image card. Add more by duplicating this block. -->
-            <div class="gallery-image-container glass-effect">
-                <img src="img/001.jpg" alt="Dwarka Yatra Image" class="gallery-image">
+        <div class="mt-10">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">Manage People</h2>
+            <div class="card p-6 rounded-xl transition-colors duration-300">
+                <div id="peopleList" class="flex flex-wrap gap-2 mb-4">
+                </div>
+                <div class="flex gap-4">
+                    <button id="addPersonBtn" class="flex-1 bg-green-600 text-white py-2 px-4 rounded-lg font-semibold shadow-lg hover:bg-green-700 transition-colors duration-300 transform hover:scale-105">
+                        + Add Person
+                    </button>
+                    <button id="removePersonBtn" class="flex-1 bg-red-600 text-white py-2 px-4 rounded-lg font-semibold shadow-lg hover:bg-red-700 transition-colors duration-300 transform hover:scale-105" disabled>
+                        - Remove Selected Person
+                    </button>
+                </div>
             </div>
-            <div class="gallery-image-container glass-effect">
-                <img src="img/002.jpg" alt="Dwarka Yatra Image" class="gallery-image">
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-10">
+            <div class="card p-6 rounded-xl transition-colors duration-300">
+                <h2 class="text-2xl font-bold text-gray-900 mb-4">Add a New Expense</h2>
+                <form id="expenseForm" class="space-y-4">
+                    <div>
+                        <label for="description" class="block text-sm font-medium text-gray-900">Description</label>
+                        <input type="text" id="description" placeholder="e.g., Dinner, groceries, taxi fare" required class="mt-1 block w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 transition-colors">
+                    </div>
+                    <div>
+                        <label for="amount" class="block text-sm font-medium text-gray-900">Amount (₹)</label>
+                        <input type="number" id="amount" step="0.01" placeholder="125.50" required class="mt-1 block w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 transition-colors">
+                    </div>
+                    <div>
+                        <label for="dateInput" class="block text-sm font-medium text-gray-900">Date</label>
+                        <input type="date" id="dateInput" required class="mt-1 block w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 transition-colors">
+                    </div>
+                    <div>
+                        <label for="paidBy" class="block text-sm font-medium text-gray-900">Paid By</label>
+                        <select id="paidBy" required class="mt-1 block w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 transition-colors"></select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-900 mb-2">Split Among</label>
+                        <div id="splitAmong" class="flex flex-wrap gap-2"></div>
+                    </div>
+                    <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg font-semibold shadow-lg hover:bg-blue-700 transition-colors duration-300 transform hover:scale-105">
+                        Add Expense
+                    </button>
+                </form>
             </div>
-            <div class="gallery-image-container glass-effect">
-                <img src="img/003.jpg" alt="Dwarka Yatra Image" class="gallery-image">
+
+            <div class="card p-6 rounded-xl transition-colors duration-300">
+                <h2 class="text-2xl font-bold text-gray-900 mb-4">Summary</h2>
+                <div id="summary" class="space-y-4">
+                    <p class="text-gray-400">Add an expense to see the summary here.</p>
+                </div>
+                <div class="mt-6">
+                    <button id="generatePdfBtn" class="w-full bg-green-600 text-white py-2 px-4 rounded-lg font-semibold shadow-lg hover:bg-green-700 transition-colors duration-300 transform hover:scale-105">
+                        Generate PDF Report
+                    </button>
+                </div>
             </div>
-            <div class="gallery-image-container glass-effect">
-                <img src="img/004.jpg" alt="Dwarka Yatra Image" class="gallery-image">
+        </div>
+
+        <div class="mt-10">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">All Expenses</h2>
+            <div id="expenseList" class="overflow-x-auto rounded-lg card transition-colors duration-300">
+                <table class="min-w-full divide-y divide-gray-300">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th scope="col" class="px-4 py-3 text-left text-xs font-semibold text-gray-900 uppercase tracking-wider">Description</th>
+                            <th scope="col" class="px-4 py-3 text-left text-xs font-semibold text-gray-900 uppercase tracking-wider">Date</th>
+                            <th scope="col" class="px-4 py-3 text-left text-xs font-semibold text-gray-900 uppercase tracking-wider">Amount</th>
+                            <th scope="col" class="px-4 py-3 text-left text-xs font-semibold text-gray-900 uppercase tracking-wider">Paid By</th>
+                            <th scope="col" class="px-4 py-3 text-left text-xs font-semibold text-gray-900 uppercase tracking-wider">Split Amount</th>
+                            <th scope="col" class="px-4 py-3 text-left text-xs font-semibold text-gray-900 uppercase tracking-wider">Split Among</th>
+                            <th scope="col" class="px-4 py-3 text-left text-xs font-semibold text-gray-900 uppercase tracking-wider">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="expenseTableBody" class="bg-transparent divide-y divide-gray-200">
+                    </tbody>
+                </table>
+                <p id="noExpensesMessage" class="text-center text-gray-400 py-6 px-4">No expenses added yet.</p>
             </div>
-            <div class="gallery-image-container glass-effect">
-                <img src="img/005.jpg" alt="Dwarka Yatra Image" class="gallery-image">
+        </div>
+        
+        <div class="mt-10">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">Data Management</h2>
+            <div class="card p-6 rounded-xl flex flex-col sm:flex-row gap-4">
+                <button id="exportDataBtn" class="flex-1 text-white py-2 px-4 rounded-lg font-semibold shadow-lg transition-colors duration-300 transform hover:scale-105 bg-gray-700 dark:bg-gray-700">
+                    Export Data (JSON)
+                </button>
+                <button id="importDataBtn" class="flex-1 text-white py-2 px-4 rounded-lg font-semibold shadow-lg transition-colors duration-300 transform hover:scale-105 bg-gray-700 dark:bg-gray-700">
+                    Import Data (JSON)
+                </button>
+                <input type="file" id="fileInput" accept="application/json" class="hidden">
             </div>
-            <div class="gallery-image-container glass-effect">
-                <img src="img/006.jpg" alt="Dwarka Yatra Image" class="gallery-image">
-            </div>
-            <div class="gallery-image-container glass-effect">
-                <img src="img/007.jpg" alt="Dwarka Yatra Image" class="gallery-image">
-            </div>
-            <div class="gallery-image-container glass-effect">
-                <img src="img/008.jpg" alt="Dwarka Yatra Image" class="gallery-image">
-            </div>
-            <div class="gallery-image-container glass-effect">
-                <img src="img/009.jpg" alt="Dwarka Yatra Image" class="gallery-image">
-            </div>
-            <div class="gallery-image-container glass-effect">
-                <img src="img/010.jpg" alt="Dwarka Yatra Image" class="gallery-image">
-            </div>
-            <div class="gallery-image-container glass-effect">
-                <img src="img/011.jpg" alt="Dwarka Yatra Image" class="gallery-image">
-            </div>
-            <div class="gallery-image-container glass-effect">
-                <img src="img/012.jpg" alt="Dwarka Yatra Image" class="gallery-image">
+        </div>
+
+    </div>
+    
+    <!-- Theme Toggle Button -->
+    <div id="themeToggle" class="fixed bottom-5 right-5 z-50 p-2 rounded-full cursor-pointer bg-white/30 dark:bg-black/30 backdrop-blur-md transition-all duration-500 flex items-center justify-center space-x-2">
+        <svg id="sunIcon" class="h-6 w-6 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+        </svg>
+        <label class="switch">
+            <input type="checkbox" id="theme-checkbox">
+            <span class="slider"></span>
+        </label>
+        <svg id="moonIcon" class="h-6 w-6 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+        </svg>
+    </div>
+
+
+    <div id="addPersonModal" class="fixed inset-0 bg-black bg-opacity-30 z-50 flex items-center justify-center hidden">
+        <div class="main-container p-8 rounded-xl shadow-2xl max-w-sm w-full mx-4 transform transition-transform duration-300 scale-95 opacity-0" id="addPersonModalContent">
+            <h3 class="text-xl font-bold text-gray-900 mb-4">Add People</h3>
+            <p class="text-sm text-gray-700 mb-4">Enter a comma-separated list of names (e.g., "Alice, Bob, Charlie")</p>
+            <input type="text" id="personInput" class="block w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 transition-colors">
+            <div class="flex justify-end gap-2 mt-4">
+                <button id="cancelAddPersonBtn" class="px-4 py-2 glass-button rounded-lg font-semibold hover:bg-gray-600 transition-colors">Cancel</button>
+                <button id="confirmAddPersonBtn" class="px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold shadow-lg hover:bg-blue-700 transition-colors">Add</button>
             </div>
         </div>
     </div>
     
-    <!-- Image Modal for enlarged view -->
-    <div id="image-modal" class="modal-backdrop hidden">
-        <div class="modal-content-img relative">
-            <!-- Close button for the modal -->
-            <button id="close-image-modal" class="absolute -top-3 -right-3 sm:-top-4 sm:-right-4 bg-red-600 text-white rounded-full h-8 w-8 flex items-center justify-center text-lg font-bold z-50 hover:bg-red-700 transition-all">&times;</button>
-            <!-- The image that will be shown in the modal -->
-            <img id="modal-image" src="" alt="Enlarged Image" class="rounded-lg">
+    <div id="editPersonModal" class="fixed inset-0 bg-black bg-opacity-30 z-50 flex items-center justify-center hidden">
+        <div class="main-container p-8 rounded-xl shadow-2xl max-w-sm w-full mx-4 transform transition-transform duration-300 scale-95 opacity-0" id="editPersonModalContent">
+            <h3 class="text-xl font-bold text-gray-900 mb-4">Edit Person's Name</h3>
+            <input type="text" id="editPersonInput" class="block w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 transition-colors">
+            <div class="flex justify-end gap-2 mt-4">
+                <button id="cancelEditPersonBtn" class="px-4 py-2 glass-button rounded-lg font-semibold hover:bg-gray-600 transition-colors">Cancel</button>
+                <button id="confirmEditPersonBtn" class="px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold shadow-lg hover:bg-blue-700 transition-colors">Save</button>
+            </div>
         </div>
     </div>
 
-    <!-- Footer, copied from your main site -->
-    <footer class="glass-effect mt-20">
-        <div class="container mx-auto px-6 py-8">
-            <div class="flex flex-col md:flex-row justify-between items-center">
-                <p class="text-sm text-gray-400 mb-4 md:mb-0">© 2025 Jay Dwarkadhish. All Rights Reserved.</p>
-                <div class="flex space-x-6">
-                    <a href="#" class="text-gray-400 hover:text-white transition-colors"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.04C6.5 2.04 2 6.53 2 12.06c0 4.71 3.21 8.65 7.53 9.79v-6.94H7.01v-2.85h2.52V9.82c0-2.5 1.52-3.88 3.78-3.88 1.08 0 2.02.08 2.29.12v2.54h-1.5c-1.21 0-1.45.58-1.45 1.42v1.86h2.83l-.37 2.85h-2.46v6.94C18.79 20.71 22 16.77 22 12.06c0-5.53-4.5-10.02-10-10.02z"/></svg></a>
-                    <a href="#" class="text-gray-400 hover:text-white transition-colors"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M22.46 6c-.77.35-1.6.58-2.46.67.88-.53 1.56-1.37 1.88-2.38-.83.49-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.98-3.56-.18-6.72-1.88-8.84-4.48-.37.63-.58 1.37-.58 2.15 0 1.49.75 2.81 1.91 3.58-.7-.02-1.37-.22-1.95-.55v.05c0 2.08 1.48 3.82 3.44 4.21a4.22 4.22 0 0 1-1.94.07 4.28 4.28 0 0 0 4 2.98 8.521 8.521 0 0 1-5.33 1.84c-.34 0-.68-.02-1.02-.06C3.44 20.29 5.7 21 8.12 21c7.55 0 11.69-6.25 11.69-11.69v-.53c.8-.58 1.48-1.3 2.02-2.12z"/></svg></a>
-                    <a href="#" class="text-gray-400 hover:text-white transition-colors"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8A3.6 3.6 0 0 0 7.6 20h8.8A3.6 3.6 0 0 0 20 16.4V7.6A3.6 3.6 0 0 0 16.4 4H7.6m9.65 1.5a1.25 1.25 0 1 1-2.5 0 1.25 1.25 0 0 1 2.5 0M12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10m0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/></svg></a>
-                </div>
+    <div id="customModal" class="fixed inset-0 bg-black bg-opacity-30 z-50 flex items-center justify-center hidden">
+        <div class="main-container p-8 rounded-xl shadow-2xl max-w-xs w-full mx-4 transform transition-transform duration-300 scale-95 opacity-0" id="customModalContent">
+            <h3 id="modalTitle" class="text-xl font-bold text-gray-900 mb-4"></h3>
+            <p id="modalMessage" class="text-sm text-gray-700 mb-4"></p>
+            <div id="modalButtons" class="flex justify-end gap-2 mt-4">
             </div>
         </div>
-    </footer>
+    </div>
+    
+    <div id="toast-container" class="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 transition-opacity duration-300 opacity-0">
+        <div id="toast-message" class="bg-green-600 text-white text-sm px-6 py-3 rounded-full shadow-lg"></div>
+    </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Mobile menu toggle logic
-            const mobileMenuButton = document.getElementById('mobile-menu-button');
-            const mobileMenu = document.getElementById('mobile-menu');
-            if (mobileMenuButton) {
-                mobileMenuButton.addEventListener('click', () => {
-                    mobileMenu.classList.toggle('hidden');
-                });
+        window.onload = function() {
+            let tourName = localStorage.getItem('tourName') || 'Expense Splitter';
+            let tripStartDate = localStorage.getItem('tripStartDate') || '';
+            let tripEndDate = localStorage.getItem('tripEndDate') || '';
+            const people = JSON.parse(localStorage.getItem('people')) || ['Alice', 'Bob', 'Charlie'];
+            const expenses = JSON.parse(localStorage.getItem('expenses')) || [];
+            let selectedPersonForRemoval = null;
+            let originalNameForEdit = null;
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+
+            const mainTitle = document.getElementById('mainTitle');
+            const tourNameInput = document.getElementById('tourNameInput');
+            const tripStartDateInput = document.getElementById('tripStartDate');
+            const tripEndDateInput = document.getElementById('tripEndDate');
+            const expenseForm = document.getElementById('expenseForm');
+            const descriptionInput = document.getElementById('description');
+            const amountInput = document.getElementById('amount');
+            const dateInput = document.getElementById('dateInput');
+            const paidBySelect = document.getElementById('paidBy');
+            const splitAmongDiv = document.getElementById('splitAmong');
+            const expenseTableBody = document.getElementById('expenseTableBody');
+            const summaryDiv = document.getElementById('summary');
+            const noExpensesMessage = document.getElementById('noExpensesMessage');
+            const generatePdfBtn = document.getElementById('generatePdfBtn');
+            const addPersonModal = document.getElementById('addPersonModal');
+            const addPersonModalContent = document.getElementById('addPersonModalContent');
+            const personInput = document.getElementById('personInput');
+            const addPersonBtn = document.getElementById('addPersonBtn');
+            const removePersonBtn = document.getElementById('removePersonBtn');
+            const peopleListDiv = document.getElementById('peopleList');
+            const cancelAddPersonBtn = document.getElementById('cancelAddPersonBtn');
+            const confirmAddPersonBtn = document.getElementById('confirmAddPersonBtn');
+            const editPersonModal = document.getElementById('editPersonModal');
+            const editPersonModalContent = document.getElementById('editPersonModalContent');
+            const editPersonInput = document.getElementById('editPersonInput');
+            const cancelEditPersonBtn = document.getElementById('cancelEditPersonBtn');
+            const confirmEditPersonBtn = document.getElementById('confirmEditPersonBtn');
+            const customModal = document.getElementById('customModal');
+            const customModalContent = document.getElementById('customModalContent');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalMessage = document.getElementById('modalMessage');
+            const modalButtons = document.getElementById('modalButtons');
+            const exportDataBtn = document.getElementById('exportDataBtn');
+            const importDataBtn = document.getElementById('importDataBtn');
+            const fileInput = document.getElementById('fileInput');
+            const toastContainer = document.getElementById('toast-container');
+            const toastMessage = document.getElementById('toast-message');
+            const themeToggleBtn = document.getElementById('themeToggle');
+            const themeCheckbox = document.getElementById('theme-checkbox');
+            const moonIcon = document.getElementById('moonIcon');
+            const sunIcon = document.getElementById('sunIcon');
+            const { jsPDF } = window.jspdf;
+
+            function applyTheme(theme) {
+                if (theme === 'dark') {
+                    document.body.classList.add('dark');
+                    themeCheckbox.checked = true;
+                    sunIcon.classList.add('hidden');
+                    moonIcon.classList.remove('hidden');
+                } else {
+                    document.body.classList.remove('dark');
+                    themeCheckbox.checked = false;
+                    moonIcon.classList.add('hidden');
+                    sunIcon.classList.remove('hidden');
+                }
             }
-
-            // Image modal functionality
-            const imageModal = document.getElementById('image-modal');
-            const modalImage = document.getElementById('modal-image');
-            const closeModalBtn = document.getElementById('close-image-modal');
-            const galleryImages = document.querySelectorAll('.gallery-image');
-
-            // Open modal when an image is clicked
-            galleryImages.forEach(image => {
-                image.addEventListener('click', () => {
-                    modalImage.src = image.src; // Set the modal's image source to the clicked image
-                    imageModal.classList.remove('hidden');
-                    // We can add a delay to smoothly fade in the modal
-                    setTimeout(() => imageModal.classList.add('modal-visible'), 10);
-                });
+            
+            themeCheckbox.addEventListener('change', () => {
+                const newTheme = themeCheckbox.checked ? 'dark' : 'light';
+                applyTheme(newTheme);
+                localStorage.setItem('theme', newTheme);
+                renderAll();
             });
 
-            // Close modal when the close button or backdrop is clicked
-            const closeImageModal = () => {
-                imageModal.classList.remove('modal-visible');
-                setTimeout(() => imageModal.classList.add('hidden'), 300); // Hide after transition
-            };
-            if (closeModalBtn) {
-                closeModalBtn.addEventListener('click', closeImageModal);
+            function saveData() {
+                localStorage.setItem('tourName', tourName);
+                localStorage.setItem('tripStartDate', tripStartDate);
+                localStorage.setItem('tripEndDate', tripEndDate);
+                localStorage.setItem('people', JSON.stringify(people));
+                localStorage.setItem('expenses', JSON.stringify(expenses));
             }
-            if (imageModal) {
-                imageModal.addEventListener('click', (event) => {
-                    if (event.target === imageModal) {
-                        closeImageModal();
+
+            function renderTourInfo() {
+                mainTitle.textContent = tourName || 'Expense Splitter';
+                tourNameInput.value = tourName === 'Expense Splitter' ? '' : tourName;
+                tripStartDateInput.value = tripStartDate;
+                tripEndDateInput.value = tripEndDate;
+            }
+
+            function renderPeopleSelectors() {
+                paidBySelect.innerHTML = '';
+                people.forEach(person => {
+                    const option = document.createElement('option');
+                    option.value = person;
+                    option.textContent = person;
+                    paidBySelect.appendChild(option);
+                });
+
+                splitAmongDiv.innerHTML = '';
+                people.forEach(person => {
+                    const badge = document.createElement('span');
+                    badge.textContent = person;
+                    badge.dataset.name = person;
+                    badge.classList.add('px-3', 'py-1', 'rounded-full', 'text-sm', 'font-semibold', 'cursor-pointer', 'transition-colors', 'duration-200');
+                    
+                    if (document.body.classList.contains('dark')) {
+                        badge.classList.add('bg-blue-600', 'text-white', 'hover:bg-blue-700');
+                    } else {
+                        badge.classList.add('bg-blue-200', 'text-blue-900', 'hover:bg-blue-300');
                     }
+                    
+                    badge.addEventListener('click', () => {
+                        if (document.body.classList.contains('dark')) {
+                            if (badge.classList.contains('bg-blue-600')) {
+                                badge.classList.remove('bg-blue-600', 'text-white', 'hover:bg-blue-700');
+                                badge.classList.add('bg-gray-700', 'text-gray-200', 'hover:bg-gray-600');
+                            } else {
+                                badge.classList.remove('bg-gray-700', 'text-gray-200', 'hover:bg-gray-600');
+                                badge.classList.add('bg-blue-600', 'text-white', 'hover:bg-blue-700');
+                            }
+                        } else {
+                            if (badge.classList.contains('bg-blue-200')) {
+                                badge.classList.remove('bg-blue-200', 'text-blue-900', 'hover:bg-blue-300');
+                                badge.classList.add('bg-gray-200', 'text-gray-700', 'hover:bg-gray-300');
+                            } else {
+                                badge.classList.remove('bg-gray-200', 'text-gray-700', 'hover:bg-gray-300');
+                                badge.classList.add('bg-blue-200', 'text-blue-900', 'hover:bg-blue-300');
+                            }
+                        }
+                    });
+
+                    splitAmongDiv.appendChild(badge);
+                });
+
+                peopleListDiv.innerHTML = '';
+                people.forEach(person => {
+                    const badge = document.createElement('span');
+                    badge.textContent = person;
+                    badge.className = 'px-3 py-1 rounded-full text-sm font-semibold cursor-pointer transition-colors duration-200';
+                    
+                    if (document.body.classList.contains('dark')) {
+                        if (person === selectedPersonForRemoval) {
+                            badge.classList.add('bg-red-500', 'text-white', 'hover:bg-red-600');
+                        } else {
+                            badge.classList.add('bg-gray-700', 'text-gray-200', 'hover:bg-gray-600');
+                        }
+                    } else {
+                        if (person === selectedPersonForRemoval) {
+                            badge.classList.add('bg-red-500', 'text-white', 'hover:bg-red-600');
+                        } else {
+                            badge.classList.add('bg-gray-200', 'text-gray-700', 'hover:bg-gray-300');
+                        }
+                    }
+                    
+                    badge.addEventListener('click', () => {
+                         selectedPersonForRemoval = (selectedPersonForRemoval === person) ? null : person;
+                         renderPeopleSelectors();
+                    });
+
+                    badge.addEventListener('dblclick', (e) => {
+                         originalNameForEdit = person;
+                         editPersonInput.value = person;
+                         showModal('editPersonModal');
+                    });
+                    
+                    peopleListDiv.appendChild(badge);
+                });
+
+                removePersonBtn.disabled = people.length <= 1 || selectedPersonForRemoval === null;
+                if (removePersonBtn.disabled) {
+                    removePersonBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                } else {
+                    removePersonBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                }
+            }
+
+            function renderExpenses() {
+                expenseTableBody.innerHTML = '';
+                if (expenses.length === 0) {
+                    noExpensesMessage.classList.remove('hidden');
+                    return;
+                }
+                noExpensesMessage.classList.add('hidden');
+
+                expenses.forEach((expense, index) => {
+                    const individualShare = expense.amount / expense.splitAmong.length;
+                    const row = document.createElement('tr');
+                    row.className = 'bg-transparent';
+                    
+                    if (document.body.classList.contains('dark')) {
+                        row.classList.add('hover:bg-gray-800/20');
+                    } else {
+                        row.classList.add('hover:bg-gray-100');
+                    }
+                    
+                    row.innerHTML = `
+                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100">${expense.description}</td>
+                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900 dark:text-gray-400">${expense.date}</td>
+                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900 dark:text-gray-400">₹${expense.amount.toFixed(2)}</td>
+                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900 dark:text-gray-400">${expense.paidBy}</td>
+                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900 dark:text-gray-400">₹${individualShare.toFixed(2)}</td>
+                        <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900 dark:text-gray-400">${expense.splitAmong.join(', ')}</td>
+                        <td class="px-4 py-3 whitespace-nowrap text-sm font-medium">
+                            <button onclick="deleteExpense(${index})" class="text-red-600 hover:text-red-900 transition-colors">Delete</button>
+                        </td>
+                    `;
+                    expenseTableBody.appendChild(row);
                 });
             }
-        });
+
+            function calculateSummary() {
+                if (expenses.length === 0) {
+                    summaryDiv.innerHTML = '<p class="text-gray-900 dark:text-gray-400">Add an expense to see the summary here.</p>';
+                    return;
+                }
+
+                const personBalances = {};
+                people.forEach(person => personBalances[person] = 0);
+
+                expenses.forEach(expense => {
+                    const individualShare = expense.amount / expense.splitAmong.length;
+                    personBalances[expense.paidBy] += expense.amount;
+                    expense.splitAmong.forEach(person => {
+                        personBalances[person] -= individualShare;
+                    });
+                });
+
+                const summaryHtml = [];
+                const debtors = [];
+                const creditors = [];
+
+                for (const person in personBalances) {
+                    if (personBalances[person] < 0) {
+                        debtors.push({ person, amount: Math.abs(personBalances[person]) });
+                    } else if (personBalances[person] > 0) {
+                        creditors.push({ person, amount: personBalances[person] });
+                    }
+                }
+
+                let debtorIndex = 0;
+                let creditorIndex = 0;
+                const settlements = [];
+
+                while (debtorIndex < debtors.length && creditorIndex < creditors.length) {
+                    const debtor = debtors[debtorIndex];
+                    const creditor = creditors[creditorIndex];
+                    
+                    const settlementAmount = Math.min(debtor.amount, creditor.amount);
+
+                    settlements.push(`${debtor.person} pays ₹${settlementAmount.toFixed(2)} to ${creditor.person}.`);
+
+                    debtor.amount -= settlementAmount;
+                    creditor.amount -= settlementAmount;
+
+                    if (debtor.amount <= 0.01) {
+                        debtorIndex++;
+                    }
+                    if (creditor.amount <= 0.01) {
+                        creditorIndex++;
+                    }
+                }
+                
+                summaryHtml.push('<h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">Settlements:</h3>');
+                if (settlements.length > 0) {
+                    summaryHtml.push(`<ul class="list-disc list-inside space-y-1 text-gray-900 dark:text-gray-300">`);
+                    settlements.forEach(settlement => summaryHtml.push(`<li>${settlement}</li>`));
+                    summaryHtml.push('</ul>');
+                } else {
+                    summaryHtml.push('<p class="text-green-600 font-medium">Everything is settled!</p>');
+                }
+
+                summaryDiv.innerHTML = summaryHtml.join('');
+            }
+
+            tourNameInput.addEventListener('input', (e) => {
+                tourName = e.target.value || 'Expense Splitter';
+                saveData();
+                renderAll();
+            });
+            tripStartDateInput.addEventListener('input', (e) => {
+                tripStartDate = e.target.value;
+                saveData();
+                renderAll();
+            });
+            tripEndDateInput.addEventListener('input', (e) => {
+                tripEndDate = e.target.value;
+                saveData();
+                renderAll();
+            });
+
+            expenseForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const description = descriptionInput.value;
+                const amount = parseFloat(amountInput.value);
+                const date = dateInput.value;
+                const paidBy = paidBySelect.value;
+                const splitAmong = Array.from(splitAmongDiv.querySelectorAll('span.bg-blue-600')).map(badge => badge.dataset.name);
+                
+                if (splitAmong.length === 0) {
+                    showAlert("Validation Error", "Please select at least one person to split the expense with.");
+                    return;
+                }
+
+                expenses.push({ description, date, amount, paidBy, splitAmong });
+                saveData();
+                
+                expenseForm.reset();
+                dateInput.value = new Date().toISOString().split('T')[0];
+                renderExpenses();
+                calculateSummary();
+            });
+
+            window.deleteExpense = (index) => {
+                 showConfirm("Delete Expense", "Are you sure you want to delete this expense?", () => {
+                    expenses.splice(index, 1);
+                    saveData();
+                    renderExpenses();
+                    calculateSummary();
+                });
+            };
+
+            generatePdfBtn.addEventListener('click', () => {
+                const doc = new jsPDF();
+                
+                const margin = 15;
+                const pageHeight = doc.internal.pageSize.height;
+                let y = margin;
+                
+                const currentTourName = tourName || 'Expense Report';
+                const totalExpenses = expenses.reduce((sum, expense) => sum + expense.amount, 0);
+
+                doc.setFont('Helvetica', 'bold');
+                doc.setFontSize(22);
+                doc.setTextColor('#1f2937');
+                doc.text(currentTourName, doc.internal.pageSize.width / 2, y, { align: 'center' });
+                y += 8;
+
+                if (tripStartDate && tripEndDate) {
+                    doc.setFontSize(10);
+                    doc.setFont('Helvetica', 'normal');
+                    doc.setTextColor('#4b5563');
+                    doc.text(`Trip Dates: ${tripStartDate} to ${tripEndDate}`, doc.internal.pageSize.width / 2, y, { align: 'center' });
+                } else if (tripStartDate) {
+                    doc.setFontSize(10);
+                    doc.setFont('Helvetica', 'normal');
+                    doc.setTextColor('#4b5563');
+                    doc.text(`Trip Starts: ${tripStartDate}`, doc.internal.pageSize.width / 2, y, { align: 'center' });
+                }
+                y += 12;
+
+                doc.setFontSize(12);
+                doc.setFont('Helvetica', 'bold');
+                doc.setTextColor('#1f2937');
+                doc.text('Expenses List', margin, y);
+                y += 6;
+
+                const headers = [['Description', 'Date', 'Amount', 'Paid By', 'Split Amount', 'Split Among']];
+                const data = expenses.map(e => [
+                    e.description,
+                    e.date,
+                    `Rs. ${e.amount.toFixed(2)}`,
+                    e.paidBy,
+                    `Rs. ${(e.amount / e.splitAmong.length).toFixed(2)}`,
+                    e.splitAmong.join(', ')
+                ]);
+
+                doc.autoTable({
+                    startY: y,
+                    head: headers,
+                    body: data,
+                    styles: { font: 'Helvetica', cellPadding: 2, fontSize: 8, valign: 'middle' },
+                    headStyles: { 
+                        fillColor: [243, 244, 246], 
+                        textColor: [55, 65, 81], 
+                        fontStyle: 'bold' 
+                    },
+                    bodyStyles: { textColor: [55, 65, 81] },
+                    margin: { left: margin, right: margin },
+                });
+                
+                y = doc.autoTable.previous.finalY + 10;
+
+                doc.setFontSize(12);
+                doc.setFont('Helvetica', 'bold');
+                doc.setTextColor('#1f2937');
+                doc.text(`Total Expenses: Rs. ${totalExpenses.toFixed(2)}`, margin, y);
+                y += 10;
+
+                doc.setFontSize(12);
+                doc.setFont('Helvetica', 'bold');
+                doc.setTextColor('#1f2937');
+                doc.text('Final Settlements', margin, y);
+                y += 6;
+
+                const personBalances = {};
+                people.forEach(person => personBalances[person] = 0);
+
+                expenses.forEach(expense => {
+                    const individualShare = expense.amount / expense.splitAmong.length;
+                    personBalances[expense.paidBy] += expense.amount;
+                    expense.splitAmong.forEach(person => {
+                        personBalances[person] -= individualShare;
+                    });
+                });
+
+                const debtors = [];
+                const creditors = [];
+
+                for (const person in personBalances) {
+                    if (personBalances[person] < 0) {
+                        debtors.push({ person, amount: Math.abs(personBalances[person]) });
+                    } else if (personBalances[person] > 0) {
+                        creditors.push({ person, amount: personBalances[person] });
+                    }
+                }
+
+                let debtorIndex = 0;
+                let creditorIndex = 0;
+                const settlements = [];
+
+                while (debtorIndex < debtors.length && creditorIndex < creditors.length) {
+                    const debtor = debtors[debtorIndex];
+                    const creditor = creditors[creditorIndex];
+                    
+                    const settlementAmount = Math.min(debtor.amount, creditor.amount);
+
+                    settlements.push(`${debtor.person} pays Rs. ${settlementAmount.toFixed(2)} to ${creditor.person}.`);
+
+                    debtor.amount -= settlementAmount;
+                    creditor.amount -= settlementAmount;
+
+                    if (debtor.amount <= 0.01) {
+                        debtorIndex++;
+                    }
+                    if (creditor.amount <= 0.01) {
+                        creditorIndex++;
+                    }
+                }
+                
+                if (settlements.length > 0) {
+                    doc.setFont('Helvetica', 'normal');
+                    doc.setTextColor('#1f2937');
+                    settlements.forEach(settlement => {
+                        if (y + 6 > pageHeight - margin - 10) {
+                            doc.addPage();
+                            y = margin;
+                        }
+                        doc.text(settlement, margin, y);
+                        y += 5;
+                    });
+                } else {
+                    if (y + 6 > pageHeight - margin - 10) {
+                        doc.addPage();
+                        y = margin;
+                    }
+                    doc.setFont('Helvetica', 'normal');
+                    doc.setTextColor('#10b981');
+                    doc.text('Everything is settled!', margin, y);
+                }
+
+                const addFooter = function(page) {
+                    doc.setFontSize(8);
+                    doc.setFont('Helvetica', 'normal');
+                    doc.setTextColor('#4b5563');
+                    doc.text(`Generated on: ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}`, margin, pageHeight - margin);
+                    doc.text(`Page ${page}`, doc.internal.pageSize.width - margin, pageHeight - margin, { align: 'right' });
+                };
+                
+                const totalPages = doc.internal.pages.length;
+                for (let i = 1; i <= totalPages; i++) {
+                    doc.setPage(i);
+                    addFooter(i);
+                }
+
+                doc.save(`${currentTourName.replace(/ /g, '_')}_report.pdf`);
+            });
+
+            function showModal(id) {
+                const modal = document.getElementById(id);
+                const modalContent = document.getElementById(id + 'Content');
+                modal.classList.remove('hidden');
+                setTimeout(() => {
+                    modalContent.classList.remove('scale-95', 'opacity-0');
+                    modalContent.classList.add('scale-100', 'opacity-100');
+                }, 10);
+            }
+
+            function hideModal(id) {
+                const modal = document.getElementById(id);
+                const modalContent = document.getElementById(id + 'Content');
+                modalContent.classList.remove('scale-100', 'opacity-100');
+                modalContent.classList.add('scale-95', 'opacity-0');
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                }, 300);
+            }
+
+            function showAlert(title, message) {
+                if (title === "Success") {
+                    toastMessage.textContent = message;
+                    toastContainer.classList.remove('opacity-0');
+                    toastContainer.classList.add('opacity-100');
+                    setTimeout(() => {
+                        toastContainer.classList.remove('opacity-100');
+                        toastContainer.classList.add('opacity-0');
+                    }, 2000);
+                } else {
+                    modalTitle.textContent = title;
+                    modalMessage.textContent = message;
+                    modalButtons.innerHTML = '';
+                    const okBtn = document.createElement('button');
+                    okBtn.textContent = 'OK';
+                    okBtn.className = 'px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors';
+                    okBtn.addEventListener('click', () => hideModal('customModal'));
+                    modalButtons.appendChild(okBtn);
+                    showModal('customModal');
+                }
+            }
+            
+            function showConfirm(title, message, onConfirm) {
+                modalTitle.textContent = title;
+                modalMessage.textContent = message;
+                modalButtons.innerHTML = '';
+                
+                const cancelBtn = document.createElement('button');
+                cancelBtn.textContent = 'Cancel';
+                cancelBtn.className = 'px-4 py-2 glass-button rounded-lg font-semibold hover:bg-gray-600 transition-colors';
+                cancelBtn.addEventListener('click', () => hideModal('customModal'));
+                modalButtons.appendChild(cancelBtn);
+
+                const confirmBtn = document.createElement('button');
+                confirmBtn.textContent = 'Confirm';
+                confirmBtn.className = 'px-4 py-2 bg-red-600 text-white rounded-lg font-semibold shadow-lg hover:bg-red-700 transition-colors';
+                confirmBtn.addEventListener('click', () => {
+                    onConfirm();
+                    hideModal('customModal');
+                });
+                modalButtons.appendChild(confirmBtn);
+
+                showModal('customModal');
+            }
+
+            addPersonBtn.addEventListener('click', () => {
+                showModal('addPersonModal');
+            });
+            cancelAddPersonBtn.addEventListener('click', () => {
+                hideModal('addPersonModal');
+            });
+            
+            confirmAddPersonBtn.addEventListener('click', () => {
+                const names = personInput.value.split(',').map(name => name.trim()).filter(name => name !== '');
+                if (names.length > 0) {
+                    people.push(...names);
+                    saveData();
+                    renderAll();
+                    hideModal('addPersonModal');
+                    personInput.value = '';
+                } else {
+                    showAlert("Validation Error", "Please enter a valid name.");
+                }
+            });
+
+            cancelEditPersonBtn.addEventListener('click', () => {
+                hideModal('editPersonModal');
+            });
+            confirmEditPersonBtn.addEventListener('click', () => {
+                const newName = editPersonInput.value.trim();
+                if (!newName) {
+                    showAlert("Validation Error", "Please enter a valid name.");
+                    return;
+                }
+                if (people.includes(newName) && newName !== originalNameForEdit) {
+                     showAlert("Validation Error", "This name already exists.");
+                     return;
+                }
+
+                if (newName && originalNameForEdit) {
+                    const index = people.indexOf(originalNameForEdit);
+                    if (index > -1) {
+                        people[index] = newName;
+                    }
+                    
+                    expenses.forEach(expense => {
+                        if (expense.paidBy === originalNameForEdit) {
+                            expense.paidBy = newName;
+                        }
+                        const splitIndex = expense.splitAmong.indexOf(originalNameForEdit);
+                        if (splitIndex > -1) {
+                            expense.splitAmong[splitIndex] = newName;
+                        }
+                    });
+                    
+                    originalNameForEdit = null;
+                    saveData();
+                    renderAll();
+                    hideModal('editPersonModal');
+                }
+            });
+
+            removePersonBtn.addEventListener('click', () => {
+                if (selectedPersonForRemoval && people.length > 1) {
+                    showConfirm("Remove Person", `Are you sure you want to remove ${selectedPersonForRemoval}? This will also remove them from all existing expenses.`, () => {
+                        const index = people.indexOf(selectedPersonForRemoval);
+                        if (index > -1) {
+                            people.splice(index, 1);
+                        }
+                        for (const expense of expenses) {
+                            if (expense.paidBy === selectedPersonForRemoval) {
+                                expense.paidBy = people[0];
+                            }
+                            const splitIndex = expense.splitAmong.indexOf(selectedPersonForRemoval);
+                            if (splitIndex > -1) {
+                                expense.splitAmong.splice(splitIndex, 1);
+                                if (expense.splitAmong.length === 0) {
+                                    expense.splitAmong.push(people[0]);
+                                }
+                            }
+                        }
+                        selectedPersonForRemoval = null;
+                        saveData();
+                        renderAll();
+                    });
+                }
+            });
+
+            exportDataBtn.addEventListener('click', () => {
+                const dataToExport = {
+                    tourName: tourName,
+                    tripStartDate: tripStartDate,
+                    tripEndDate: tripEndDate,
+                    people: people,
+                    expenses: expenses
+                };
+                const dataStr = JSON.stringify(dataToExport, null, 2);
+                const blob = new Blob([dataStr], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${(tourName || 'expense_report').replace(/ /g, '_')}_backup.json`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            });
+
+            importDataBtn.addEventListener('click', () => {
+                fileInput.click();
+            });
+
+            fileInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (!file) {
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    try {
+                        const importedData = JSON.parse(event.target.result);
+                        if (importedData.people && importedData.expenses) {
+                            showConfirm("Import Data", "Are you sure you want to overwrite your current data with this file?", () => {
+                                tourName = importedData.tourName || 'Expense Splitter';
+                                tripStartDate = importedData.tripStartDate || '';
+                                tripEndDate = importedData.tripEndDate || '';
+                                people.length = 0;
+                                people.push(...importedData.people);
+                                expenses.length = 0;
+                                expenses.push(...importedData.expenses);
+                                saveData();
+                                renderAll();
+                                showAlert("Success", "Data imported successfully!");
+                            });
+                        } else {
+                            showAlert("Import Error", "Invalid file format. Please select a valid Expense Tracker JSON file.");
+                        }
+                    } catch (error) {
+                        showAlert("Import Error", "Failed to read the file. Please ensure it is a valid JSON format.");
+                    }
+                };
+                reader.readAsText(file);
+            });
+
+            function renderAll() {
+                renderTourInfo();
+                renderPeopleSelectors();
+                renderExpenses();
+                calculateSummary();
+            }
+
+            function setTodayDate() {
+                const today = new Date();
+                const year = today.getFullYear();
+                const month = String(today.getMonth() + 1).padStart(2, '0');
+                const day = String(today.getDate()).padStart(2, '0');
+                dateInput.value = `${year}-${month}-${day}`;
+            }
+
+            applyTheme(savedTheme);
+            renderAll();
+            setTodayDate();
+        };
     </script>
 </body>
 </html>
-
