@@ -52,10 +52,35 @@
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
             transition: all 0.3s ease-in-out;
         }
+        
+        /* New iOS-style button */
+        .ios-button {
+            position: relative;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            transition: all 0.2s ease-in-out;
+            cursor: pointer;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        .ios-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .ios-button:active {
+            transform: translateY(0) scale(1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
 
         .animated-glow-border {
             position: relative;
             overflow: hidden;
+            z-index: 10;
         }
 
         .animated-glow-border::before {
@@ -261,7 +286,8 @@
             <form id="password-form">
                 <input type="password" id="password-input" class="w-full px-4 py-3 bg-slate-800/50 border border-slate-600 rounded-lg text-white text-center text-lg tracking-widest focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all" placeholder="******">
                 <p id="error-message" class="text-red-400 h-6 mt-2 text-sm"></p>
-                <button type="submit" class="w-full mt-2 p-3 rounded-lg bg-gradient-to-r from-pink-500 to-purple-600 text-center font-semibold text-white transition-all duration-300 hover:shadow-xl transform hover:scale-105">Enter</button>
+                <!-- This button is styled with the new iOS class -->
+                <button type="submit" class="w-full mt-2 p-3 rounded-xl font-semibold text-white ios-button bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700">Enter</button>
             </form>
         </div>
     </div>
@@ -289,10 +315,11 @@
                     <a href="#" id="timing-link" class="text-gray-300 hover:text-white font-medium transition-colors duration-300">Mandir Timing</a>
                     <a href="#" id="about-link" class="text-gray-300 hover:text-white font-medium transition-colors duration-300">About Us</a>
                     <a href="#" id="contact-link" class="text-gray-300 hover:text-white font-medium transition-colors duration-300">Contact</a>
-                    <a href="#" id="pay-link" class="bg-green-500/80 hover:bg-green-500/90 text-white font-bold py-2 px-4 rounded-lg transition-all duration-300 transform hover:scale-105">Pay Me Here</a>
+                    <!-- This button is styled with the new iOS class -->
+                    <a href="#" id="pay-link" class="ios-button text-white font-bold py-2 px-4 rounded-xl bg-green-500/80 hover:bg-green-500/90 transform hover:scale-105">Pay Me Here</a>
                 </div>
                 <button class="md:hidden" id="mobile-menu-button">
-                       <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
                 </button>
             </nav>
             <div id="mobile-menu" class="hidden md:hidden px-6 pb-4 glass-effect">
@@ -300,7 +327,8 @@
                 <a href="#" id="mobile-timing-link" class="block py-2 text-gray-300 hover:text-white">Mandir Timing</a>
                 <a href="#" id="mobile-about-link" class="block py-2 text-gray-300 hover:text-white">About Us</a>
                 <a href="#" id="mobile-contact-link" class="block py-2 text-gray-300 hover:text-white">Contact</a>
-                <a href="#" id="mobile-pay-link" class="block py-2 mt-2 text-center bg-green-500/80 hover:bg-green-500/90 text-white font-bold rounded-lg transition-all duration-300">Pay Me Here</a>
+                <!-- This button is styled with the new iOS class -->
+                <a href="#" id="mobile-pay-link" class="ios-button block py-2 mt-2 text-center text-white font-bold rounded-xl bg-green-500/80 hover:bg-green-500/90 transition-all duration-300">Pay Me Here</a>
             </div>
         </header>
 
@@ -338,10 +366,12 @@
     <!-- Ticket Viewer Modal -->
     <div id="ticketModal" class="modal-backdrop hidden">
         <div class="modal-content-ticket glass-effect p-2 sm:p-4 relative flex flex-col rounded-2xl">
-            <button id="closeModalBtn" class="absolute -top-2 -right-2 sm:-top-3 sm:-right-3 bg-red-600 text-white rounded-full h-8 w-8 flex items-center justify-center text-lg font-bold z-50 hover:bg-red-700 transition-all">&times;</button>
+            <!-- Modal close button with new iOS-style -->
+            <button id="closeModalBtn" class="ios-button !bg-red-600/80 absolute -top-2 -right-2 sm:-top-3 sm:-right-3 text-white rounded-full h-8 w-8 flex items-center justify-center text-lg font-bold z-50 hover:!bg-red-700 transition-all">&times;</button>
             <iframe id="ticketViewerIframe" class="modal-iframe flex-grow rounded-t-lg" src="" title="Ticket Viewer"></iframe>
             <div class="text-center p-2">
-                <a id="downloadBtn" href="#" download="ticket.pdf" class="w-full sm:w-auto inline-block animated-glow-border bg-green-500/10 text-green-300 border border-green-400/30 px-6 py-2 rounded-lg hover:bg-green-500/20 transition-all duration-300">Download</a>
+                <!-- Download button with new iOS-style -->
+                <a id="downloadBtn" href="#" download="ticket.pdf" class="w-full sm:w-auto inline-block animated-glow-border ios-button bg-green-500/10 text-green-300 border-green-400/30 px-6 py-2 rounded-xl transition-all duration-300">Download</a>
             </div>
         </div>
     </div>
@@ -393,7 +423,7 @@
                     <span class="font-semibold">WhatsApp</span>
                 </a>
                 <a href="https://instagram.com/hookstar.fx" target="_blank" class="flex items-center space-x-2 text-pink-400 hover:text-pink-300 transition-colors">
-                       <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8A3.6 3.6 0 0 0 7.6 20h8.8A3.6 3.6 0 0 0 20 16.4V7.6A3.6 3.6 0 0 0 16.4 4H7.6m9.65 1.5a1.25 1.25 0 1 1-2.5 0 1.25 1.25 0 0 1 2.5 0M12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10m0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/></svg></a>
+                        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8A3.6 3.6 0 0 0 7.6 20h8.8A3.6 3.6 0 0 0 20 16.4V7.6A3.6 3.6 0 0 0 16.4 4H7.6m9.65 1.5a1.25 1.25 0 1 1-2.5 0 1.25 1.25 0 0 1 2.5 0M12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10m0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/></svg></a>
                     <span class="font-semibold">Instagram</span>
                 </a>
             </div>
@@ -402,7 +432,8 @@
                 <input type="text" name="name" id="contact-name" placeholder="Your Name" class="w-full px-4 py-2 bg-slate-800/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-sky-500" required>
                 <input type="email" name="email" id="contact-email" placeholder="Your Email" class="w-full px-4 py-2 bg-slate-800/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-sky-500" required>
                 <textarea name="message" id="contact-message" placeholder="Your Suggestion..." rows="4" class="w-full px-4 py-2 bg-slate-800/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-sky-500" required></textarea>
-                <button type="submit" class="w-full p-3 rounded-lg bg-gradient-to-r from-sky-500 to-indigo-500 text-center font-semibold text-white transition-all duration-300 hover:shadow-xl transform hover:scale-105">Send Suggestion</button>
+                <!-- This button is styled with the new iOS class -->
+                <button type="submit" class="ios-button w-full p-3 rounded-xl bg-gradient-to-r from-sky-500 to-indigo-500 text-center font-semibold text-white transition-all duration-300 hover:shadow-xl transform hover:scale-105">Send Suggestion</button>
             </form>
         </div>
     </div>
@@ -411,7 +442,7 @@
     <div id="payment-modal" class="modal-backdrop hidden">
         <div class="modal-content-ticket glass-effect p-2 sm:p-4 relative flex flex-col rounded-2xl">
             <button id="close-payment-modal" class="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors text-3xl">&times;</button>
-               <div class="text-center">
+                <div class="text-center">
                 <h1 class="text-2xl sm:text-3xl font-bold text-high-contrast tracking-tight">Make a Secure Payment</h1>
                 <p class="text-gray-300 mt-2 text-high-contrast text-sm sm:text-base">Click a button to pay with your preferred mobile app. (Mobile only)</p>
             </div>
@@ -419,15 +450,16 @@
             <div class="space-y-4 mt-8">
                 <h2 class="text-lg font-semibold text-cyan-300 text-high-contrast">1. Pay Directly via App</h2>
                 <div class="grid grid-cols-3 gap-4">
-                    <a href="upi://pay?pa=9824594156@okbizaxis&pn=Your%20Name&cu=INR" class="glass-effect hover:bg-white/10 p-4 rounded-lg flex flex-col items-center justify-center space-y-2 transition-all duration-300 transform hover:scale-105">
+                    <!-- App buttons with new iOS-style -->
+                    <a href="upi://pay?pa=9824594156@okbizaxis&pn=Your%20Name&cu=INR" class="ios-button p-4 rounded-xl flex flex-col items-center justify-center space-y-2 bg-white/10">
                         <div class="h-8 flex items-center"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Google_Pay_Logo.svg/2560px-Google_Pay_Logo.svg.png" alt="Google Pay" class="h-full w-auto object-contain"></div>
                         <span class="font-semibold text-gray-200 text-xs text-high-contrast">Google Pay</span>
                     </a>
-                    <a href="phonepe://pay?pa=9824594156@okbizaxis&pn=Your%20Name&cu=INR" class="glass-effect hover:bg-white/10 p-4 rounded-lg flex flex-col items-center justify-center space-y-2 transition-all duration-300 transform hover:scale-105">
+                    <a href="phonepe://pay?pa=9824594156@okbizaxis&pn=Your%20Name&cu=INR" class="ios-button p-4 rounded-xl flex flex-col items-center justify-center space-y-2 bg-white/10">
                         <div class="h-8 flex items-center"><img src="https://upload.wikimedia.org/wikipedia/commons/7/71/PhonePe_Logo.svg" alt="PhonePe" class="h-full w-auto object-contain"></div>
                         <span class="font-semibold text-gray-200 text-xs text-high-contrast">PhonePe</span>
                     </a>
-                    <a href="bhim://upi/pay?pa=9824594156@okbizaxis&pn=Your%20Name&cu=INR" class="glass-effect hover:bg-white/10 p-4 rounded-lg flex flex-col items-center justify-center space-y-2 transition-all duration-300 transform hover:scale-105">
+                    <a href="bhim://upi/pay?pa=9824594156@okbizaxis&pn=Your%20Name&cu=INR" class="ios-button p-4 rounded-xl flex flex-col items-center justify-center space-y-2 bg-white/10">
                         <div class="h-8 flex items-center"><img src="https://upload.wikimedia.org/wikipedia/en/6/65/BHIM_SVG_Logo.svg" alt="BHIM UPI" class="h-full w-auto object-contain"></div>
                         <span class="font-semibold text-gray-200 text-xs text-high-contrast">BHIM</span>
                     </a>
@@ -445,26 +477,26 @@
                 <h2 class="text-lg font-semibold text-cyan-300 text-high-contrast">3. Pay with UPI ID</h2>
                 <div class="glass-effect p-4 rounded-lg flex justify-between items-center">
                     <span id="upiId" class="font-medium text-high-contrast text-sm sm:text-base break-all">9824594156@okbizaxis</span>
-                    <button onclick="copyToClipboard('upiId', this)" title="Copy UPI ID" class="p-2 rounded-lg transition-all duration-200 bg-white/10 hover:bg-white/20 flex-shrink-0 ml-3">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" viewBox="0 0 20 20" fill="currentColor"><path d="M7 9a2 2 0 012-2h6a2 2 0 012 2v6a2 2 0 01-2 2H9a2 2 0 01-2-2V9z" /><path d="M5 3a2 2 0 00-2 2v6a2 2 0 002 2V5h6a2 2 0 00-2-2H5z" /></svg>
-                    </button>
+                    <!-- Copy button with new iOS-style -->
+                    <button onclick="copyToClipboard('upiId', this)" title="Copy UPI ID" class="ios-button p-1.5 rounded-xl flex-shrink-0 bg-white/10"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" viewBox="0 0 20 20" fill="currentColor"><path d="M7 9a2 2 0 012-2h6a2 2 0 012 2v6a2 2 0 01-2 2H9a2 2 0 01-2-2V9z" /><path d="M5 3a2 2 0 00-2 2v6a2 2 0 002 2V5h6a2 2 0 00-2-2H5z" /></svg></button>
                 </div>
             </div>
             
             <div class="space-y-4 mt-6">
                 <h2 class="text-lg font-semibold text-cyan-300 text-high-contrast">4. Direct Bank Transfer</h2>
                 <div class="glass-effect p-4 rounded-lg space-y-4 text-sm sm:text-base">
-                    <div class="flex justify-between items-center"><span class="text-gray-200 text-high-contrast">Account Name:</span><div class="flex items-center space-x-3"><span id="accName" class="font-medium text-high-contrast text-right">SAVANI HARDEEP M.</span><button onclick="copyToClipboard('accName', this)" title="Copy Account Name" class="p-1.5 rounded-lg transition-all duration-200 bg-white/10 hover:bg-white/20 flex-shrink-0"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" viewBox="0 0 20 20" fill="currentColor"><path d="M7 9a2 2 0 012-2h6a2 2 0 012 2v6a2 2 0 01-2 2H9a2 2 0 01-2-2V9z" /><path d="M5 3a2 2 0 00-2 2v6a2 2 0 002 2V5h6a2 2 0 00-2-2H5z" /></svg></button></div></div>
-                    <div class="flex justify-between items-center"><span class="text-gray-200 text-high-contrast">Bank Name:</span><div class="flex items-center space-x-3"><span id="bankName" class="font-medium text-high-contrast">STATE BANK OF INDIA</span><button onclick="copyToClipboard('bankName', this)" title="Copy Bank Name" class="p-1.5 rounded-lg transition-all duration-200 bg-white/10 hover:bg-white/20 flex-shrink-0"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" viewBox="0 0 20 20" fill="currentColor"><path d="M7 9a2 2 0 012-2h6a2 2 0 012 2v6a2 2 0 01-2 2H9a2 2 0 01-2-2V9z" /><path d="M5 3a2 2 0 00-2 2v6a2 2 0 002 2V5h6a2 2 0 00-2-2H5z" /></svg></button></div></div>
-                    <div class="flex justify-between items-center"><span class="text-gray-200 text-high-contrast">Account No:</span><div class="flex items-center space-x-3"><span id="accNum" class="font-medium text-high-contrast">40003791171</span><button onclick="copyToClipboard('accNum', this)" title="Copy Account Number" class="p-1.5 rounded-lg transition-all duration-200 bg-white/10 hover:bg-white/20 flex-shrink-0"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" viewBox="0 0 20 20" fill="currentColor"><path d="M7 9a2 2 0 012-2h6a2 2 0 012 2v6a2 2 0 01-2 2H9a2 2 0 01-2-2V9z" /><path d="M5 3a2 2 0 00-2 2v6a2 2 0 002 2V5h6a2 2 0 00-2-2H5z" /></svg></button></div></div>
-                    <div class="flex justify-between items-center"><span class="text-gray-200 text-high-contrast">IFSC Code:</span><div class="flex items-center space-x-3"><span id="ifscCode" class="font-medium text-high-contrast">SBIN0060236</span><button onclick="copyToClipboard('ifscCode', this)" title="Copy IFSC Code" class="p-1.5 rounded-lg transition-all duration-200 bg-white/10 hover:bg-white/20 flex-shrink-0"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" viewBox="0 0 20 20" fill="currentColor"><path d="M7 9a2 2 0 012-2h6a2 2 0 012 2v6a2 2 0 01-2 2H9a2 2 0 01-2-2V9z" /><path d="M5 3a2 2 0 00-2 2v6a2 2 0 002 2V5h6a2 2 0 00-2-2H5z" /></svg></button></div></div>
+                    <div class="flex justify-between items-center"><span class="text-gray-200 text-high-contrast">Account Name:</span><div class="flex items-center space-x-3"><span id="accName" class="font-medium text-high-contrast text-right">SAVANI HARDEEP M.</span><button onclick="copyToClipboard('accName', this)" title="Copy Account Name" class="ios-button p-1.5 rounded-xl flex-shrink-0 bg-white/10"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" viewBox="0 0 20 20" fill="currentColor"><path d="M7 9a2 2 0 012-2h6a2 2 0 012 2v6a2 2 0 01-2 2H9a2 2 0 01-2-2V9z" /><path d="M5 3a2 2 0 00-2 2v6a2 2 0 002 2V5h6a2 2 0 00-2-2H5z" /></svg></button></div></div>
+                    <div class="flex justify-between items-center"><span class="text-gray-200 text-high-contrast">Bank Name:</span><div class="flex items-center space-x-3"><span id="bankName" class="font-medium text-high-contrast">STATE BANK OF INDIA</span><button onclick="copyToClipboard('bankName', this)" title="Copy Bank Name" class="ios-button p-1.5 rounded-xl flex-shrink-0 bg-white/10"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" viewBox="0 0 20 20" fill="currentColor"><path d="M7 9a2 2 0 012-2h6a2 2 0 012 2v6a2 2 0 01-2 2H9a2 2 0 01-2-2V9z" /><path d="M5 3a2 2 0 00-2 2v6a2 2 0 002 2V5h6a2 2 0 00-2-2H5z" /></svg></button></div></div>
+                    <div class="flex justify-between items-center"><span class="text-gray-200 text-high-contrast">Account No:</span><div class="flex items-center space-x-3"><span id="accNum" class="font-medium text-high-contrast">40003791171</span><button onclick="copyToClipboard('accNum', this)" title="Copy Account Number" class="ios-button p-1.5 rounded-xl flex-shrink-0 bg-white/10"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" viewBox="0 0 20 20" fill="currentColor"><path d="M7 9a2 2 0 012-2h6a2 2 0 012 2v6a2 2 0 01-2 2H9a2 2 0 01-2-2V9z" /><path d="M5 3a2 2 0 00-2 2v6a2 2 0 002 2V5h6a2 2 0 00-2-2H5z" /></svg></button></div></div>
+                    <div class="flex justify-between items-center"><span class="text-gray-200 text-high-contrast">IFSC Code:</span><div class="flex items-center space-x-3"><span id="ifscCode" class="font-medium text-high-contrast">SBIN0060236</span><button onclick="copyToClipboard('ifscCode', this)" title="Copy IFSC Code" class="ios-button p-1.5 rounded-xl flex-shrink-0 bg-white/10"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" viewBox="0 0 20 20" fill="currentColor"><path d="M7 9a2 2 0 012-2h6a2 2 0 012 2v6a2 2 0 01-2 2H9a2 2 0 01-2-2V9z" /><path d="M5 3a2 2 0 00-2 2v6a2 2 0 002 2V5h6a2 2 0 00-2-2H5z" /></svg></button></div></div>
                 </div>
             </div>
             
             <div class="space-y-4 pt-6">
                 <h2 class="text-lg font-semibold text-cyan-300 text-high-contrast">5. Confirm on WhatsApp</h2>
                 <p class="text-center text-sm text-gray-300 text-high-contrast">After payment, click the button below to send us the screenshot for confirmation.</p>
-                <a href="https://wa.me/919824594156?text=Hello!%20I%20have%20completed%20the%20payment.%20Here%20is%20the%20screenshot." target="_blank" rel="noopener noreferrer" class="w-full bg-green-500/80 hover:bg-green-500/90 text-white font-bold py-3 px-4 rounded-lg flex items-center justify-center space-x-3 transition-all duration-300 transform hover:scale-105 glass-panel border-green-400/50">
+                <!-- WhatsApp button with new iOS-style -->
+                <a href="https://wa.me/919824594156?text=Hello!%20I%20have%20completed%20the%20payment.%20Here%20is%20the%20screenshot." target="_blank" rel="noopener noreferrer" class="ios-button w-full bg-green-500/80 hover:bg-green-500/90 text-white font-bold py-3 px-4 rounded-xl flex items-center justify-center space-x-3 transition-all duration-300 transform hover:scale-105">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.894 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.886-.001 2.269.654 4.542 1.916 6.448l-.29 2.021 2.094-.554z"/></svg>
                     <span>Send Screenshot on WhatsApp</span>
                 </a>
@@ -510,10 +542,9 @@
             "August 2025": { yatri: [{name:"Hardeep Savani",to:{coach:"S3",seat:"22 UPPER"},from:{coach:"S5",seat:"28 LOWER"}},{name:"Nilesh Savani",to:{coach:"S3",seat:"21 MIDDLE"},from:{coach:"S5",seat:"32 SIDE UPPER"}}], stay: { name: "No Stay At This Time", checkIn: "09-Aug-2025, 02:00 PM", checkOut: "09-Aug-2025, 07:41 PM", ticketUrl: "#" }, expenses: { train: 1675.40, stay: 0, food: 0, total: 1675.40 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "SAURASHTRA MAIL", trainNo: "#22945", pnr: "8334056450", departure: "09-Aug-2025, 01:07 AM", arrival: "09-Aug-2025, 01:10 PM", ticketUrl: "https://hookstar1993.github.io/dwarka/tickets2025/08-2025/ST-DWRK_09-Aug-2025_-_SAURASHTRA_MAIL_(22945)_-_PNR-8334056450_Seat-S3-21-22.pdf" }, { from: "Dwarka", to: "Surat", trainName: "Okha BSP SF Express", trainNo: "#22939", pnr: "8434098659", departure: "09-Aug-2025, 07:41 PM", arrival: "10-Aug-2025, 08:01 AM", ticketUrl: "https://hookstar1993.github.io/dwarka/tickets2025/08-2025/DWRK-ST_09-Aug-2025_-_OKHA_BSP_SF_EXP_(22939)_-_PNR-8434098659_Seat-S5-28-32.pdf" } ] },
             "September 2025": { yatri: [{name:"Hardeep Savani",to:{coach:"S3",seat:"23 SIDE LOWER"},from:{coach:"S7",seat:"15 SIDE LOWER"}},{name:"Nilesh Savani",to:{coach:"S3",seat:"24 SIDE UPPER"},from:{coach:"S7",seat:"16 SIDE UPPER"}},{name:"Bharat Rathod",to:{coach:"S3",seat:"17 LOWER"},from:{coach:"S7",seat:"9 LOWER"}}], stay: { name: " Dwarka - Gayatri Shantivan", checkIn: "07-Sep-2025, 01:00 PM", checkOut: "08-Sep-2025, 12:00 PM", ticketUrl: "https://hookstar1993.github.io/dwarka/tickets2025/09-2025/101347153_Stay_Confirmation_Gaytri_Shantivan_07-09-2025_to_08-09-2025.pdf" }, expenses: { train: 2426.30, stay: 880.5, food: 0, total: 3306.8 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "SAURASHTRA MAIL", trainNo: "#22945", pnr: "8335174786", departure: "07-Sep-2025, 01:07 AM", arrival: "07-Sep-2025, 01:10 AM", ticketUrl: "https://hookstar1993.github.io/dwarka/tickets2025/09-2025/ST-DWRK_07-Sept-2025_-_SAURASHTRA_MAIL_(22945)_-_PNR-8335174786_Seat-S3-17-23-24.pdf" }, { from: "Dwarka", to: "Surat", trainName: "Okha ERS Express", trainNo: "#16337", pnr: "8335256036", departure: "08-Sep-2025, 07:16 AM", arrival: "08-Sep-2025, 07:24 PM", ticketUrl: "https://hookstar1993.github.io/dwarka/tickets2025/09-2025/DWRK-ST_08-Sept-2025_-_OKHA_ERS_EXP_(16337)_-_PNR-8335256036_Seat-S7-9-15-16.pdf" } ] },
             "October 2025": { yatri: [{name:"Hardeep Savani",to:{coach:"S4",seat:"42 MIDDLE BIRTH"},from:{coach:"S4",seat:"33 LOWER BIRTH"}},{name:"Nilesh Savani",to:{coach:"S4",seat:"48 SIDE UPPER"},from:{coach:"S4",seat:"40 SIDE UPPER"}}], stay: { name: "FOR FRESH ONLY - Swaminarayan Bhakti Dham", checkIn: "06-Oct-2025, 09:00 AM", checkOut: "07-Oct-2025, 11:00 PM", ticketUrl: "#" }, expenses: { train: 862.70 + 832.7, stay: 0, food: 0, total: 1695.4 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "PURI OKHA SF", trainNo: "#20819", pnr: "6156459766", departure: "06-Oct-2025, 07:38 PM (Evening)", arrival: "07-Oct-2025, 09:03 AM (Morning)", ticketUrl: "https://hookstar1993.github.io/dwarka/tickets2025/10-2025/SURAT_DWARKA_06_OCT_2025_PURI_OKHA_20819_Coach-S4_Seat_42_MIDDLE_48_SIDE_UPPER_PNR-066156459766.pdf" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "LOCAL TICKET BOOK", departure: "07-Oct-2025, 03:55 PM", arrival: "07-Oct-2025, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "8736392546", departure: "07-Oct-2025, 08:15 PM (Evening)", arrival: "08-Oct-2025, 05:25 AM(Morning)", ticketUrl: "https://hookstar1993.github.io/dwarka/tickets2025/10-2025/JAMNAGAR-ST_07_OCT_2025_BDTS_HAMSAFAR-22924_Coach_S4_Seat_33-LOWER_44-SIDE-UPPER_PNR_8736392546.pdf" } ] },
-
-            // --- COMMENT SHURU: Yahan se comment hatakar aap November 2025 aur aage ke mahino ki details live kar sakte hain. ---
             "November 2025": { yatri: [{ name: "Hardeep Savani", to: { coach: "--", seat: "--" }, from: { coach: "--", seat: "--" } }], stay: { name: "NOT BOOKED", checkIn: "05-Nov-2025, 10:00 AM", checkOut: "05-Nov-2025, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Songadh", to: "Dwarka", trainName: "BVC OKHA", trainNo: "#20819", pnr: "NOT BOOKED", departure: "04-Nov-2025, 07:38 PM", arrival: "05-Nov-2025, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "3456789013", departure: "05-Nov-2025, 03:55 PM", arrival: "05-Nov-2025, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "3456789014", departure: "05-Nov-2025, 08:15 PM", arrival: "06-Nov-2025, 05:25 AM", ticketUrl: "#" } ] },
-            /*           
+            /*
+            // --- COMMENT SHURU: Yahan se comment hatakar aap November 2025 aur aage ke mahino ki details live kar sakte hain. ---
             "December 2025": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "05-Dec-2025, 10:00 AM", checkOut: "05-Dec-2025, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "4567890123", departure: "04-Dec-2025, 07:38 PM", arrival: "05-Dec-2025, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "4567890124", departure: "05-Dec-2025, 03:55 PM", arrival: "05-Dec-2025, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "4567890125", departure: "05-Dec-2025, 08:15 PM", arrival: "06-Dec-2025, 05:25 AM", ticketUrl: "#" } ] },
             // --- 2026 DATA ---
             "January 2026": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "03-Jan-2026, 10:00 AM", checkOut: "03-Jan-2026, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "5678901234", departure: "02-Jan-2026, 07:38 PM", arrival: "03-Jan-2026, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "5678901235", departure: "03-Jan-2026, 03:55 PM", arrival: "03-Jan-2026, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "5678901236", departure: "03-Jan-2026, 08:15 PM", arrival: "04-Jan-2026, 05:25 AM", ticketUrl: "#" } ] },
@@ -533,7 +564,7 @@
             "February 2027": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "21-Feb-2027, 10:00 AM", checkOut: "21-Feb-2027, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "9012387654", departure: "20-Feb-2027, 07:38 PM", arrival: "21-Feb-2027, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "9012387655", departure: "21-Feb-2027, 03:55 PM", arrival: "21-Feb-2027, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "9012387656", departure: "21-Feb-2027, 08:15 PM", arrival: "22-Feb-2027, 05:25 AM", ticketUrl: "#" } ] },
             "March 2027": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "22-Mar-2027, 10:00 AM", checkOut: "22-Mar-2027, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "1234598765", departure: "21-Mar-2027, 07:38 PM", arrival: "22-Mar-2027, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "1234598766", departure: "22-Mar-2027, 03:55 PM", arrival: "22-Mar-2027, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "1234598767", departure: "22-Mar-2027, 08:15 PM", arrival: "23-Mar-2027, 05:25 AM", ticketUrl: "#" } ] },
             "April 2027": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "21-Apr-2027, 10:00 AM", checkOut: "21-Apr-2027, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "2345609876", departure: "20-Apr-2027, 07:38 PM", arrival: "21-Apr-2027, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "2345609877", departure: "21-Apr-2027, 03:55 PM", arrival: "21-Apr-2027, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "2345609878", departure: "21-Apr-2027, 08:15 PM", arrival: "22-Apr-2027, 05:25 AM", ticketUrl: "#" } ] },
-            "May 2027": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "20-May-2027, 10:00 AM", checkOut: "20-May-2027, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "3456710987", departure: "19-May-2027, 07:38 PM", arrival: "20-May-2027, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "3456710988", departure: "20-May-2027, 03:55 PM", arrival: "20-May-2027, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "3456710989", departure: "20-May-2027, 08:15 PM", arrival: "21-May-2027, 05:25 AM", ticketUrl: "#" } ] },
+            "May 2027": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "20-May-2027, 10:00 AM", checkOut: "20-May-2027, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", pnr: "3456710987", departure: "19-May-2027, 07:38 PM", arrival: "20-May-2027, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", pnr: "3456710988", departure: "20-May-2027, 03:55 PM", arrival: "20-May-2027, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", pnr: "3456710989", departure: "20-May-2027, 08:15 PM", arrival: "21-May-2027, 05:25 AM", ticketUrl: "#" } ] },
             "June 2027": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "19-Jun-2027, 10:00 AM", checkOut: "19-Jun-2027, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "4567821098", departure: "18-Jun-2027, 07:38 PM", arrival: "19-Jun-2027, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "4567821099", departure: "19-Jun-2027, 03:55 PM", arrival: "19-Jun-2027, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "4567821100", departure: "19-Jun-2027, 08:15 PM", arrival: "20-Jun-2027, 05:25 AM", ticketUrl: "#" } ] },
             "July 2027": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "18-Jul-2027, 10:00 AM", checkOut: "18-Jul-2027, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "5678932109", departure: "17-Jul-2027, 07:38 PM", arrival: "18-Jul-2027, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "5678932110", departure: "18-Jul-2027, 03:55 PM", arrival: "18-Jul-2027, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "5678932111", departure: "18-Jul-2027, 08:15 PM", arrival: "19-Jul-2027, 05:25 AM", ticketUrl: "#" } ] },
             "August 2027": { yatri: [{ name: "Hardeep Savani", to: { coach: "S1", seat: "1" }, from: { coach: "S2", seat: "2" } }], stay: { name: "Shree Dutt Dharmashala", checkIn: "17-Aug-2027, 10:00 AM", checkOut: "17-Aug-2027, 03:00 PM", ticketUrl: "#" }, expenses: { train: 1250, stay: 750, food: 550, total: 2550 }, journeys: [ { from: "Surat", to: "Dwarka", trainName: "Puri Okha SF Express", trainNo: "#20819", pnr: "6789043210", departure: "16-Aug-2027, 07:38 PM", arrival: "17-Aug-2027, 09:03 AM", ticketUrl: "#" }, { from: "Dwarka", to: "Jamnagar", trainName: "Okha BVC Express", trainNo: "#19210", pnr: "6789043211", departure: "17-Aug-2027, 03:55 PM", arrival: "17-Aug-2027, 06:33 PM", ticketUrl: "#" }, { from: "Jamnagar", to: "Surat", trainName: "BDTS Humsafar", trainNo: "#22924", pnr: "6789043212", departure: "17-Aug-2027, 08:15 PM", arrival: "18-Aug-2027, 05:25 AM", ticketUrl: "#" } ] },
@@ -634,7 +665,7 @@
             if (!data) {
                 detailsContent = `
                     <div class="text-center">
-                        <button id="back-button" class="mb-8 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-purple-600 hover:bg-purple-700">
+                        <button id="back-button" class="mb-8 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-xl shadow-sm text-white ios-button bg-purple-600 hover:bg-purple-700">
                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 17l-5-5m0 0l5-5m-5 5h12"></path></svg>
                             Back to Calendar
                         </button>
@@ -658,7 +689,8 @@
                             <div class="text-center sm:text-right"><p class="text-sm text-slate-400">Arrival</p><p class="font-semibold text-base sm:text-lg text-slate-200">${j.to.toUpperCase()}</p><p class="mt-1 text-violet-400 text-sm sm:text-base">${j.arrival}</p></div>
                         </div>
                         <div class="text-center mt-4">
-                            <button class="view-ticket-btn animated-glow-border bg-sky-500/10 text-sky-300 border border-sky-400/30 px-6 py-2 rounded-lg hover:bg-sky-500/20 transition-all duration-300" data-ticket-url="${j.ticketUrl}">View Ticket</button>
+                            <!-- Button with new iOS-style -->
+                            <button class="view-ticket-btn animated-glow-border ios-button bg-sky-500/10 text-sky-300 border-sky-400/30 px-6 py-2 rounded-xl" data-ticket-url="${j.ticketUrl}">View Ticket</button>
                         </div>
                     </div>
                 `).join('');
@@ -674,7 +706,8 @@
                             <div class="flex justify-between items-center text-lg"><p class="font-bold text-emerald-300">Total Kharch:</p><p class="font-bold text-emerald-300">₹ ${data.expenses.total.toFixed(2)}</p></div>
                         </div>
                         <div class="text-center mt-6">
-                            <button id="pay-now-btn" class="animated-glow-border w-full bg-green-500/80 hover:bg-green-500/90 text-white font-bold py-3 px-4 rounded-lg flex items-center justify-center space-x-3 transition-all duration-300 transform hover:scale-105">Pay Now</button>
+                             <!-- Button with new iOS-style -->
+                            <button id="pay-now-btn" class="animated-glow-border w-full py-3 px-4 rounded-xl ios-button bg-green-500/80 hover:bg-green-500/90 text-white font-bold transition-all duration-300 transform hover:scale-105">Pay Now</button>
                         </div>
                     </div>
                 `;
@@ -707,7 +740,8 @@
 
                 detailsContent = `
                     <div class="text-center">
-                        <button id="back-button" class="mb-8 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-purple-500">
+                        <!-- Button with new iOS-style -->
+                        <button id="back-button" class="mb-8 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-xl shadow-sm text-white ios-button bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-purple-500">
                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 17l-5-5m0 0l5-5m-5 5h12"></path></svg>
                             Back to Calendar
                         </button>
@@ -726,7 +760,10 @@
                                     <div><p class="text-sm text-slate-400">Check-in</p><p class="font-semibold text-base sm:text-lg text-violet-400">${data.stay.checkIn}</p></div>
                                     <div class="mt-4 sm:mt-0 sm:text-right"><p class="text-sm text-slate-400">Check-out</p><p class="font-semibold text-base sm:text-lg text-violet-400">${data.stay.checkOut}</p></div>
                                 </div>
-                                <div class="text-center mt-4"><button class="view-ticket-btn animated-glow-border bg-purple-500/10 text-purple-300 border border-purple-400/30 px-6 py-2 rounded-lg hover:bg-purple-500/20 transition-all duration-300" data-ticket-url="${data.stay.ticketUrl}">Show Booking Info</button></div>
+                                <div class="text-center mt-4">
+                                    <!-- Button with new iOS-style -->
+                                    <button class="view-ticket-btn animated-glow-border ios-button bg-purple-500/10 text-purple-300 border-purple-400/30 px-6 py-2 rounded-xl" data-ticket-url="${data.stay.ticketUrl}">Show Booking Info</button>
+                                </div>
                             </div>
                             ${journeyCardsHtml}
                             ${yatriListHtml}
@@ -785,7 +822,8 @@
                 monthBlock.appendChild(datesGrid);
 
                 const bookingButton = document.createElement('button');
-                bookingButton.className = 'animated-glow-border relative block w-full mt-4 p-3 rounded-lg bg-gradient-to-r from-pink-500 to-purple-600 text-center font-semibold text-white';
+                // Button with new iOS-style
+                bookingButton.className = 'animated-glow-border relative block w-full mt-4 p-3 rounded-xl ios-button bg-gradient-to-r from-pink-500 to-purple-600 text-center font-semibold text-white';
                 bookingButton.textContent = 'SHOW BOOKINGS';
                 bookingButton.dataset.monthyear = monthYear;
 
