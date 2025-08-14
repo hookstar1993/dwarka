@@ -419,7 +419,7 @@
 
             <div class="flex items-center justify-center space-x-6 mb-8">
                 <a href="https://wa.me/919824594156" target="_blank" class="flex items-center space-x-2 text-green-400 hover:text-green-300 transition-colors">
-                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.894 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.886-.001 2.269.654 4.542 1.916 6.448l-.29 2.021 2.094-.554z"/></svg>
+                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.894 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654z"/></svg>
                     <span class="font-semibold">WhatsApp</span>
                 </a>
                 <a href="https://instagram.com/hookstar.fx" target="_blank" class="flex items-center space-x-2 text-pink-400 hover:text-pink-300 transition-colors">
@@ -440,7 +440,8 @@
 
     <!-- Payment Modal -->
     <div id="payment-modal" class="modal-backdrop hidden">
-        <div class="modal-content-ticket glass-effect p-2 sm:p-4 relative flex flex-col rounded-2xl">
+        <!-- The modal-content class is used here instead of modal-content-ticket to fix the layout -->
+        <div class="modal-content glass-effect p-6 sm:p-8 relative flex flex-col rounded-2xl">
             <button id="close-payment-modal" class="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors text-3xl">&times;</button>
                 <div class="text-center">
                 <h1 class="text-2xl sm:text-3xl font-bold text-high-contrast tracking-tight">Make a Secure Payment</h1>
@@ -497,7 +498,7 @@
                 <p class="text-center text-sm text-gray-300 text-high-contrast">After payment, click the button below to send us the screenshot for confirmation.</p>
                 <!-- WhatsApp button with new iOS-style -->
                 <a href="https://wa.me/919824594156?text=Hello!%20I%20have%20completed%20the%20payment.%20Here%20is%20the%20screenshot." target="_blank" rel="noopener noreferrer" class="ios-button w-full bg-green-500/80 hover:bg-green-500/90 text-white font-bold py-3 px-4 rounded-xl flex items-center justify-center space-x-3 transition-all duration-300 transform hover:scale-105">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.894 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.886-.001 2.269.654 4.542 1.916 6.448l-.29 2.021 2.094-.554z"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.894 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654z"/></svg>
                     <span>Send Screenshot on WhatsApp</span>
                 </a>
             </div>
