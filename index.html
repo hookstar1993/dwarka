@@ -208,21 +208,21 @@
         }
         #toast-notification.show { transform: translate(-50%, 0); opacity: 1; pointer-events: auto; }
         
-        /* --- COUNTDOWN TIMER --- */
+        /* --- UPDATED COUNTDOWN TIMER --- */
         .countdown-item {
             background-image: url('https://hookstar1993.github.io/dwarka/img/moon.png');
+            background-color: transparent; /* Explicitly remove any background color */
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            border-radius: 1rem;
-            padding: 0.5rem;
             width: 100px;
             height: 100px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            box-shadow: none; /* Remove shadow */
+            border-radius: 0; /* Remove border-radius to prevent any shape */
         }
         .countdown-item span {
             color: black;
