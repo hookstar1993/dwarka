@@ -1,22 +1,24 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jay Dwarkadhish - Poonam Schedule - Views Bookings</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Teko:wght@400;600&family=Inter:wght@300;400;500;600;700;900&family=Jost:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Teko:wght@400;600&family=Jost:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         html {
             scroll-behavior: smooth;
         }
 
+        /* --- THEME ENGINE & FONT SETUP --- */
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #0c0a1a;
-            color: #f0f0f0;
-            overflow-x: hidden;
+            font-family: 'Jost', sans-serif;
+            background-attachment: fixed;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            cursor: default;
         }
 
         h1,
@@ -25,235 +27,188 @@
             font-family: 'Teko', sans-serif;
             letter-spacing: 0.05em;
         }
-
-        .aurora-background {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            background: radial-gradient(ellipse at 50% 0%, rgba(56, 189, 248, 0.2) 0%, transparent 70%),
-                        radial-gradient(ellipse at 10% 100%, rgba(168, 85, 247, 0.2) 0%, transparent 70%),
-                        radial-gradient(ellipse at 90% 100%, rgba(236, 72, 153, 0.2) 0%, transparent 70%);
-            animation: animate-aurora 15s linear infinite;
-        }
-
-        @keyframes animate-aurora {
-            0% { transform: rotate(0deg) scale(1.5); opacity: 0.5; }
-            50% { transform: rotate(180deg) scale(2); opacity: 1; }
-            100% { transform: rotate(360deg) scale(1.5); opacity: 0.5; }
-        }
-
-        .glass-effect {
-            background: rgba(12, 10, 26, 0.4);
-            -webkit-backdrop-filter: blur(20px);
+        
+        /* Glassmorphism Card Style */
+        .glass-card {
+            background: var(--glass-bg);
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-            transition: all 0.3s ease-in-out;
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 24px;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+            transition: background 0.3s, border 0.3s;
         }
+
+        /* --- Light Theme --- */
+        .light {
+            --bg-gradient-start: #FFF1E4;
+            --bg-gradient-end: #FAD4C4;
+            --text-primary: #4A2E1A;
+            --text-secondary: #8C5B3F;
+            --glass-bg: rgba(255, 255, 255, 0.4);
+            --glass-border: rgba(255, 255, 255, 0.6);
+            --accent-color: #FF7B54;
+            --modal-overlay: rgba(58, 46, 32, 0.5);
+            --input-bg: rgba(255, 255, 255, 0.7);
+            --current-timing-bg: rgba(255, 123, 84, 0.1);
+        }
+        .light body {
+            background-image: linear-gradient(120deg, var(--bg-gradient-start), var(--bg-gradient-end));
+        }
+        .light select option {
+            background: var(--bg-gradient-start);
+            color: var(--text-primary);
+        }
+
+        /* --- Dark Theme --- */
+        .dark {
+            --bg-gradient-start: #121212;
+            --bg-gradient-end: #181818;
+            --text-primary: #F0E6D8;
+            --text-secondary: #A89C8C;
+            --glass-bg: rgba(30, 40, 50, 0.4);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --accent-color: #FFA781;
+            --modal-overlay: rgba(0, 0, 0, 0.6);
+            --input-bg: rgba(255, 255, 255, 0.05);
+            --current-timing-bg: rgba(255, 167, 129, 0.1);
+        }
+        .dark body {
+            background-image: linear-gradient(120deg, var(--bg-gradient-start), var(--bg-gradient-end));
+        }
+        .dark select option {
+            background: var(--bg-gradient-end);
+            color: var(--text-primary);
+        }
+        
+        /* Themed elements */
+        .theme-text-primary { color: var(--text-primary); }
+        .theme-text-secondary { color: var(--text-secondary); }
+        .theme-accent-color { color: var(--accent-color); }
+
+        /* --- COMPONENT STYLES --- */
         
         .ios-button {
             position: relative;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
             backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.1);
             transition: all 0.2s ease-in-out;
             cursor: pointer;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
         }
-
         .ios-button:hover {
-            background: rgba(255, 255, 255, 0.2);
             transform: translateY(-2px) scale(1.02);
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.2);
         }
-
         .ios-button:active {
             transform: translateY(0) scale(1);
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.1);
         }
-
-        .animated-glow-border {
-            position: relative;
-            overflow: hidden;
-            z-index: 10;
+        
+        .pay-button {
+            background-color: var(--accent-color);
+            color: white;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 15px -5px var(--accent-color);
+            transition: all 0.2s ease-in-out;
+        }
+        .pay-button:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 8px 25px -8px var(--accent-color);
         }
 
+
+        .animated-glow-border {
+            position: relative; overflow: hidden; z-index: 10;
+        }
         .animated-glow-border::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -150%;
-            width: 150%;
-            height: 100%;
-            background: linear-gradient(110deg, transparent 20%, rgba(192, 132, 252, 0.6) 50%, transparent 80%);
+            content: ''; position: absolute; top: 0; left: -150%;
+            width: 150%; height: 100%;
+            background: linear-gradient(110deg, transparent 20%, color-mix(in srgb, var(--accent-color) 40%, transparent) 50%, transparent 80%);
             transform: skewX(-25deg);
             animation: animate-glow 4s linear infinite;
         }
-
-        @keyframes animate-glow {
-            from { left: -150%; }
-            to { left: 150%; }
-        }
+        @keyframes animate-glow { from { left: -150%; } to { left: 150%; } }
 
         .modal-backdrop {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            z-index: 50;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: var(--modal-overlay); z-index: 50;
+            display: flex; align-items: center; justify-content: center;
             transition: opacity 0.3s ease;
         }
-
-        .modal-content {
-            width: 90%;
-            max-width: 600px;
-            max-height: 90vh;
-            overflow-y: auto;
+        .modal-content, .modal-content-ticket {
+            transform: scale(0.95); opacity: 0;
+            transition: transform 0.2s ease-out, opacity 0.2s ease-out;
         }
-
-        .modal-content-ticket {
-            width: 90%;
-            height: 90%;
-            max-width: 1000px;
+        .modal-backdrop:not(.hidden) .modal-content,
+        .modal-backdrop:not(.hidden) .modal-content-ticket {
+            transform: scale(1); opacity: 1;
         }
-
-        .modal-iframe {
-            width: 100%;
-            height: calc(100% - 60px);
-            border: none;
-        }
-
-        .text-high-contrast {
-            color: white;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
-        }
-
-        /* Highlight for current timing */
+        .modal-content { width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto; }
+        .modal-content-ticket { width: 90%; height: 90%; max-width: 1000px; }
+        .modal-iframe { width: 100%; height: calc(100% - 60px); border: none; }
+        
         .current-timing {
-            background-color: rgba(250, 204, 21, 0.15);
-            border-left: 4px solid #facc15; /* amber-400 */
+            background-color: var(--current-timing-bg);
+            border-left: 4px solid var(--accent-color);
         }
-        
-        /* Welcome Popup Animations */
+
         .welcome-popup-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 100;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transition: opacity 0.5s ease-in-out;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.8); z-index: 100;
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; transition: opacity 0.5s ease-in-out;
         }
-
-        .welcome-popup-visible {
-            opacity: 1;
-        }
-
+        .welcome-popup-visible { opacity: 1; }
         .welcome-content {
-            background: rgba(12, 10, 26, 0.6);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 2rem;
-            border-radius: 1.5rem;
-            text-align: center;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
-            transform: scale(0.9);
-            transition: transform 0.5s ease-in-out;
+            padding: 2rem; text-align: center;
+            transform: scale(0.9); transition: transform 0.5s ease-in-out;
         }
+        .welcome-content-visible { transform: scale(1); }
 
-        .welcome-content-visible {
-            transform: scale(1);
-        }
-        
-        /* New card styling from second code snippet */
         .train-container {
-            position: relative;
-            width: 100%;
-            height: 96px; /* Same as the circle height */
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            position: relative; width: 100%; height: 96px;
+            display: flex; align-items: center; justify-content: center;
         }
         .train-track {
-            position: absolute;
-            width: 100%;
-            height: 2px;
-            background-color: #e5e7eb; /* gray-200 */
-            top: 50%;
-            transform: translateY(-50%);
-            z-index: 5;
+            position: absolute; width: 100%; height: 2px;
+            background-color: var(--glass-border); top: 50%;
+            transform: translateY(-50%); z-index: 5;
         }
         .train {
-            position: absolute;
-            top: 50%;
-            left: 0;
+            position: absolute; top: 50%; left: 0;
             transform: translateY(-50%);
             animation: move-train 4s linear infinite;
-            z-index: 15; /* Above the track */
+            z-index: 15;
         }
-        @keyframes move-train {
-            0% {
-                left: -12px; /* Start off-screen */
-            }
-            100% {
-                left: calc(100% - 12px); /* End off-screen */
-            }
+        @keyframes move-train { 0% { left: -12px; } 100% { left: calc(100% - 12px); } }
+        
+        .ticket-card { position: relative; transition: transform 0.3s, box-shadow 0.3s; }
+        .ticket-card:hover { 
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
         }
-        /* Ticket cut-out effect */
-        .ticket-card {
-            position: relative;
+        .ticket-card::before, .ticket-card::after {
+            content: ''; position: absolute; top: 50%;
+            width: 40px; height: 40px;
+            border-radius: 50%; z-index: 20;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.2);
         }
-        .ticket-card::before,
-        .ticket-card::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            width: 40px;
-            height: 40px;
-            background-color: #0c0a1a; /* Same as body bg */
-            border-radius: 50%;
-            z-index: 20;
-        }
-        .ticket-card::before {
-            left: 0;
-            transform: translate(-50%, -50%);
-        }
-        .ticket-card::after {
-            right: 0;
-            transform: translate(50%, -50%);
-        }
-        /* Toast Notification Styling */
+        .dark .ticket-card::before, .dark .ticket-card::after { background: var(--bg-gradient-end); }
+        .light .ticket-card::before, .light .ticket-card::after { background: var(--bg-gradient-end); }
+        .ticket-card::before { left: 0; transform: translate(-50%, -50%); }
+        .ticket-card::after { right: 0; transform: translate(50%, -50%); }
+        
         #toast-notification {
-            position: fixed;
-            bottom: 1.25rem; /* 20px */
-            left: 50%;
-            transform: translate(-50%, 5rem); /* Start centered and below view */
-            opacity: 0;
+            position: fixed; bottom: 1.25rem; left: 50%;
+            transform: translate(-50%, 5rem); opacity: 0;
             transition: transform 0.3s ease, opacity 0.3s ease;
-            pointer-events: none; /* Prevent clicks when hidden */
+            pointer-events: none;
         }
-        #toast-notification.show {
-            transform: translate(-50%, 0); /* Move to final centered position */
-            opacity: 1;
-            pointer-events: auto; /* Allow clicks when visible */
-        }
-
-        /* Countdown Timer Styling */
+        #toast-notification.show { transform: translate(-50%, 0); opacity: 1; pointer-events: auto; }
+        
+        /* --- RESTORED ORIGINAL COUNTDOWN TIMER --- */
         .countdown-item {
             background-image: url('https://hookstar1993.github.io/dwarka/img/moon.png');
             background-size: cover;
@@ -269,7 +224,6 @@
             justify-content: center;
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
-
         .countdown-item span {
             color: black;
             text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
@@ -278,238 +232,206 @@
             color: black;
             font-weight: 600;
         }
+        
+        .status-duration-circle {
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+        }
 
         @media (max-width: 640px) {
             .countdown-item {
-                width: 70px;
-                height: 70px;
-                padding: 0.25rem;
-                border-radius: 0.75rem;
+                width: 70px; height: 70px;
             }
-            #countdown-timer {
-                gap: 0.5rem;
-            }
+            #countdown-timer { gap: 0.5rem; }
         }
     </style>
 </head>
-<body class="flex flex-col min-h-screen">
-
-    <div class="aurora-background"></div>
-
+<body class="flex flex-col min-h-screen theme-text-primary transition-colors duration-500">
+    
     <!-- Welcome Popup -->
     <div id="welcome-popup" class="welcome-popup-container">
-        <div class="welcome-content">
-            <h2 class="text-4xl sm:text-5xl font-bold text-amber-300 page-title" style="text-shadow: 0 0 15px rgba(251, 191, 36, 0.5);">Jay Dwarkadhish 🙏</h2>
-            <p id="slogan-text" class="text-slate-300 mt-2 text-xl font-bold min-h-[3rem] flex items-center justify-center">Welcome to the sacred journey!</p>
+        <div class="welcome-content glass-card">
+            <h2 class="text-4xl sm:text-5xl font-bold theme-accent-color page-title">Jay Dwarkadhish 🙏</h2>
+            <p id="slogan-text" class="theme-text-secondary mt-2 text-xl font-bold min-h-[3rem] flex items-center justify-center">Welcome to the sacred journey!</p>
         </div>
     </div>
 
     <!-- Main Site Wrapper -->
     <div id="site-wrapper" class="opacity-100 transition-opacity duration-500">
-        <header class="glass-effect shadow-md sticky top-0 z-40">
-            <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
-                <div class="flex items-center text-2xl font-bold tracking-wider text-white" style="text-shadow: 0 0 8px rgba(255,255,255,0.5);">
-                    <svg class="w-8 h-8 mr-2 text-amber-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <header class="glass-card fixed top-4 left-4 right-4 z-40 transition-all duration-300">
+            <nav class="container mx-auto px-4 sm:px-6 py-3 flex justify-between items-center">
+                <div class="flex items-center text-xl sm:text-2xl font-bold tracking-wider theme-text-primary">
+                    <svg class="w-8 h-8 mr-2 theme-accent-color" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M3 20h18" /><path d="M7 20L12 5l5 15" /><path d="M12 5V2l5 1.5L12 2" /><path d="M8 20v-3h8v3" />
                     </svg>
                     Jay Dwarkadhish
                 </div>
-                <div class="hidden md:flex items-center space-x-8">
-                    <a href="#" id="home-link" class="text-gray-300 hover:text-white font-medium transition-colors duration-300">Home</a>
-                    <a href="#" id="timing-link" class="text-gray-300 hover:text-white font-medium transition-colors duration-300">Mandir Timing</a>
-                    <a href="#" id="about-link" class="text-gray-300 hover:text-white font-medium transition-colors duration-300">About Us</a>
-                    <a href="#" id="contact-link" class="text-gray-300 hover:text-white font-medium transition-colors duration-300">Contact</a>
-                    <a href="#" id="pay-link" class="ios-button text-white font-bold py-2 px-4 rounded-xl bg-green-500/80 hover:bg-green-500/90 transform hover:scale-105">Pay Me Here</a>
+                <div class="flex items-center space-x-2">
+                    <div class="hidden md:flex items-center space-x-6">
+                        <a href="#" id="home-link" class="theme-text-secondary hover:theme-text-primary font-medium transition-colors duration-300">Home</a>
+                        <a href="#" id="timing-link" class="theme-text-secondary hover:theme-text-primary font-medium transition-colors duration-300">Mandir Timing</a>
+                        <a href="#" id="about-link" class="theme-text-secondary hover:theme-text-primary font-medium transition-colors duration-300">About Us</a>
+                        <a href="#" id="contact-link" class="theme-text-secondary hover:theme-text-primary font-medium transition-colors duration-300">Contact</a>
+                        <a href="#" id="pay-link" class="pay-button font-bold py-2 px-4 rounded-xl">Pay Me Here</a>
+                    </div>
+                    <!-- Theme Toggle -->
+                    <button id="theme-toggle" title="Toggle Theme" class="p-2 rounded-full hover:bg-black/10 dark:hover:bg-white/10 transition-colors">
+                        <svg id="sun-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="theme-text-secondary"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                        <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="hidden theme-text-secondary"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                    </button>
+                    <button class="md:hidden" id="mobile-menu-button">
+                        <svg class="w-6 h-6 theme-text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                    </button>
                 </div>
-                <button class="md:hidden" id="mobile-menu-button">
-                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
-                </button>
             </nav>
-            <div id="mobile-menu" class="hidden md:hidden px-6 pb-4 glass-effect">
-                <a href="#" id="mobile-home-link" class="block py-2 text-gray-300 hover:text-white">Home</a>
-                <a href="#" id="mobile-timing-link" class="block py-2 text-gray-300 hover:text-white">Mandir Timing</a>
-                <a href="#" id="mobile-about-link" class="block py-2 text-gray-300 hover:text-white">About Us</a>
-                <a href="#" id="mobile-contact-link" class="block py-2 text-gray-300 hover:text-white">Contact</a>
-                <a href="#" id="mobile-pay-link" class="ios-button block py-2 mt-2 text-center text-white font-bold rounded-xl bg-green-500/80 hover:bg-green-500/90 transition-all duration-300">Pay Me Here</a>
+            <div id="mobile-menu" class="hidden md:hidden px-6 pb-4 glass-card rounded-b-2xl -mt-2">
+                 <a href="#" id="mobile-home-link" class="block py-2 text-center theme-text-secondary hover:theme-text-primary">Home</a>
+                 <a href="#" id="mobile-timing-link" class="block py-2 text-center theme-text-secondary hover:theme-text-primary">Mandir Timing</a>
+                 <a href="#" id="mobile-about-link" class="block py-2 text-center theme-text-secondary hover:theme-text-primary">About Us</a>
+                 <a href="#" id="mobile-contact-link" class="block py-2 text-center theme-text-secondary hover:theme-text-primary">Contact</a>
+                 <a href="#" id="mobile-pay-link" class="pay-button block py-2 mt-2 text-center font-bold rounded-xl transition-all duration-300">Pay Me Here</a>
             </div>
         </header>
 
-        <div id="content-area" class="container mx-auto px-4 sm:px-6 py-12 sm:py-16 flex-grow">
+        <main id="content-area" class="container mx-auto px-4 sm:px-6 pt-24 md:pt-28 pb-12 flex-grow">
             <div id="main-view">
-                <div class="text-center mb-12">
-                    <h1 class="text-4xl sm:text-5xl md:text-6xl font-black text-white leading-tight" style="text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);">🌕 Our Spiritual Journey to Dwarka Begins!</h1>
-                    <p class="text-base sm:text-lg text-gray-400 mt-4 max-w-3xl mx-auto">Our journey on these all special Poonam days! So Stay updated with Dharamshala booking and travel details below.</p>
-                </div>
+                <section class="text-center mb-12">
+                    <h1 class="text-4xl sm:text-5xl font-black theme-text-primary leading-tight" style="text-shadow: 0 2px 4px rgba(0,0,0,0.1);">🌕 Our Spiritual Journey to Dwarka Begins!</h1>
+                    <p class="text-base sm:text-lg theme-text-secondary mt-4 max-w-3xl mx-auto">Join our sacred pilgrimage on these special Poonam days! Stay updated with all travel and booking details below.</p>
+                </section>
                 
                 <!-- Countdown Timer -->
-                <div id="countdown-container" class="mb-12 sm:mb-16">
+                <section id="countdown-container" class="mb-12 sm:mb-16">
                     <!-- Timer will be injected here -->
-                </div>
+                </section>
                 
                 <!-- DROPDOWN MENUS -->
-                <div class="w-full max-w-xl mx-auto mb-12">
-                    <div class="glass-effect rounded-2xl shadow-lg overflow-hidden p-4 flex flex-col sm:flex-row justify-center items-center gap-4">
+                <section class="w-full max-w-xl mx-auto mb-12">
+                    <div class="glass-card overflow-hidden p-4 flex flex-col sm:flex-row justify-center items-center gap-4">
                         <div class="w-full sm:w-1/2">
-                            <label for="year-filter" class="block text-sm font-bold text-gray-400 mb-1 text-center">Select Year:</label>
-                            <select id="year-filter" class="block w-full px-3 py-2 text-base glass-effect text-white rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 sm:text-sm">
+                            <label for="year-filter" class="block text-sm font-bold theme-text-secondary mb-1 text-center">Select Year:</label>
+                            <select id="year-filter" class="block w-full px-3 py-2 text-base rounded-md focus:outline-none theme-text-primary" style="background:var(--input-bg); border: 1px solid var(--glass-border);">
                                 <!-- Year options will be populated by JavaScript -->
                             </select>
                         </div>
                         <div class="w-full sm:w-1/2">
-                            <label for="date-month-filter" class="block text-sm font-bold text-gray-400 mb-1 text-center">Select Date & Month:</label>
-                            <select id="date-month-filter" class="block w-full px-3 py-2 text-base glass-effect text-white rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 sm:text-sm" disabled>
+                            <label for="date-month-filter" class="block text-sm font-bold theme-text-secondary mb-1 text-center">Select Date & Month:</label>
+                            <select id="date-month-filter" class="block w-full px-3 py-2 text-base rounded-md focus:outline-none theme-text-primary" style="background:var(--input-bg); border: 1px solid var(--glass-border);" disabled>
                                 <!-- Date/Month options will be populated by JavaScript -->
                             </select>
                         </div>
                     </div>
-                </div>
+                </section>
 
                 <!-- DETAILED BOOKING CARDS WILL BE LOADED HERE -->
-                <div id="poonam-dates-container" class="space-y-8">
+                <section id="poonam-dates-container" class="space-y-8">
                     <!-- Cards will be dynamically added here -->
-                </div>
+                </section>
             </div>
-        </div>
+        </main>
 
-        <footer class="glass-effect mt-20">
-            <div class="container mx-auto px-6 py-8">
-                <div class="flex flex-col md:flex-row justify-between items-center">
-                    <p class="text-sm text-gray-400 mb-4 md:mb-0">© 2025 Jay Dwarkadhish. All Rights Reserved.</p>
-                    <div class="flex space-x-6">
-                        <a href="#" class="text-gray-400 hover:text-white transition-colors"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.04C6.5 2.04 2 6.53 2 12.06c0 4.71 3.21 8.65 7.53 9.79v-6.94H7.01v-2.85h2.52V9.82c0-2.5 1.52-3.88 3.78-3.88 1.08 0 2.02.08 2.29.12v2.54h-1.5c-1.21 0-1.45.58-1.45 1.42v1.86h2.83l-.37 2.85h-2.46v6.94C18.79 20.71 22 16.77 22 12.06c0-5.53-4.5-10.02-10-10.02z"/></svg></a>
-                        <a href="#" class="text-gray-400 hover:text-white transition-colors"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M22.46 6c-.77.35-1.6.58-2.46.67.88-.53 1.56-1.37 1.88-2.38-.83.49-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.98-3.56-.18-6.72-1.88-8.84-4.48-.37.63-.58 1.37-.58 2.15 0 1.49.75 2.81 1.91 3.58-.7-.02-1.37-.22-1.95-.55v.05c0 2.08 1.48 3.82 3.44 4.21a4.22 4.22 0 0 1-1.94.07 4.28 4.28 0 0 0 4 2.98 8.521 8.521 0 0 1-5.33 1.84c-.34 0-.68-.02-1.02-.06C3.44 20.29 5.7 21 8.12 21c7.55 0 11.69-6.25 11.69-11.69v-.53c.8-.58 1.48-1.3 2.02-2.12z"/></svg></a>
-                        <a href="#" class="text-gray-400 hover:text-white transition-colors"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8A3.6 3.6 0 0 0 7.6 20h8.8A3.6 3.6 0 0 0 20 16.4V7.6A3.6 3.6 0 0 0 16.4 4H7.6m9.65 1.5a1.25 1.25 0 1 1-2.5 0 1.25 1.25 0 0 1 2.5 0M12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10m0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/></svg></a>
-                    </div>
-                </div>
+        <footer class="text-center pb-8 px-4">
+            <p class="text-sm theme-text-secondary mb-4">© 2025 Jay Dwarkadhish. All Rights Reserved.</p>
+            <div class="flex justify-center space-x-6">
+                <a href="#" class="theme-text-secondary hover:theme-text-primary transition-colors"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.04C6.5 2.04 2 6.53 2 12.06c0 4.71 3.21 8.65 7.53 9.79v-6.94H7.01v-2.85h2.52V9.82c0-2.5 1.52-3.88 3.78-3.88 1.08 0 2.02.08 2.29.12v2.54h-1.5c-1.21 0-1.45.58-1.45 1.42v1.86h2.83l-.37 2.85h-2.46v6.94C18.79 20.71 22 16.77 22 12.06c0-5.53-4.5-10.02-10-10.02z"/></svg></a>
+                <a href="#" class="theme-text-secondary hover:theme-text-primary transition-colors"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M22.46 6c-.77.35-1.6.58-2.46.67.88-.53 1.56-1.37 1.88-2.38-.83.49-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.98-3.56-.18-6.72-1.88-8.84-4.48-.37.63-.58 1.37-.58 2.15 0 1.49.75 2.81 1.91 3.58-.7-.02-1.37-.22-1.95-.55v.05c0 2.08 1.48 3.82 3.44 4.21a4.22 4.22 0 0 1-1.94.07 4.28 4.28 0 0 0 4 2.98 8.521 8.521 0 0 1-5.33 1.84c-.34 0-.68-.02-1.02-.06C3.44 20.29 5.7 21 8.12 21c7.55 0 11.69-6.25 11.69-11.69v-.53c.8-.58 1.48-1.3 2.02-2.12z"/></svg></a>
+                <a href="#" class="theme-text-secondary hover:theme-text-primary transition-colors"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8A3.6 3.6 0 0 0 7.6 20h8.8A3.6 3.6 0 0 0 20 16.4V7.6A3.6 3.6 0 0 0 16.4 4H7.6m9.65 1.5a1.25 1.25 0 1 1-2.5 0 1.25 1.25 0 0 1 2.5 0M12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10m0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/></svg></a>
             </div>
         </footer>
     </div>
 
     <!-- Ticket Viewer Modal -->
     <div id="ticketModal" class="modal-backdrop hidden">
-        <div class="modal-content-ticket glass-effect p-2 sm:p-4 relative flex flex-col rounded-2xl">
+        <div class="modal-content-ticket glass-card p-2 sm:p-4 relative flex flex-col">
             <button id="closeModalBtn" class="ios-button !bg-red-600/80 absolute -top-2 -right-2 sm:-top-3 sm:-right-3 text-white rounded-full h-8 w-8 flex items-center justify-center text-lg font-bold z-50 hover:!bg-red-700 transition-all">&times;</button>
             <iframe id="ticketViewerIframe" class="modal-iframe flex-grow rounded-t-lg" src="" title="Ticket Viewer"></iframe>
             <div class="text-center p-2">
-                <a id="downloadBtn" href="#" download="ticket.pdf" class="w-full sm:w-auto inline-block animated-glow-border ios-button bg-green-500/10 text-green-300 border-green-400/30 px-6 py-2 rounded-xl transition-all duration-300">Download</a>
+                <a id="downloadBtn" href="#" download="ticket.pdf" class="w-full sm:w-auto inline-block animated-glow-border ios-button px-6 py-2 rounded-xl transition-all duration-300" style="color:var(--accent-color)">Download</a>
             </div>
         </div>
     </div>
     
     <!-- About Us Modal -->
     <div id="about-modal" class="modal-backdrop hidden">
-        <div class="modal-content glass-effect p-6 sm:p-8 relative flex flex-col rounded-2xl">
-            <button id="close-about-modal" class="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors text-3xl">&times;</button>
-            <h2 class="text-3xl font-bold text-purple-300 page-title mb-4">About Us</h2>
-            <div class="text-slate-300 overflow-y-auto pr-4 space-y-4">
-                <h3 class="text-2xl font-bold text-amber-300">Welcome to Jay Dwarkadhish’s Sacred Pilgrimage</h3>
-                <p>
-                    At Jay Dwarkadhish, we bring together a community of seekers who embark on a spiritual journey to Dwarka during auspicious Poonam (full-moon) occasions. Rooted in devotion and fellowship, our mission is to facilitate this sacred pilgrimage with warmth, ease, and purpose.
-                </p>
-                <h3 class="text-2xl font-bold text-purple-300 mt-6">What We Offer:</h3>
+        <div class="modal-content glass-card p-6 sm:p-8 relative flex flex-col">
+            <button id="close-about-modal" class="absolute top-4 right-4 theme-text-secondary hover:theme-text-primary transition-colors text-3xl">&times;</button>
+            <h2 class="text-3xl font-bold theme-accent-color page-title mb-4">About Us</h2>
+            <div class="theme-text-secondary overflow-y-auto pr-4 space-y-4">
+                <h3 class="text-2xl font-bold theme-accent-color">Welcome to Jay Dwarkadhish’s Sacred Pilgrimage</h3>
+                <p>At Jay Dwarkadhish, we bring together a community of seekers who embark on a spiritual journey to Dwarka during auspicious Poonam (full-moon) occasions. Rooted in devotion and fellowship, our mission is to facilitate this sacred pilgrimage with warmth, ease, and purpose.</p>
+                <h3 class="text-2xl font-bold theme-accent-color mt-6">What We Offer:</h3>
                 <ul class="list-disc list-inside space-y-2">
-                    <li>
-                        <span class="font-semibold text-white">Curated Yatra Travel:</span> Comprehensive bookings and logistics aligned with special Poonam days to ensure serene and hassle-free travel.
-                    </li>
-                    <li>
-                        <span class="font-semibold text-white">Community Focus:</span> A heartfelt space for devotees to connect, share, and experience the spiritual richness of Dwarka together.
-                    </li>
+                    <li><span class="font-semibold theme-text-primary">Curated Yatra Travel:</span> Comprehensive bookings and logistics aligned with special Poonam days to ensure serene and hassle-free travel.</li>
+                    <li><span class="font-semibold theme-text-primary">Community Focus:</span> A heartfelt space for devotees to connect, share, and experience the spiritual richness of Dwarka together.</li>
                 </ul>
-                <h3 class="text-2xl font-bold text-purple-300 mt-6">About the Organizers</h3>
-                <p>
-                    The journey is organized by <span class="font-semibold text-white">Hardeep Savani</span> from Surat, Gujarat. With a deep reverence for our spiritual heritage and a passion for community, Hardeep is committed to guiding everyone on a blessed and memorable pilgrimage.
-                </p>
+                <h3 class="text-2xl font-bold theme-accent-color mt-6">About the Organizers</h3>
+                <p>The journey is organized by <span class="font-semibold theme-text-primary">Hardeep Savani</span> from Surat, Gujarat. With a deep reverence for our spiritual heritage and a passion for community, Hardeep is committed to guiding everyone on a blessed and memorable pilgrimage.</p>
             </div>
         </div>
     </div>
 
     <!-- Contact Modal -->
     <div id="contact-modal" class="modal-backdrop hidden">
-        <div class="modal-content glass-effect p-6 sm:p-8 relative flex flex-col rounded-2xl">
-            <button id="close-contact-modal" class="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors text-3xl">&times;</button>
-            <h2 class="text-3xl font-bold text-sky-300 page-title mb-4">Contact & Suggestions</h2>
-            
-            <div class="text-slate-300 mb-6">
-                <p class="font-semibold text-lg">Hardeep Savani</p>
-                <p class="text-slate-400">Surat, Gujarat</p>
+        <div class="modal-content glass-card p-6 sm:p-8 relative flex flex-col">
+            <button id="close-contact-modal" class="absolute top-4 right-4 theme-text-secondary hover:theme-text-primary transition-colors text-3xl">&times;</button>
+            <h2 class="text-3xl font-bold theme-accent-color page-title mb-4">Contact & Suggestions</h2>
+            <div class="theme-text-secondary mb-6">
+                <p class="font-semibold text-lg theme-text-primary">Hardeep Savani</p>
+                <p>Surat, Gujarat</p>
             </div>
-
             <div class="flex items-center justify-center space-x-6 mb-8">
-                <a href="https://wa.me/919824594156" target="_blank" class="flex items-center space-x-2 text-green-400 hover:text-green-300 transition-colors">
-                    <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.894 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654z"/></svg>
-                    <span class="font-semibold">WhatsApp</span>
-                </a>
-                <a href="https://instagram.com/hookstar.fx" target="_blank" class="flex items-center space-x-2 text-pink-400 hover:text-pink-300 transition-colors">
-                        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8A3.6 3.6 0 0 0 7.6 20h8.8A3.6 3.6 0 0 0 20 16.4V7.6A3.6 3.6 0 0 0 16.4 4H7.6m9.65 1.5a1.25 1.25 0 1 1-2.5 0 1.25 1.25 0 0 1 2.5 0M12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10m0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/></svg></a>
-                    <span class="font-semibold">Instagram</span>
-                </a>
+                <a href="https://wa.me/919824594156" target="_blank" class="flex items-center space-x-2 text-green-400 hover:text-green-300 transition-colors"><svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.894 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654z"/></svg><span class="font-semibold">WhatsApp</span></a>
+                <a href="https://instagram.com/hookstar.fx" target="_blank" class="flex items-center space-x-2 text-pink-400 hover:text-pink-300 transition-colors"><svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24"><path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8A3.6 3.6 0 0 0 7.6 20h8.8A3.6 3.6 0 0 0 20 16.4V7.6A3.6 3.6 0 0 0 16.4 4H7.6m9.65 1.5a1.25 1.25 0 1 1-2.5 0 1.25 1.25 0 0 1 2.5 0M12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10m0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/></svg><span class="font-semibold">Instagram</span></a>
             </div>
-
             <form id="contact-form" action="https://formspree.io/f/xovlkbqr" method="POST" class="space-y-4">
-                <input type="text" name="name" id="contact-name" placeholder="Your Name" class="w-full px-4 py-2 bg-slate-800/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-sky-500" required>
-                <input type="email" name="email" id="contact-email" placeholder="Your Email" class="w-full px-4 py-2 bg-slate-800/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-sky-500" required>
-                <textarea name="message" id="contact-message" placeholder="Your Suggestion..." rows="4" class="w-full px-4 py-2 bg-slate-800/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-sky-500" required></textarea>
-                <button type="submit" class="ios-button w-full p-3 rounded-xl bg-gradient-to-r from-sky-500 to-indigo-500 text-center font-semibold text-white transition-all duration-300 hover:shadow-xl transform hover:scale-105">Send Suggestion</button>
+                <input type="text" name="name" id="contact-name" placeholder="Your Name" class="w-full p-2 rounded-lg border theme-text-primary focus:outline-none" style="background: var(--input-bg); border-color: var(--glass-border);" required>
+                <input type="email" name="email" id="contact-email" placeholder="Your Email" class="w-full p-2 rounded-lg border theme-text-primary focus:outline-none" style="background: var(--input-bg); border-color: var(--glass-border);" required>
+                <textarea name="message" id="contact-message" placeholder="Your Suggestion..." rows="4" class="w-full p-2 rounded-lg border theme-text-primary focus:outline-none" style="background: var(--input-bg); border-color: var(--glass-border);" required></textarea>
+                <button type="submit" class="ios-button w-full p-3 rounded-xl text-center font-semibold transition-all duration-300 hover:shadow-xl transform hover:scale-105" style="background:var(--accent-color); color:white;">Send Suggestion</button>
             </form>
         </div>
     </div>
 
     <!-- Payment Modal -->
     <div id="payment-modal" class="modal-backdrop hidden">
-        <div class="modal-content glass-effect p-6 sm:p-8 relative flex flex-col rounded-2xl">
-            <button id="close-payment-modal" class="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors text-3xl">&times;</button>
-                <div class="text-center">
-                <h1 class="text-2xl sm:text-3xl font-bold text-high-contrast tracking-tight">Make a Secure Payment</h1>
-                <p class="text-gray-300 mt-2 text-high-contrast text-sm sm:text-base">Click a button to pay with your preferred mobile app. (Mobile only)</p>
+        <div class="modal-content glass-card p-6 sm:p-8 relative flex flex-col max-h-[90vh] overflow-y-auto">
+            <button id="close-payment-modal" class="absolute top-4 right-4 theme-text-secondary hover:theme-text-primary transition-colors text-3xl">&times;</button>
+            <div class="text-center">
+                <h1 class="text-2xl sm:text-3xl font-bold theme-text-primary tracking-tight">Make a Secure Payment</h1>
+                <p class="theme-text-secondary mt-2 text-sm sm:text-base">Click a button to pay with your preferred mobile app. (Mobile only)</p>
             </div>
-
             <div class="space-y-4 mt-8">
-                <h2 class="text-lg font-semibold text-cyan-300 text-high-contrast">1. Pay Directly via App</h2>
+                <h2 class="text-lg font-semibold theme-accent-color">1. Pay Directly via App</h2>
                 <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                    <a href="upi://pay?pa=9824594156@okbizaxis&pn=Your%20Name&cu=INR" class="ios-button p-4 rounded-xl flex flex-col items-center justify-center space-y-2 bg-white/10">
-                        <div class="h-8 flex items-center"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Google_Pay_Logo.svg/2560px-Google_Pay_Logo.svg.png" alt="Google Pay" class="h-full w-auto object-contain"></div>
-                        <span class="font-semibold text-gray-200 text-xs text-high-contrast">Google Pay</span>
-                    </a>
-                    <a href="phonepe://pay?pa=9824594156@okbizaxis&pn=Your%20Name&cu=INR" class="ios-button p-4 rounded-xl flex flex-col items-center justify-center space-y-2 bg-white/10">
-                        <div class="h-8 flex items-center"><img src="https://upload.wikimedia.org/wikipedia/commons/7/71/PhonePe_Logo.svg" alt="PhonePe" class="h-full w-auto object-contain"></div>
-                        <span class="font-semibold text-gray-200 text-xs text-high-contrast">PhonePe</span>
-                    </a>
-                    <a href="bhim://upi/pay?pa=9824594156@okbizaxis&pn=Your%20Name&cu=INR" class="ios-button p-4 rounded-xl flex flex-col items-center justify-center space-y-2 bg-white/10">
-                        <div class="h-8 flex items-center"><img src="https://upload.wikimedia.org/wikipedia/en/6/65/BHIM_SVG_Logo.svg" alt="BHIM UPI" class="h-full w-auto object-contain"></div>
-                        <span class="font-semibold text-gray-200 text-xs text-high-contrast">BHIM</span>
-                    </a>
+                    <a href="upi://pay?pa=9824594156@okbizaxis&pn=Your%20Name&cu=INR" class="ios-button p-4 rounded-xl flex flex-col items-center justify-center space-y-2"><div class="h-8 flex items-center"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Google_Pay_Logo.svg/2560px-Google_Pay_Logo.svg.png" alt="Google Pay" class="h-full w-auto object-contain"></div><span class="font-semibold theme-text-primary text-xs">Google Pay</span></a>
+                    <a href="phonepe://pay?pa=9824594156@okbizaxis&pn=Your%20Name&cu=INR" class="ios-button p-4 rounded-xl flex flex-col items-center justify-center space-y-2"><div class="h-8 flex items-center"><img src="https://upload.wikimedia.org/wikipedia/commons/7/71/PhonePe_Logo.svg" alt="PhonePe" class="h-full w-auto object-contain"></div><span class="font-semibold theme-text-primary text-xs">PhonePe</span></a>
+                    <a href="bhim://upi/pay?pa=9824594156@okbizaxis&pn=Your%20Name&cu=INR" class="ios-button p-4 rounded-xl flex flex-col items-center justify-center space-y-2"><div class="h-8 flex items-center"><img src="https://upload.wikimedia.org/wikipedia/en/6/65/BHIM_SVG_Logo.svg" alt="BHIM UPI" class="h-full w-auto object-contain"></div><span class="font-semibold theme-text-primary text-xs">BHIM</span></a>
                 </div>
             </div>
-
-            <div class="relative my-6"><div class="absolute inset-0 flex items-center" aria-hidden="true"><div class="w-full border-t border-white/20"></div></div><div class="relative flex justify-center"><span class="bg-[#0c0a1a] px-2 text-sm text-gray-300 text-high-contrast">OR</span></div></div>
-
+            <div class="relative my-6"><div class="absolute inset-0 flex items-center"><div class="w-full" style="border-top:1px solid var(--glass-border)"></div></div><div class="relative flex justify-center"><span class="px-2 text-sm theme-text-secondary" style="background:var(--glass-bg)">OR</span></div></div>
             <div class="space-y-4">
-                <h2 class="text-lg font-semibold text-cyan-300 text-high-contrast">2. Scan & Pay</h2>
+                <h2 class="text-lg font-semibold theme-accent-color">2. Scan & Pay</h2>
                 <div class="bg-white/90 p-4 rounded-lg flex justify-center"><img src="https://hookstar1993.github.io/paymehook/qr-9824594156@okbizaxis.png" alt="QR Code for Payment" class="rounded-md w-full max-w-[200px]"></div>
             </div>
-            
             <div class="space-y-4 mt-6">
-                <h2 class="text-lg font-semibold text-cyan-300 text-high-contrast">3. Pay with UPI ID</h2>
-                <div class="glass-effect p-4 rounded-lg flex justify-between items-center">
-                    <span id="upiId" class="font-medium text-high-contrast text-sm sm:text-base break-all">9824594156@okbizaxis</span>
-                    <button onclick="copyToClipboard('upiId', this)" title="Copy UPI ID" class="ios-button p-1.5 rounded-xl flex-shrink-0 bg-white/10"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" viewBox="0 0 20 20" fill="currentColor"><path d="M7 9a2 2 0 012-2h6a2 2 0 012 2v6a2 2 0 01-2 2H9a2 2 0 01-2-2V9z" /><path d="M5 3a2 2 0 00-2 2v6a2 2 0 002 2V5h6a2 2 0 00-2-2H5z" /></svg></button>
+                <h2 class="text-lg font-semibold theme-accent-color">3. Pay with UPI ID</h2>
+                <div class="p-4 rounded-lg flex justify-between items-center" style="background:var(--input-bg)">
+                    <span id="upiId" class="font-medium theme-text-primary text-sm sm:text-base break-all">9824594156@okbizaxis</span>
+                    <button onclick="copyToClipboard('upiId', this)" title="Copy UPI ID" class="ios-button p-1.5 rounded-xl flex-shrink-0"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 theme-text-primary" viewBox="0 0 20 20" fill="currentColor"><path d="M7 9a2 2 0 012-2h6a2 2 0 012 2v6a2 2 0 01-2 2H9a2 2 0 01-2-2V9z" /><path d="M5 3a2 2 0 00-2 2v6a2 2 0 002 2V5h6a2 2 0 00-2-2H5z" /></svg></button>
                 </div>
             </div>
-            
             <div class="space-y-4 mt-6">
-                <h2 class="text-lg font-semibold text-cyan-300 text-high-contrast">4. Direct Bank Transfer</h2>
-                <div class="glass-effect p-4 rounded-lg space-y-4 text-sm sm:text-base">
-                    <div class="flex justify-between items-center"><span class="text-gray-200 text-high-contrast">Account Name:</span><div class="flex items-center space-x-3"><span id="accName" class="font-medium text-high-contrast text-right">SAVANI HARDEEP M.</span><button onclick="copyToClipboard('accName', this)" title="Copy Account Name" class="ios-button p-1.5 rounded-xl flex-shrink-0 bg-white/10"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" viewBox="0 0 20 20" fill="currentColor"><path d="M7 9a2 2 0 012-2h6a2 2 0 012 2v6a2 2 0 01-2 2H9a2 2 0 01-2-2V9z" /><path d="M5 3a2 2 0 00-2 2v6a2 2 0 002 2V5h6a2 2 0 00-2-2H5z" /></svg></button></div></div>
-                    <div class="flex justify-between items-center"><span class="text-gray-200 text-high-contrast">Bank Name:</span><div class="flex items-center space-x-3"><span id="bankName" class="font-medium text-high-contrast">STATE BANK OF INDIA</span><button onclick="copyToClipboard('bankName', this)" title="Copy Bank Name" class="ios-button p-1.5 rounded-xl flex-shrink-0 bg-white/10"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" viewBox="0 0 20 20" fill="currentColor"><path d="M7 9a2 2 0 012-2h6a2 2 0 012 2v6a2 2 0 01-2 2H9a2 2 0 01-2-2V9z" /><path d="M5 3a2 2 0 00-2 2v6a2 2 0 002 2V5h6a2 2 0 00-2-2H5z" /></svg></button></div></div>
-                    <div class="flex justify-between items-center"><span class="text-gray-200 text-high-contrast">Account No:</span><div class="flex items-center space-x-3"><span id="accNum" class="font-medium text-high-contrast">40003791171</span><button onclick="copyToClipboard('accNum', this)" title="Copy Account Number" class="ios-button p-1.5 rounded-xl flex-shrink-0 bg-white/10"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" viewBox="0 0 20 20" fill="currentColor"><path d="M7 9a2 2 0 012-2h6a2 2 0 012 2v6a2 2 0 01-2 2H9a2 2 0 01-2-2V9z" /><path d="M5 3a2 2 0 00-2 2v6a2 2 0 002 2V5h6a2 2 0 00-2-2H5z" /></svg></button></div></div>
-                    <div class="flex justify-between items-center"><span class="text-gray-200 text-high-contrast">IFSC Code:</span><div class="flex items-center space-x-3"><span id="ifscCode" class="font-medium text-high-contrast">SBIN0060236</span><button onclick="copyToClipboard('ifscCode', this)" title="Copy IFSC Code" class="ios-button p-1.5 rounded-xl flex-shrink-0 bg-white/10"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" viewBox="0 0 20 20" fill="currentColor"><path d="M7 9a2 2 0 012-2h6a2 2 0 012 2v6a2 2 0 01-2 2H9a2 2 0 01-2-2V9z" /><path d="M5 3a2 2 0 00-2 2v6a2 2 0 002 2V5h6a2 2 0 00-2-2H5z" /></svg></button></div></div>
+                <h2 class="text-lg font-semibold theme-accent-color">4. Direct Bank Transfer</h2>
+                <div class="p-4 rounded-lg space-y-4 text-sm sm:text-base" style="background:var(--input-bg)">
+                    <div class="flex justify-between items-center"><span class="theme-text-secondary">Account Name:</span><div class="flex items-center space-x-3"><span id="accName" class="font-medium theme-text-primary text-right">SAVANI HARDEEP M.</span><button onclick="copyToClipboard('accName', this)" title="Copy Account Name" class="ios-button p-1.5 rounded-xl flex-shrink-0"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 theme-text-primary" viewBox="0 0 20 20" fill="currentColor"><path d="M7 9a2 2 0 012-2h6a2 2 0 012 2v6a2 2 0 01-2 2H9a2 2 0 01-2-2V9z" /><path d="M5 3a2 2 0 00-2 2v6a2 2 0 002 2V5h6a2 2 0 00-2-2H5z" /></svg></button></div></div>
+                    <div class="flex justify-between items-center"><span class="theme-text-secondary">Bank Name:</span><div class="flex items-center space-x-3"><span id="bankName" class="font-medium theme-text-primary text-right">STATE BANK OF INDIA</span><button onclick="copyToClipboard('bankName', this)" title="Copy Bank Name" class="ios-button p-1.5 rounded-xl flex-shrink-0"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 theme-text-primary" viewBox="0 0 20 20" fill="currentColor"><path d="M7 9a2 2 0 012-2h6a2 2 0 012 2v6a2 2 0 01-2 2H9a2 2 0 01-2-2V9z" /><path d="M5 3a2 2 0 00-2 2v6a2 2 0 002 2V5h6a2 2 0 00-2-2H5z" /></svg></button></div></div>
+                    <div class="flex justify-between items-center"><span class="theme-text-secondary">Account No:</span><div class="flex items-center space-x-3"><span id="accNum" class="font-medium theme-text-primary">40003791171</span><button onclick="copyToClipboard('accNum', this)" title="Copy Account Number" class="ios-button p-1.5 rounded-xl flex-shrink-0"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 theme-text-primary" viewBox="0 0 20 20" fill="currentColor"><path d="M7 9a2 2 0 012-2h6a2 2 0 012 2v6a2 2 0 01-2 2H9a2 2 0 01-2-2V9z" /><path d="M5 3a2 2 0 00-2 2v6a2 2 0 002 2V5h6a2 2 0 00-2-2H5z" /></svg></button></div></div>
+                    <div class="flex justify-between items-center"><span class="theme-text-secondary">IFSC Code:</span><div class="flex items-center space-x-3"><span id="ifscCode" class="font-medium theme-text-primary">SBIN0060236</span><button onclick="copyToClipboard('ifscCode', this)" title="Copy IFSC Code" class="ios-button p-1.5 rounded-xl flex-shrink-0"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 theme-text-primary" viewBox="0 0 20 20" fill="currentColor"><path d="M7 9a2 2 0 012-2h6a2 2 0 012 2v6a2 2 0 01-2 2H9a2 2 0 01-2-2V9z" /><path d="M5 3a2 2 0 00-2 2v6a2 2 0 002 2V5h6a2 2 0 00-2-2H5z" /></svg></button></div></div>
                 </div>
             </div>
-            
             <div class="space-y-4 pt-6">
-                <h2 class="text-lg font-semibold text-cyan-300 text-high-contrast">5. Confirm on WhatsApp</h2>
-                <p class="text-center text-sm text-gray-300 text-high-contrast">After payment, click the button below to send us the screenshot for confirmation.</p>
-                <a href="https://wa.me/919824594156?text=Hello!%20I%20have%20completed%20the%20payment.%20Here%20is%20the%20screenshot." target="_blank" rel="noopener noreferrer" class="ios-button w-full bg-green-500/80 hover:bg-green-500/90 text-white font-bold py-3 px-4 rounded-xl flex items-center justify-center space-x-3 transition-all duration-300 transform hover:scale-105">
+                <h2 class="text-lg font-semibold theme-accent-color">5. Confirm on WhatsApp</h2>
+                <p class="text-center text-sm theme-text-secondary">After payment, click the button below to send us the screenshot for confirmation.</p>
+                <a href="https://wa.me/919824594156?text=Hello!%20I%20have%20completed%20the%20payment.%20Here%20is%20the%20screenshot." target="_blank" rel="noopener noreferrer" class="pay-button w-full font-bold py-3 px-4 rounded-xl flex items-center justify-center space-x-3 transition-all duration-300 transform hover:scale-105">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.894 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654z"/></svg>
                     <span>Send Screenshot on WhatsApp</span>
                 </a>
@@ -518,16 +440,16 @@
     </div>
     
     <!-- Notification element for copy feedback -->
-    <div id="toast-notification" class="glass-effect text-white py-2 px-4 rounded-lg shadow-lg z-50">
+    <div id="toast-notification" class="glass-card theme-text-primary py-2 px-4 rounded-lg shadow-lg z-50">
         <!-- Message will be set by JS -->
     </div>
     
     <!-- Mandir Timing Modal -->
     <div id="timing-modal" class="modal-backdrop hidden">
-        <div class="modal-content glass-effect p-6 sm:p-8 relative flex flex-col rounded-2xl">
-            <button id="close-timing-modal" class="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors text-3xl">&times;</button>
-            <h2 class="text-3xl font-bold text-amber-300 page-title mb-4">Dwarkadhish Mandir Timings</h2>
-            <div id="timing-schedule" class="text-slate-300 overflow-y-auto pr-4 space-y-2">
+        <div class="modal-content glass-card p-6 sm:p-8 relative flex flex-col">
+            <button id="close-timing-modal" class="absolute top-4 right-4 theme-text-secondary hover:theme-text-primary transition-colors text-3xl">&times;</button>
+            <h2 class="text-3xl font-bold theme-accent-color page-title mb-4">Dwarkadhish Mandir Timings</h2>
+            <div id="timing-schedule" class="theme-text-secondary overflow-y-auto pr-4 space-y-2">
                 <!-- Timings will be injected here by JavaScript -->
             </div>
         </div>
@@ -535,12 +457,12 @@
 
     <!-- Success Modal -->
     <div id="success-modal" class="modal-backdrop hidden">
-        <div class="modal-content glass-effect p-6 sm:p-8 relative flex flex-col rounded-2xl text-center">
+        <div class="modal-content glass-card p-6 sm:p-8 relative flex flex-col rounded-2xl text-center">
             <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100 mb-4">
                 <svg class="h-6 w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
             </div>
-            <h2 class="text-2xl font-bold text-white mb-2">Message Sent!</h2>
-            <p class="text-slate-300">Thank you for reaching out. We will get back to you shortly.</p>
+            <h2 class="text-2xl font-bold theme-text-primary mb-2">Message Sent!</h2>
+            <p class="theme-text-secondary">Thank you for reaching out. We will get back to you shortly.</p>
         </div>
     </div>
 
@@ -612,7 +534,7 @@
 
         function setupDropdowns() {
             const years = Object.keys(groupedData).sort();
-            yearFilter.innerHTML = '<option value="">-- Select Year --</option>';
+            yearFilter.innerHTML = '<option value="">-- Select a Journey Year --</option>';
             years.forEach(year => {
                 const option = document.createElement('option');
                 option.value = year;
@@ -620,15 +542,15 @@
                 yearFilter.appendChild(option);
             });
             
-            dateMonthFilter.innerHTML = '<option value="">-- Select a Year First --</option>';
+            dateMonthFilter.innerHTML = '<option value="">-- First, Choose a Year --</option>';
             dateMonthFilter.disabled = true;
-            datesContainer.innerHTML = `<p class="text-center text-gray-400 p-10">Please select a year and date to see booking details.</p>`;
+            datesContainer.innerHTML = `<p class="text-center theme-text-secondary p-10">Please select a year and date to see booking details.</p>`;
         }
         
         function renderCards(year, dateMonth) {
             const bookings = groupedData[year]?.[dateMonth];
             if (!bookings) {
-                datesContainer.innerHTML = `<p class="text-center text-gray-400 p-10">No bookings found for this date.</p>`;
+                datesContainer.innerHTML = `<p class="text-center theme-text-secondary p-10">No bookings found for this date.</p>`;
                 return;
             }
 
@@ -648,14 +570,14 @@
             let guestHtml = '';
             stay.passengers.forEach(guest => {
                 guestHtml += `
-                    <div class="flex items-center justify-between bg-white/5 p-2 rounded-lg">
+                    <div class="flex items-center justify-between p-2 rounded-lg" style="background:var(--input-bg)">
                         <div class="flex items-center w-2/3">
                             <div class="bg-blue-300 text-blue-900 rounded-full h-6 w-6 flex items-center justify-center font-bold mr-2 text-xs flex-shrink-0">${guest.guest_initials}</div>
-                            <p class="font-semibold text-white text-sm truncate">${guest.guest_name}</p>
+                            <p class="font-semibold theme-text-primary text-sm truncate">${guest.guest_name}</p>
                         </div>
                         <div class="text-right w-1/3">
-                            <p class="text-sm text-gray-400">Amount</p>
-                            <p class="font-bold text-white">₹ ${guest.fare}</p>
+                            <p class="text-sm theme-text-secondary">Amount</p>
+                            <p class="font-bold theme-text-primary">₹ ${guest.fare}</p>
                         </div>
                     </div>`;
             });
@@ -663,9 +585,12 @@
             const statusColors = cardColors[stay.status] || cardColors['no-stay'];
             
             return `
-                <div class="glass-effect rounded-2xl shadow-lg overflow-hidden ticket-card text-white">
+                <div class="glass-card overflow-hidden ticket-card">
                     <div class="p-4 text-center relative ${statusColors.header}">
-                        <h2 class="text-xl font-bold text-white uppercase">Stay Information</h2>
+                        <h2 class="text-xl font-bold text-white uppercase flex items-center justify-center gap-2">
+                            <i class="fas fa-bed"></i>
+                            <span>Stay Information</span>
+                        </h2>
                         <div class="bg-white text-blue-800 text-sm font-semibold px-3 py-1.5 rounded-full flex items-center absolute top-4 right-4">
                             <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">${statusColors.icon}</svg>
                             <span>${stay.status.charAt(0).toUpperCase() + stay.status.slice(1)}</span>
@@ -674,49 +599,45 @@
                     <div class="p-6">
                         <div class="flex justify-between items-start -mt-2 mb-4">
                             <div>
-                                <p class="text-sm text-gray-400">Hotel/Dharamshala/Guest House</p>
-                                <p class="font-semibold text-white">${stay.name}</p>
+                                <p class="text-sm theme-text-secondary">Hotel/Dharamshala/Guest House</p>
+                                <p class="font-semibold theme-text-primary">${stay.name}</p>
                             </div>
                             <div class="text-right">
-                                <p class="text-sm text-gray-400">Booking No.</p>
-                                <p class="font-mono font-bold text-white">${stay.booking_no_pnr}</p>
+                                <p class="text-sm theme-text-secondary">Booking No.</p>
+                                <p class="font-mono font-bold theme-text-primary">${stay.booking_no_pnr}</p>
                             </div>
                         </div>
                         <div class="flex flex-col sm:flex-row items-center justify-between text-center mt-8 space-y-4 sm:space-y-0">
                             <div class="w-full sm:w-1/3">
-                                <p class="text-sm text-gray-400">Check In</p>
-                                <p class="font-bold text-white flex items-center justify-center gap-2 mt-1">
-                                    <i class="fas fa-calendar-days text-gray-500"></i>
-                                    <span>${stay.check_in_date}</span>
+                                <p class="text-sm theme-text-secondary">Check In</p>
+                                <p class="font-bold theme-text-primary flex items-center justify-center gap-2 mt-1">
+                                    <i class="fas fa-calendar-days theme-text-secondary"></i><span>${stay.check_in_date}</span>
                                 </p>
-                                <p class="text-gray-400 text-sm flex items-center justify-center gap-2">
-                                    <i class="fas fa-clock text-gray-500"></i>
-                                    <span>${stay.check_in_time}</span>
+                                <p class="theme-text-secondary text-sm flex items-center justify-center gap-2">
+                                    <i class="fas fa-clock theme-text-secondary"></i><span>${stay.check_in_time}</span>
                                 </p>
                             </div>
                             <div class="w-full sm:w-1/3 flex justify-center">
-                                <div class="w-24 h-24 bg-blue-900/50 border-4 border-blue-400/50 rounded-full flex flex-col items-center justify-center">
-                                    <p class="font-bold text-blue-300 text-xl">${stay.duration_days}</p>
-                                    <p class="text-xs text-blue-300">${stay.duration_hours}</p>
+                                <div class="w-24 h-24 rounded-full flex flex-col items-center justify-center border-4" style="border-color: var(--accent-color); background-color: color-mix(in srgb, var(--accent-color) 15%, transparent);">
+                                    <p class="font-bold theme-accent-color text-2xl">${stay.duration_days}</p>
+                                    <p class="text-xs theme-accent-color">${stay.duration_hours}</p>
                                 </div>
                             </div>
                             <div class="w-full sm:w-1/3">
-                                <p class="text-sm text-gray-400">Check Out</p>
-                                <p class="font-bold text-white flex items-center justify-center gap-2 mt-1">
-                                    <i class="fas fa-calendar-days text-gray-500"></i>
-                                    <span>${stay.check_out_date}</span>
+                                <p class="text-sm theme-text-secondary">Check Out</p>
+                                <p class="font-bold theme-text-primary flex items-center justify-center gap-2 mt-1">
+                                    <i class="fas fa-calendar-days theme-text-secondary"></i><span>${stay.check_out_date}</span>
                                 </p>
-                                <p class="text-gray-400 text-sm flex items-center justify-center gap-2">
-                                    <i class="fas fa-clock text-gray-500"></i>
-                                    <span>${stay.check_out_time}</span>
+                                <p class="theme-text-secondary text-sm flex items-center justify-center gap-2">
+                                    <i class="fas fa-clock theme-text-secondary"></i><span>${stay.check_out_time}</span>
                                 </p>
                             </div>
                         </div>
-                        <div class="border-t border-slate-700 pt-4 mt-8">
+                        <div class="border-t pt-4 mt-8" style="border-color: var(--glass-border)">
                             <div class="space-y-2">${guestHtml}</div>
                         </div>
                     </div>
-                    <div class="bg-white/10 px-6 py-4">
+                    <div class="px-6 py-4" style="background:var(--input-bg)">
                         <button data-ticket-url="${stay.pdf_link}" class="view-ticket-btn w-full bg-blue-600/80 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-700/80 transition duration-300 flex items-center justify-center ${!stay.pdf_link || stay.pdf_link === '#' ? 'opacity-50 cursor-not-allowed' : ''}">
                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                             View Booking PDF
@@ -729,18 +650,21 @@
             let passengerHtml = '';
             if (travel.passengers.length > 0 && travel.status !== 'not-booked') {
                 travel.passengers.forEach(p => {
-                    passengerHtml += `<div class="flex items-center justify-between bg-white/5 p-2 rounded-lg"><div class="flex items-center w-1/3"><div class="bg-gray-300 text-gray-800 rounded-full h-6 w-6 flex items-center justify-center font-bold mr-2 text-xs flex-shrink-0">${p.guest_initials}</div><p class="font-semibold text-white text-sm truncate">${p.guest_name}</p></div><div class="text-center w-1/3"><p class="font-semibold text-white text-sm">${p.seat_no}</p><p class="text-xs text-gray-400">${p.berth}</p></div><div class="text-right w-1/3"><p class="text-sm text-gray-400">Fare</p><p class="font-bold text-white">₹ ${p.fare}</p></div></div>`;
+                    passengerHtml += `<div class="flex items-center justify-between p-2 rounded-lg" style="background:var(--input-bg)"><div class="flex items-center w-1/3"><div class="bg-gray-300 text-gray-800 rounded-full h-6 w-6 flex items-center justify-center font-bold mr-2 text-xs flex-shrink-0">${p.guest_initials}</div><p class="font-semibold theme-text-primary text-sm truncate">${p.guest_name}</p></div><div class="text-center w-1/3"><p class="font-semibold theme-text-primary text-sm">${p.seat_no}</p><p class="text-xs theme-text-secondary">${p.berth}</p></div><div class="text-right w-1/3"><p class="text-sm theme-text-secondary">Fare</p><p class="font-bold theme-text-primary">₹ ${p.fare}</p></div></div>`;
                 });
             } else if (travel.status === 'not-booked') {
-                 passengerHtml = `<div class="text-center"><p class="text-gray-400">You have not booked a ticket for this journey.</p></div>`;
+                 passengerHtml = `<div class="text-center"><p class="theme-text-secondary">You have not booked a ticket for this journey.</p></div>`;
             }
 
             const statusColors = cardColors[travel.status] || cardColors['not-booked'];
             
             return `
-                <div class="glass-effect rounded-2xl shadow-lg overflow-hidden ticket-card text-white">
+                <div class="glass-card overflow-hidden ticket-card">
                     <div class="status-header p-4 text-center relative ${statusColors.header}">
-                        <h2 class="text-xl font-bold text-white uppercase">Travel Information</h2>
+                         <h2 class="text-xl font-bold text-white uppercase flex items-center justify-center gap-2">
+                            <i class="fas fa-train-subway"></i>
+                            <span>${travel.departure_city} to ${travel.arrival_city}</span>
+                        </h2>
                         <div class="status-chip text-sm font-semibold px-3 py-1.5 rounded-full flex items-center absolute top-4 right-4 ${statusColors.chip}">
                             <span class="status-icon w-4 h-4 mr-2"><svg fill="currentColor" viewBox="0 0 20 20">${statusColors.icon}</svg></span>
                             <span class="status-text">${statusColors.chipText || travel.status.charAt(0).toUpperCase() + travel.status.slice(1)}</span>
@@ -749,53 +673,41 @@
                     <div class="p-6">
                         <div class="flex justify-between items-start -mt-2 mb-4">
                             <div>
-                                <p class="text-sm text-gray-400">Train</p>
-                                <p class="font-semibold text-white">${travel.name} (${travel.train_no})</p>
+                                <p class="text-sm theme-text-secondary">Train</p>
+                                <p class="font-semibold theme-text-primary">${travel.name} (${travel.train_no})</p>
                             </div>
                             <div class="pnr-container text-right">
-                                <p class="text-sm text-gray-400">PNR</p><p class="font-mono font-bold text-white flex items-center justify-end gap-1.5"><i class="fas fa-ticket-alt text-gray-500"></i><span>${travel.booking_no_pnr}</span></p>
+                                <p class="text-sm theme-text-secondary">PNR</p><p class="font-mono font-bold theme-text-primary flex items-center justify-end gap-1.5"><i class="fas fa-ticket-alt theme-text-secondary"></i><span>${travel.booking_no_pnr}</span></p>
                             </div>
                         </div>
                         <div class="flex flex-col sm:flex-row items-center justify-between text-center my-8 space-y-4 sm:space-y-0">
                             <div class="w-full sm:w-1/3 flex flex-col items-center">
-                                <p class="text-sm text-gray-400 mb-1">Departure</p>
-                                <svg class="w-8 h-8 text-gray-400 mb-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955a1.5 1.5 0 012.122 0l8.954 8.955M2.25 12v10.5a1.5 1.5 0 001.5 1.5h16.5a1.5 1.5 0 001.5-1.5V12M10.5 21V15a1.5 1.5 0 011.5-1.5h0a1.5 1.5 0 011.5 1.5v6" /></svg>
-                                <p class="font-bold text-white text-lg">${travel.departure_city}</p>
-                                <p class="text-gray-400 text-sm flex items-center gap-1.5 mt-1">
-                                    <i class="fas fa-calendar-days fa-xs text-gray-500"></i>
-                                    <span>${travel.start_date}</span>
-                                </p>
-                                <p class="text-gray-400 text-sm flex items-center gap-1.5">
-                                    <i class="fas fa-clock fa-xs text-gray-500"></i>
-                                    <span>${travel.start_time}</span>
-                                </p>
+                                <p class="text-sm theme-text-secondary mb-1">Departure</p>
+                                <svg class="w-8 h-8 theme-text-secondary mb-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955a1.5 1.5 0 012.122 0l8.954 8.955M2.25 12v10.5a1.5 1.5 0 001.5 1.5h16.5a1.5 1.5 0 001.5-1.5V12M10.5 21V15a1.5 1.5 0 011.5-1.5h0a1.5 1.5 0 011.5 1.5v6" /></svg>
+                                <p class="font-bold theme-text-primary text-lg">${travel.departure_city}</p>
+                                <p class="theme-text-secondary text-sm flex items-center gap-1.5 mt-1"><i class="fas fa-calendar-days fa-xs"></i><span>${travel.start_date}</span></p>
+                                <p class="theme-text-secondary text-sm flex items-center gap-1.5"><i class="fas fa-clock fa-xs"></i><span>${travel.start_time}</span></p>
                             </div>
                             <div class="w-full sm:w-1/3 px-2 train-container">
                                 <div class="train-track"><i class="fas fa-train fa-lg train" style="color: ${statusColors.train};"></i></div>
-                                <div class="status-duration-circle w-24 h-24 rounded-full flex flex-col items-center justify-center relative z-10 border-4 ${statusColors.durationCircle}">
+                                <div class="status-duration-circle w-24 h-24 rounded-full flex flex-col items-center justify-center relative z-10 border-[6px] ${statusColors.durationCircle}">
                                     <p class="status-duration-text font-bold text-lg ${statusColors.durationText}">${travel.duration_days}</p>
                                     <p class="text-xs ${statusColors.durationText}">${travel.duration_hours}</p>
                                 </div>
                             </div>
                             <div class="w-full sm:w-1/3 flex flex-col items-center">
-                                <p class="text-sm text-gray-400 mb-1">Arrival</p>
-                                <svg class="w-8 h-8 text-gray-400 mb-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0012 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75z" /></svg>
-                                <p class="font-bold text-white text-lg">${travel.arrival_city}</p>
-                                <p class="text-gray-400 text-sm flex items-center gap-1.5 mt-1">
-                                    <i class="fas fa-calendar-days fa-xs text-gray-500"></i>
-                                    <span>${travel.end_date}</span>
-                                </p>
-                                <p class="text-gray-400 text-sm flex items-center gap-1.5">
-                                    <i class="fas fa-clock fa-xs text-gray-500"></i>
-                                    <span>${travel.end_time}</span>
-                                </p>
+                                <p class="text-sm theme-text-secondary mb-1">Arrival</p>
+                                <svg class="w-8 h-8 theme-text-secondary mb-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0012 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75z" /></svg>
+                                <p class="font-bold theme-text-primary text-lg">${travel.arrival_city}</p>
+                                <p class="theme-text-secondary text-sm flex items-center gap-1.5 mt-1"><i class="fas fa-calendar-days fa-xs"></i><span>${travel.end_date}</span></p>
+                                <p class="theme-text-secondary text-sm flex items-center gap-1.5"><i class="fas fa-clock fa-xs"></i><span>${travel.end_time}</span></p>
                             </div>
                         </div>
-                        <div class="passenger-details-container border-t border-slate-700 pt-4 space-y-2">
+                        <div class="passenger-details-container border-t pt-4 space-y-2" style="border-color: var(--glass-border)">
                             ${passengerHtml}
                         </div>
                     </div>
-                    <div class="bg-white/10 px-6 py-4">
+                    <div class="px-6 py-4" style="background:var(--input-bg)">
                         <button data-ticket-url="${travel.pdf_link}" class="view-ticket-btn w-full ${travel.status === 'confirmed' ? 'bg-green-600/80 hover:bg-green-700/80' : 'bg-red-600/80 hover:bg-red-700/80'} text-white font-bold py-3 px-4 rounded-lg transition duration-300 flex items-center justify-center ${!travel.pdf_link || travel.pdf_link === '#' ? 'opacity-50 cursor-not-allowed' : ''}">
                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                             View Booking PDF
@@ -818,14 +730,14 @@
             }
 
             if (!nextPoonamDate) {
-                countdownContainer.innerHTML = `<h2 class="text-2xl text-center text-amber-300">All scheduled journeys for this period are complete.</h2>`;
+                countdownContainer.innerHTML = `<h2 class="text-2xl text-center theme-accent-color">All scheduled journeys for this period are complete.</h2>`;
                 return;
             }
 
             const nextPoonamMonthYear = `${nextPoonamDate.toLocaleString('default', { month: 'long' })} ${nextPoonamDate.getFullYear()}`;
             countdownContainer.innerHTML = `
                 <div class="text-center">
-                    <h2 class="text-2xl sm:text-3xl font-semibold text-amber-300 page-title">Next Journey Countdown: ${nextPoonamMonthYear}</h2>
+                    <h2 class="text-3xl sm:text-4xl font-semibold theme-accent-color page-title">Next Journey Countdown: ${nextPoonamMonthYear}</h2>
                     <div id="countdown-timer" class="flex flex-wrap justify-center gap-2 sm:gap-4 lg:gap-8 mt-4">
                         <div class="countdown-item"><span id="days" class="text-4xl sm:text-6xl">00</span><p class="text-xs sm:text-sm">Days</p></div>
                         <div class="countdown-item"><span id="hours" class="text-4xl sm:text-6xl">00</span><p class="text-xs sm:text-sm">Hours</p></div>
@@ -886,15 +798,8 @@
         const showToast = (message, type = 'success') => {
             const toast = document.getElementById('toast-notification');
             toast.textContent = message;
-
-            toast.classList.remove('bg-green-500/80', 'border-green-400/50', 'bg-amber-500/80', 'border-amber-400/50');
-
-            if (type === 'error') {
-                toast.classList.add('bg-amber-500/80', 'border-amber-400/50');
-            } else {
-                toast.classList.add('bg-green-500/80', 'border-green-400/50');
-            }
-
+            toast.style.background = type === 'error' ? 'var(--accent-color)' : '#28a745';
+            toast.style.color = 'white';
             toast.classList.add('show');
             setTimeout(() => {
                 toast.classList.remove('show');
@@ -904,44 +809,20 @@
         const updateButtonState = (button) => {
             const originalHTML = button.innerHTML; 
             button.disabled = true;
-            button.classList.add('bg-green-500/50');
-            button.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>`;
+            button.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 theme-text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>`;
             
             setTimeout(() => {
                 button.innerHTML = originalHTML;
                 button.disabled = false;
-                button.classList.remove('bg-green-500/50');
             }, 2000);
         };
 
         window.copyToClipboard = function(elementId, button) {
             const textToCopy = document.getElementById(elementId).innerText;
-            const fallbackCopy = () => {
-                const textArea = document.createElement('textarea');
-                textArea.value = textToCopy;
-                textArea.style.position = 'fixed';
-                textArea.style.left = '-9999px';
-                document.body.appendChild(textArea);
-                textArea.focus();
-                textArea.select();
-                try {
-                    document.execCommand('copy');
-                    showToast('Copied to clipboard!');
-                    updateButtonState(button);
-                } catch (err) {
-                    console.error('Fallback: Oops, unable to copy', err);
-                }
-                document.body.removeChild(textArea);
-            };
-
-            if (navigator.clipboard && window.isSecureContext) {
-                navigator.clipboard.writeText(textToCopy).then(() => {
-                    showToast('Copied to clipboard!');
-                    updateButtonState(button);
-                }).catch(fallbackCopy);
-            } else {
-                fallbackCopy();
-            }
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                showToast('Copied to clipboard!');
+                updateButtonState(button);
+            }).catch(err => console.error('Failed to copy', err));
         };
         
         const populateTimings = () => {
@@ -980,7 +861,7 @@
                 
                 html += `
                     <div class="flex justify-between items-center p-3 rounded-lg ${currentClass} transition-all duration-300">
-                        <span class="font-semibold">${item.event}</span>
+                        <span class="font-semibold theme-text-primary">${item.event}</span>
                         <span class="${colorClass} font-bold">${item.time}</span>
                     </div>
                 `;
@@ -1014,11 +895,11 @@
             
             datesContainer.innerHTML = `
                 <div class="text-center p-10">
-                    <svg aria-hidden="true" class="inline w-10 h-10 text-gray-700 animate-spin fill-purple-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <svg aria-hidden="true" class="inline w-10 h-10 theme-text-secondary animate-spin" style="fill: var(--accent-color)" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
                         <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0492C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentColor"/>
                     </svg>
-                    <p class="mt-4 text-gray-400 font-semibold">Loading booking data...</p>
+                    <p class="mt-4 theme-text-secondary font-semibold">Loading booking data...</p>
                 </div>`;
 
             try {
@@ -1031,12 +912,8 @@
                 groupedData = allBookingsData.reduce((acc, row) => {
                     if (row.year && row.date_month) {
                         const { year, date_month } = row;
-                        if (!acc[year]) {
-                            acc[year] = {};
-                        }
-                        if (!acc[year][date_month]) {
-                            acc[year][date_month] = [];
-                        }
+                        if (!acc[year]) acc[year] = {};
+                        if (!acc[year][date_month]) acc[year][date_month] = [];
                         
                         const key = `${row.type}-${row.booking_no_pnr || Math.random()}`;
                         let booking = acc[year][date_month].find(b => b.key === key);
@@ -1062,7 +939,32 @@
         }
         
         document.addEventListener('DOMContentLoaded', async function() {
-            // --- Event Listeners ---
+            // --- Theme Toggle Logic ---
+            const themeToggle = document.getElementById('theme-toggle');
+            const sunIcon = document.getElementById('sun-icon');
+            const moonIcon = document.getElementById('moon-icon');
+            const htmlTag = document.documentElement;
+
+            function updateThemeIcons(isDarkMode) {
+                moonIcon.classList.toggle('hidden', !isDarkMode);
+                sunIcon.classList.toggle('hidden', isDarkMode);
+            }
+            themeToggle.addEventListener('click', () => {
+                htmlTag.classList.toggle('dark');
+                htmlTag.classList.toggle('light');
+                const isDarkMode = htmlTag.classList.contains('dark');
+                localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+                updateThemeIcons(isDarkMode);
+            });
+            const savedTheme = localStorage.getItem('theme');
+            const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const isDark = savedTheme === 'dark' || (!savedTheme && systemPrefersDark);
+            htmlTag.classList.toggle('dark', isDark);
+            htmlTag.classList.toggle('light', !isDark);
+            updateThemeIcons(isDark);
+
+
+            // --- Original Event Listeners ---
             if(closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
             if(modal) modal.addEventListener('click', (event) => {
                 if (event.target === modal) closeModal();
@@ -1085,11 +987,11 @@
             document.getElementById('close-contact-modal').addEventListener('click', () => contactModal.classList.add('hidden'));
             document.getElementById('close-payment-modal').addEventListener('click', () => paymentModal.classList.add('hidden'));
             document.getElementById('close-timing-modal').addEventListener('click', () => timingModal.classList.add('hidden'));
-            aboutModal.addEventListener('click', (e) => { if(e.target === aboutModal) aboutModal.classList.add('hidden'); });
-            contactModal.addEventListener('click', (e) => { if(e.target === contactModal) contactModal.classList.add('hidden'); });
-            paymentModal.addEventListener('click', (e) => { if(e.target === paymentModal) paymentModal.classList.add('hidden'); });
-            timingModal.addEventListener('click', (e) => { if(e.target === timingModal) timingModal.classList.add('hidden'); });
             
+            [aboutModal, contactModal, paymentModal, timingModal, successModal].forEach(m => {
+                 m.addEventListener('click', (e) => { if(e.target === m) m.classList.add('hidden'); });
+            });
+
             contactForm.addEventListener('submit', async function(e) {
                 e.preventDefault();
                 const form = e.target;
@@ -1123,7 +1025,7 @@
             yearFilter.addEventListener('change', (e) => {
                 const selectedYear = e.target.value;
                 datesContainer.innerHTML = '';
-                dateMonthFilter.innerHTML = '<option value="">-- Select Date --</option>';
+                dateMonthFilter.innerHTML = '<option value="">-- First, Choose a Year --</option>';
 
                 if (selectedYear && groupedData[selectedYear]) {
                     dateMonthFilter.disabled = false;
