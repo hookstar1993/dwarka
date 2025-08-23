@@ -208,7 +208,7 @@
         }
         #toast-notification.show { transform: translate(-50%, 0); opacity: 1; pointer-events: auto; }
         
-        /* --- RESTORED ORIGINAL COUNTDOWN TIMER --- */
+        /* --- COUNTDOWN TIMER --- */
         .countdown-item {
             background-image: url('https://hookstar1993.github.io/dwarka/img/moon.png');
             background-size: cover;
@@ -235,6 +235,17 @@
         
         .status-duration-circle {
             box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        /* --- CARD ANIMATION --- */
+        .card-item {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+        .card-item.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         @media (max-width: 640px) {
@@ -345,7 +356,7 @@
             <button id="closeModalBtn" class="ios-button !bg-red-600/80 absolute -top-2 -right-2 sm:-top-3 sm:-right-3 text-white rounded-full h-8 w-8 flex items-center justify-center text-lg font-bold z-50 hover:!bg-red-700 transition-all">&times;</button>
             <iframe id="ticketViewerIframe" class="modal-iframe flex-grow rounded-t-lg" src="" title="Ticket Viewer"></iframe>
             <div class="text-center p-2">
-                <a id="downloadBtn" href="#" download="ticket.pdf" class="w-full sm:w-auto inline-block animated-glow-border ios-button px-6 py-2 rounded-xl transition-all duration-300" style="color:var(--accent-color)">Download</a>
+                <a id="downloadBtn" href="#" download class="w-full sm:w-auto inline-block animated-glow-border ios-button px-6 py-2 rounded-xl transition-all duration-300" style="color:var(--accent-color)">Download</a>
             </div>
         </div>
     </div>
@@ -563,6 +574,17 @@
                 }
             });
             datesContainer.innerHTML = detailsHtml;
+
+            // --- NEW ANIMATION LOGIC ---
+            const cards = datesContainer.querySelectorAll('.card-item');
+            cards.forEach((card, index) => {
+                // Use a timeout to apply the 'visible' class, creating a staggered animation
+                setTimeout(() => {
+                    card.classList.add('visible');
+                }, 100 * index); // 100ms delay between each card
+            });
+            // --- END OF NEW LOGIC ---
+
             attachModalListeners();
         }
         
@@ -585,7 +607,7 @@
             const statusColors = cardColors[stay.status] || cardColors['no-stay'];
             
             return `
-                <div class="glass-card overflow-hidden ticket-card">
+                <div class="glass-card overflow-hidden ticket-card card-item">
                     <div class="p-4 text-center relative ${statusColors.header}">
                         <h2 class="text-xl font-bold text-white uppercase flex items-center justify-center gap-2">
                             <i class="fas fa-bed"></i>
@@ -659,7 +681,7 @@
             const statusColors = cardColors[travel.status] || cardColors['not-booked'];
             
             return `
-                <div class="glass-card overflow-hidden ticket-card">
+                <div class="glass-card overflow-hidden ticket-card card-item">
                     <div class="status-header p-4 text-center relative ${statusColors.header}">
                          <h2 class="text-xl font-bold text-white uppercase flex items-center justify-center gap-2">
                             <i class="fas fa-train-subway"></i>
@@ -782,6 +804,11 @@
                     if (ticketUrl && ticketUrl.trim() !== '#') {
                         iframe.src = ticketUrl;
                         downloadBtn.href = ticketUrl;
+                        
+                        // --- NEW LOGIC TO SET FILENAME ---
+                        const fileName = ticketUrl.substring(ticketUrl.lastIndexOf('/') + 1);
+                        downloadBtn.setAttribute('download', fileName);
+                        
                         modal.classList.remove('hidden');
                     } else {
                         showToast('Tickets not available right now, check back later.', 'error');
