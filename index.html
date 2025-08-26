@@ -208,7 +208,7 @@
         }
         #toast-notification.show { transform: translate(-50%, 0); opacity: 1; pointer-events: auto; }
         
-        /* --- UPDATED COUNTDOWN TIMER --- */
+        /* --- COUNTDOWN TIMER --- */
         .countdown-item {
             background-image: url('https://hookstar1993.github.io/dwarka/img/moon.png');
             background-color: transparent; /* Explicitly remove any background color */
@@ -478,8 +478,11 @@
     </div>
 
     <script>
-        // --- PASTE YOUR GOOGLE SHEET CSV LINK HERE ---
-        const googleSheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSqINNmQ6CtGixfyo5goqhTKfVwIMGjQi_5MIc4FtTx053jXO2QftjgUt26XLQXE8Ld7kt7VEPK4TJO/pub?output=csv';
+        // --- API & SHEET DETAILS ---
+        const apiKey = 'AIzaSyA6vRLnDZ-GLY6NrwMBqpqlGjKrreFJmo8';
+        const sheetId = '1OOthoN3XS_GfwYsbQC-WSpJer9FMZ-AYK7E4xuxE4y8';
+        const range = 'Sheet1!A:Z'; // Assuming data is in Sheet1
+        const googleSheetApiUrl = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=${apiKey}`;
 
         // --- GLOBAL VARIABLES ---
         let groupedData = {};
@@ -896,27 +899,24 @@
             scheduleContainer.innerHTML = html;
         };
 
-        function parseCSV(csvText) {
-            const lines = csvText.split(/\r?\n/).filter(line => line.trim());
-            if (lines.length < 2) return [];
-            const headers = lines[0].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(h => h.trim().replace(/"/g, '').toLowerCase());
+        function processApiData(values) {
+            if (!values || values.length < 2) return [];
+            const headers = values[0].map(h => h.trim().toLowerCase());
             const data = [];
-            for (let i = 1; i < lines.length; i++) {
+            for (let i = 1; i < values.length; i++) {
                 const obj = {};
-                const currentline = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(item => item.trim().replace(/"/g, ''));
-                if (currentline.length === headers.length) {
-                    for (let j = 0; j < headers.length; j++) {
-                        obj[headers[j]] = currentline[j];
-                    }
-                    data.push(obj);
+                const currentline = values[i];
+                for (let j = 0; j < headers.length; j++) {
+                    obj[headers[j]] = currentline[j] || '';
                 }
+                data.push(obj);
             }
             return data;
         }
 
         async function fetchAndProcessData() {
-            if (!googleSheetUrl || googleSheetUrl.includes('YOUR_GOOGLE_SHEET')) {
-                datesContainer.innerHTML = `<p class="text-center text-red-400 p-10">Please add your Google Sheet CSV link in the script.</p>`;
+            if (!apiKey || !sheetId) {
+                datesContainer.innerHTML = `<p class="text-center text-red-400 p-10">Please add your API Key and Sheet ID in the script.</p>`;
                 return;
             }
             
@@ -930,11 +930,11 @@
                 </div>`;
 
             try {
-                const response = await fetch(`${googleSheetUrl}&_=${new Date().getTime()}`);
+                const response = await fetch(googleSheetApiUrl);
                 if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
                 
-                const csvText = await response.text();
-                const allBookingsData = parseCSV(csvText);
+                const result = await response.json();
+                const allBookingsData = processApiData(result.values);
 
                 groupedData = allBookingsData.reduce((acc, row) => {
                     if (row.year && row.date_month) {
@@ -961,7 +961,7 @@
 
             } catch (error) {
                 console.error('Error fetching or processing data:', error);
-                datesContainer.innerHTML = `<p class="text-center text-red-400 p-10">Error loading booking data. Please check the data source and network connection.</p>`;
+                datesContainer.innerHTML = `<p class="text-center text-red-400 p-10">Error loading booking data. Please make sure the Google Sheet is published to the web and the link is correct.</p>`;
             }
         }
         
