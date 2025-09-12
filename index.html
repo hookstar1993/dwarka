@@ -27,7 +27,7 @@
             font-family: 'Teko', sans-serif;
             letter-spacing: 0.05em;
         }
-        
+
         /* Glassmorphism Card Style */
         .glass-card {
             background: var(--glass-bg);
@@ -80,14 +80,14 @@
             background: var(--bg-gradient-end);
             color: var(--text-primary);
         }
-        
+
         /* Themed elements */
         .theme-text-primary { color: var(--text-primary); }
         .theme-text-secondary { color: var(--text-secondary); }
         .theme-accent-color { color: var(--accent-color); }
 
         /* --- COMPONENT STYLES --- */
-        
+
         .ios-button {
             position: relative;
             border: 1px solid var(--glass-border);
@@ -105,7 +105,7 @@
             transform: translateY(0) scale(1);
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.1);
         }
-        
+
         .pay-button {
             background-color: var(--accent-color);
             color: white;
@@ -148,7 +148,7 @@
         .modal-content { width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto; }
         .modal-content-ticket { width: 90%; height: 90%; max-width: 1000px; }
         .modal-iframe { width: 100%; height: calc(100% - 60px); border: none; }
-        
+
         .current-timing {
             background-color: var(--current-timing-bg);
             border-left: 4px solid var(--accent-color);
@@ -183,7 +183,7 @@
             z-index: 15;
         }
         @keyframes move-train { 0% { left: -12px; } 100% { left: calc(100% - 12px); } }
-        
+
         .ticket-card { position: relative; transition: transform 0.3s, box-shadow 0.3s; }
         .ticket-card:hover { 
             transform: translateY(-5px);
@@ -199,7 +199,7 @@
         .light .ticket-card::before, .light .ticket-card::after { background: var(--bg-gradient-end); }
         .ticket-card::before { left: 0; transform: translate(-50%, -50%); }
         .ticket-card::after { right: 0; transform: translate(50%, -50%); }
-        
+
         #toast-notification {
             position: fixed; bottom: 1.25rem; left: 50%;
             transform: translate(-50%, 5rem); opacity: 0;
@@ -207,21 +207,26 @@
             pointer-events: none;
         }
         #toast-notification.show { transform: translate(-50%, 0); opacity: 1; pointer-events: auto; }
-        
-        /* --- COUNTDOWN TIMER (FIXED) --- */
+
+        /* --- COUNTDOWN TIMER --- */
+        /* --- UPDATED COUNTDOWN TIMER --- */
         .countdown-item {
             background-image: url('https://hookstar1993.github.io/dwarka/img/moon.png');
-            background-color: transparent;
+            background-color: transparent; /* Explicitly remove any background color */
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
+            border-radius: 1rem;
+            padding: 0.5rem;
             width: 100px;
             height: 100px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            border-radius: 50%; /* Make it a circle */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            box-shadow: none; /* Remove shadow */
+            border-radius: 0; /* Remove border-radius to prevent any shape */
         }
         .countdown-item span {
             color: black;
@@ -231,7 +236,7 @@
             color: black;
             font-weight: 600;
         }
-        
+
         .status-duration-circle {
             box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
         }
@@ -256,7 +261,7 @@
     </style>
 </head>
 <body class="flex flex-col min-h-screen theme-text-primary transition-colors duration-500">
-    
+
     <!-- Welcome Popup -->
     <div id="welcome-popup" class="welcome-popup-container">
         <div class="welcome-content glass-card">
@@ -308,25 +313,25 @@
                     <h1 class="text-4xl sm:text-5xl font-black theme-text-primary leading-tight" style="text-shadow: 0 2px 4px rgba(0,0,0,0.1);">🌕 Our Spiritual Journey to Dwarka Begins!</h1>
                     <p class="text-base sm:text-lg theme-text-secondary mt-4 max-w-3xl mx-auto">Join our sacred pilgrimage on these special Poonam days! Stay updated with all travel and booking details below.</p>
                 </section>
-                
+
                 <!-- Countdown Timer -->
                 <section id="countdown-container" class="mb-12 sm:mb-16">
                     <!-- Timer will be injected here -->
                 </section>
-                
+
                 <!-- DROPDOWN MENUS -->
                 <section class="w-full max-w-xl mx-auto mb-12">
                     <div class="glass-card overflow-hidden p-4 flex flex-col sm:flex-row justify-center items-center gap-4">
                         <div class="w-full sm:w-1/2">
-                            <label for="year-filter" class="block text-sm font-bold theme-text-secondary mb-1 text-center">Select a Journey Year</label>
+                            <label for="year-filter" class="block text-sm font-bold theme-text-secondary mb-1 text-center">Select Year:</label>
                             <select id="year-filter" class="block w-full px-3 py-2 text-base rounded-md focus:outline-none theme-text-primary" style="background:var(--input-bg); border: 1px solid var(--glass-border);">
                                 <!-- Year options will be populated by JavaScript -->
                             </select>
                         </div>
                         <div class="w-full sm:w-1/2">
-                            <label for="date-month-filter" class="block text-sm font-bold theme-text-secondary mb-1 text-center">Select Date & Month</label>
+                            <label for="date-month-filter" class="block text-sm font-bold theme-text-secondary mb-1 text-center">Select Date & Month:</label>
                             <select id="date-month-filter" class="block w-full px-3 py-2 text-base rounded-md focus:outline-none theme-text-primary" style="background:var(--input-bg); border: 1px solid var(--glass-border);" disabled>
-                                <option value="">First, Choose a Year</option>
+                                <!-- Date/Month options will be populated by JavaScript -->
                             </select>
                         </div>
                     </div>
@@ -359,7 +364,7 @@
             </div>
         </div>
     </div>
-    
+
     <!-- About Us Modal -->
     <div id="about-modal" class="modal-backdrop hidden">
         <div class="modal-content glass-card p-6 sm:p-8 relative flex flex-col">
@@ -448,12 +453,12 @@
             </div>
         </div>
     </div>
-    
+
     <!-- Notification element for copy feedback -->
     <div id="toast-notification" class="glass-card theme-text-primary py-2 px-4 rounded-lg shadow-lg z-50">
         <!-- Message will be set by JS -->
     </div>
-    
+
     <!-- Mandir Timing Modal -->
     <div id="timing-modal" class="modal-backdrop hidden">
         <div class="modal-content glass-card p-6 sm:p-8 relative flex flex-col">
@@ -477,12 +482,8 @@
     </div>
 
     <script>
-        // --- API & SHEET DETAILS (will be injected by GitHub Actions) ---
-        const apiKey = "__API_KEY__";
-        const sheetId = "__SHEET_ID__";
-        
-        const range = 'Sheet1!A:Z';
-        const googleSheetApiUrl = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=${apiKey}`;
+        // --- PASTE YOUR GOOGLE SHEET CSV LINK HERE ---
+        const googleSheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSqINNmQ6CtGixfyo5goqhTKfVwIMGjQi_5MIc4FtTx053jXO2QftjgUt26XLQXE8Ld7kt7VEPK4TJO/pub?output=csv';
 
         // --- GLOBAL VARIABLES ---
         let groupedData = {};
@@ -530,13 +531,13 @@
 
         function showWelcomePopup() {
             if (!welcomePopup) return;
-            
+
             welcomePopup.style.display = 'flex';
             setTimeout(() => {
                 welcomePopup.classList.add('welcome-popup-visible');
                 welcomePopup.querySelector('.welcome-content').classList.add('welcome-content-visible');
             }, 10);
-            
+
             setTimeout(() => {
                 welcomePopup.classList.remove('welcome-popup-visible');
                 welcomePopup.querySelector('.welcome-content').classList.remove('welcome-content-visible');
@@ -555,12 +556,12 @@
                 option.textContent = year;
                 yearFilter.appendChild(option);
             });
-            
+
             dateMonthFilter.innerHTML = '<option value="">-- First, Choose a Year --</option>';
             dateMonthFilter.disabled = true;
             datesContainer.innerHTML = `<p class="text-center theme-text-secondary p-10">Please select a year and date to see booking details.</p>`;
         }
-        
+
         function renderCards(year, dateMonth) {
             const bookings = groupedData[year]?.[dateMonth];
             if (!bookings) {
@@ -590,7 +591,7 @@
 
             attachModalListeners();
         }
-        
+
         function createStayCard(stay) {
             let guestHtml = '';
             stay.passengers.forEach(guest => {
@@ -606,9 +607,9 @@
                         </div>
                     </div>`;
             });
-            
+
             const statusColors = cardColors[stay.status] || cardColors['no-stay'];
-            
+
             return `
                 <div class="glass-card overflow-hidden ticket-card card-item">
                     <div class="p-4 text-center relative ${statusColors.header}">
@@ -682,7 +683,7 @@
             }
 
             const statusColors = cardColors[travel.status] || cardColors['not-booked'];
-            
+
             return `
                 <div class="glass-card overflow-hidden ticket-card card-item">
                     <div class="status-header p-4 text-center relative ${statusColors.header}">
@@ -740,7 +741,7 @@
                     </div>
                 </div>`;
         }
-        
+
         function startCountdown() {
             const now = new Date();
             let nextPoonamDate = null;
@@ -807,11 +808,11 @@
                     if (ticketUrl && ticketUrl.trim() !== '#') {
                         iframe.src = ticketUrl;
                         downloadBtn.href = ticketUrl;
-                        
+
                         // --- NEW LOGIC TO SET FILENAME ---
                         const fileName = ticketUrl.substring(ticketUrl.lastIndexOf('/') + 1);
                         downloadBtn.setAttribute('download', fileName);
-                        
+
                         modal.classList.remove('hidden');
                     } else {
                         showToast('Tickets not available right now, check back later.', 'error');
@@ -840,7 +841,7 @@
             const originalHTML = button.innerHTML; 
             button.disabled = true;
             button.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 theme-text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>`;
-            
+
             setTimeout(() => {
                 button.innerHTML = originalHTML;
                 button.disabled = false;
@@ -854,7 +855,7 @@
                 updateButtonState(button);
             }).catch(err => console.error('Failed to copy', err));
         };
-        
+
         const populateTimings = () => {
             const scheduleContainer = document.getElementById('timing-schedule');
             const now = new Date();
@@ -888,7 +889,7 @@
                 const isCurrent = currentTime >= item.start && currentTime < item.end;
                 const colorClass = item.type === 'open' ? 'text-green-400' : 'text-red-400';
                 const currentClass = isCurrent ? 'current-timing' : '';
-                
+
                 html += `
                     <div class="flex justify-between items-center p-3 rounded-lg ${currentClass} transition-all duration-300">
                         <span class="font-semibold theme-text-primary">${item.event}</span>
@@ -899,28 +900,30 @@
             scheduleContainer.innerHTML = html;
         };
 
-        function processApiData(values) {
-            if (!values || values.length < 2) return [];
-            const headers = values[0].map(h => h.trim().toLowerCase());
+        function parseCSV(csvText) {
+            const lines = csvText.split(/\r?\n/).filter(line => line.trim());
+            if (lines.length < 2) return [];
+            const headers = lines[0].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(h => h.trim().replace(/"/g, '').toLowerCase());
             const data = [];
-            for (let i = 1; i < values.length; i++) {
+            for (let i = 1; i < lines.length; i++) {
                 const obj = {};
-                const currentline = values[i];
-                for (let j = 0; j < headers.length; j++) {
-                    obj[headers[j]] = currentline[j] || '';
+                const currentline = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(item => item.trim().replace(/"/g, ''));
+                if (currentline.length === headers.length) {
+                    for (let j = 0; j < headers.length; j++) {
+                        obj[headers[j]] = currentline[j];
+                    }
+                    data.push(obj);
                 }
-                data.push(obj);
             }
             return data;
         }
 
         async function fetchAndProcessData() {
-            if (!apiKey || apiKey === "__API_KEY__" || !sheetId || sheetId === "__SHEET_ID__") {
-                datesContainer.innerHTML = `<p class="text-center text-red-400 p-10"><b>API Configuration is missing.</b><br>Please check your GitHub Secrets and ensure the Action workflow has run successfully.</p>`;
-                console.error("API Key/Sheet ID not replaced by GitHub Actions.");
+            if (!googleSheetUrl || googleSheetUrl.includes('YOUR_GOOGLE_SHEET')) {
+                datesContainer.innerHTML = `<p class="text-center text-red-400 p-10">Please add your Google Sheet CSV link in the script.</p>`;
                 return;
             }
-            
+
             datesContainer.innerHTML = `
                 <div class="text-center p-10">
                     <svg aria-hidden="true" class="inline w-10 h-10 theme-text-secondary animate-spin" style="fill: var(--accent-color)" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -931,26 +934,18 @@
                 </div>`;
 
             try {
-                const response = await fetch(googleSheetApiUrl);
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    const errorMessage = errorData.error?.message || `HTTP error! Status: ${response.status}`;
-                    console.error("API Error Details:", errorMessage);
-                    throw new Error(errorMessage);
-                }
-                
-                const result = await response.json();
-                if (!result.values) {
-                     throw new Error("No data found in the sheet. Check if the sheet name is 'Sheet1' and the range is correct.");
-                }
-                const allBookingsData = processApiData(result.values);
+                const response = await fetch(`${googleSheetUrl}&_=${new Date().getTime()}`);
+                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+
+                const csvText = await response.text();
+                const allBookingsData = parseCSV(csvText);
 
                 groupedData = allBookingsData.reduce((acc, row) => {
                     if (row.year && row.date_month) {
                         const { year, date_month } = row;
                         if (!acc[year]) acc[year] = {};
                         if (!acc[year][date_month]) acc[year][date_month] = [];
-                        
+
                         const key = `${row.type}-${row.booking_no_pnr || Math.random()}`;
                         let booking = acc[year][date_month].find(b => b.key === key);
 
@@ -958,22 +953,22 @@
                             booking = { ...row, passengers: [], key: key };
                             acc[year][date_month].push(booking);
                         }
-                        
+
                         if (row.guest_name) {
                             booking.passengers.push(row);
                         }
                     }
                     return acc;
                 }, {});
-                
+
                 setupDropdowns();
 
             } catch (error) {
                 console.error('Error fetching or processing data:', error);
-                datesContainer.innerHTML = `<p class="text-center text-red-400 p-10"><b>Error:</b> ${error.message}<br><br>Please check your API Key permissions, Sheet sharing settings, and the browser console (F12) for more details.</p>`;
+                datesContainer.innerHTML = `<p class="text-center text-red-400 p-10">Error loading booking data. Please check the data source and network connection.</p>`;
             }
         }
-        
+
         document.addEventListener('DOMContentLoaded', async function() {
             // --- Theme Toggle Logic ---
             const themeToggle = document.getElementById('theme-toggle');
@@ -1005,7 +1000,7 @@
             if(modal) modal.addEventListener('click', (event) => {
                 if (event.target === modal) closeModal();
             });
-            
+
             document.querySelectorAll('#about-link, #mobile-about-link').forEach(link => {
                 link.addEventListener('click', (e) => { e.preventDefault(); aboutModal.classList.remove('hidden'); });
             });
@@ -1023,7 +1018,7 @@
             document.getElementById('close-contact-modal').addEventListener('click', () => contactModal.classList.add('hidden'));
             document.getElementById('close-payment-modal').addEventListener('click', () => paymentModal.classList.add('hidden'));
             document.getElementById('close-timing-modal').addEventListener('click', () => timingModal.classList.add('hidden'));
-            
+
             [aboutModal, contactModal, paymentModal, timingModal, successModal].forEach(m => {
                  m.addEventListener('click', (e) => { if(e.target === m) m.classList.add('hidden'); });
             });
@@ -1050,14 +1045,14 @@
                     console.error("Oops! There was a problem submitting your form.");
                 }
             });
-            
+
             document.getElementById('mobile-menu-button').addEventListener('click', () => {
                 document.getElementById('mobile-menu').classList.toggle('hidden');
             });
-            
+
             document.getElementById('home-link').addEventListener('click', (e) => { e.preventDefault(); window.location.reload(); });
             document.getElementById('mobile-home-link').addEventListener('click', (e) => { e.preventDefault(); window.location.reload(); });
-            
+
             yearFilter.addEventListener('change', (e) => {
                 const selectedYear = e.target.value;
                 datesContainer.innerHTML = '';
@@ -1096,4 +1091,3 @@
     </script>
 </body>
 </html>
-
