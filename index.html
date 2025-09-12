@@ -208,10 +208,10 @@
         }
         #toast-notification.show { transform: translate(-50%, 0); opacity: 1; pointer-events: auto; }
         
-        /* --- COUNTDOWN TIMER --- */
+        /* --- COUNTDOWN TIMER (FIXED) --- */
         .countdown-item {
             background-image: url('https://hookstar1993.github.io/dwarka/img/moon.png');
-            background-color: transparent; /* Explicitly remove any background color */
+            background-color: transparent;
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -221,8 +221,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            box-shadow: none; /* Remove shadow */
-            border-radius: 0; /* Remove border-radius to prevent any shape */
+            border-radius: 50%; /* Make it a circle */
         }
         .countdown-item span {
             color: black;
@@ -319,15 +318,15 @@
                 <section class="w-full max-w-xl mx-auto mb-12">
                     <div class="glass-card overflow-hidden p-4 flex flex-col sm:flex-row justify-center items-center gap-4">
                         <div class="w-full sm:w-1/2">
-                            <label for="year-filter" class="block text-sm font-bold theme-text-secondary mb-1 text-center">Select Year:</label>
+                            <label for="year-filter" class="block text-sm font-bold theme-text-secondary mb-1 text-center">Select a Journey Year</label>
                             <select id="year-filter" class="block w-full px-3 py-2 text-base rounded-md focus:outline-none theme-text-primary" style="background:var(--input-bg); border: 1px solid var(--glass-border);">
                                 <!-- Year options will be populated by JavaScript -->
                             </select>
                         </div>
                         <div class="w-full sm:w-1/2">
-                            <label for="date-month-filter" class="block text-sm font-bold theme-text-secondary mb-1 text-center">Select Date & Month:</label>
+                            <label for="date-month-filter" class="block text-sm font-bold theme-text-secondary mb-1 text-center">Select Date & Month</label>
                             <select id="date-month-filter" class="block w-full px-3 py-2 text-base rounded-md focus:outline-none theme-text-primary" style="background:var(--input-bg); border: 1px solid var(--glass-border);" disabled>
-                                <!-- Date/Month options will be populated by JavaScript -->
+                                <option value="">First, Choose a Year</option>
                             </select>
                         </div>
                     </div>
@@ -477,10 +476,11 @@
         </div>
     </div>
 
+    <script src="config.js"></script>
     <script>
-        // --- API & SHEET DETAILS ---
-        const apiKey = 'AIzaSyA6vRLnDZ-GLY6NrwMBqpqlGjKrreFJmo8';
-        const sheetId = '1OOthoN3XS_GfwYsbQC-WSpJer9FMZ-AYK7E4xuxE4y8';
+        // --- API & SHEET DETAILS (from config.js) ---
+        const apiKey = config.apiKey;
+        const sheetId = config.sheetId;
         const range = 'Sheet1!A:Z'; // Assuming data is in Sheet1
         const googleSheetApiUrl = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=${apiKey}`;
 
@@ -916,7 +916,7 @@
 
         async function fetchAndProcessData() {
             if (!apiKey || !sheetId) {
-                datesContainer.innerHTML = `<p class="text-center text-red-400 p-10">Please add your API Key and Sheet ID in the script.</p>`;
+                datesContainer.innerHTML = `<p class="text-center text-red-400 p-10">API Key or Sheet ID is missing. Please check your config.js file.</p>`;
                 return;
             }
             
@@ -931,7 +931,11 @@
 
             try {
                 const response = await fetch(googleSheetApiUrl);
-                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error("API Error Details:", errorData);
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
                 
                 const result = await response.json();
                 const allBookingsData = processApiData(result.values);
@@ -961,7 +965,7 @@
 
             } catch (error) {
                 console.error('Error fetching or processing data:', error);
-                datesContainer.innerHTML = `<p class="text-center text-red-400 p-10">Error loading booking data. Please make sure the Google Sheet is published to the web and the link is correct.</p>`;
+                datesContainer.innerHTML = `<p class="text-center text-red-400 p-10">Error loading booking data. Please check if the API Key is correct and has access to the Google Sheet.</p>`;
             }
         }
         
@@ -1087,3 +1091,4 @@
     </script>
 </body>
 </html>
+
