@@ -476,15 +476,12 @@
         </div>
     </div>
 
-    <script src="config.js"></script>
     <script>
-        // --- API & SHEET DETAILS (from config.js) ---
-        let apiKey, sheetId;
-        if (typeof config !== 'undefined') {
-            apiKey = config.apiKey;
-            sheetId = config.sheetId;
-        }
-        const range = 'Sheet1!A:Z'; // Assuming data is in Sheet1
+        // --- API & SHEET DETAILS (will be injected by GitHub Actions) ---
+        const apiKey = "__API_KEY__";
+        const sheetId = "__SHEET_ID__";
+        
+        const range = 'Sheet1!A:Z';
         const googleSheetApiUrl = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=${apiKey}`;
 
         // --- GLOBAL VARIABLES ---
@@ -918,9 +915,9 @@
         }
 
         async function fetchAndProcessData() {
-            if (typeof config === 'undefined' || !config.apiKey || !config.sheetId) {
-                datesContainer.innerHTML = `<p class="text-center text-red-400 p-10">Configuration file (config.js) is missing or invalid.</p>`;
-                console.error("config.js not found or is missing API Key/Sheet ID.");
+            if (!apiKey || apiKey === "__API_KEY__" || !sheetId || sheetId === "__SHEET_ID__") {
+                datesContainer.innerHTML = `<p class="text-center text-red-400 p-10"><b>API Configuration is missing.</b><br>Please check your GitHub Secrets and ensure the Action workflow has run successfully.</p>`;
+                console.error("API Key/Sheet ID not replaced by GitHub Actions.");
                 return;
             }
             
@@ -973,7 +970,7 @@
 
             } catch (error) {
                 console.error('Error fetching or processing data:', error);
-                datesContainer.innerHTML = `<p class="text-center text-red-400 p-10"><b>Error:</b> ${error.message}<br><br>Please check the browser console (F12) for more details.</p>`;
+                datesContainer.innerHTML = `<p class="text-center text-red-400 p-10"><b>Error:</b> ${error.message}<br><br>Please check your API Key permissions, Sheet sharing settings, and the browser console (F12) for more details.</p>`;
             }
         }
         
@@ -1099,3 +1096,4 @@
     </script>
 </body>
 </html>
+
