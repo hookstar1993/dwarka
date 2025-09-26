@@ -517,6 +517,7 @@
 
         // --- GLOBAL VARIABLES ---
         let groupedData = {};
+        let isAppInitialized = false; // <-- YEH NAYA FLAG HAI
         const poonamDates = [
             { year: 2025, month: 'August', day: 9 }, { year: 2025, month: 'September', day: 7 },
             { year: 2025, month: 'October', day: 7 }, { year: 2025, month: 'November', day: 5 },
@@ -566,7 +567,6 @@
         
         let auth;
         
-        // Yeh function Firebase ko initialize karega
         function initializeFirebase() {
             if (typeof firebaseConfig !== 'undefined') {
                 try {
@@ -586,49 +586,62 @@
             }
         }
 
-        // Yeh function Auth listeners ko set karega
+        // --- YEH NAYA AUR BEHTAR AUTHENTICATION LOGIC HAI ---
         function setupAuthListeners() {
             const provider = new GoogleAuthProvider();
             
             loginButton.addEventListener('click', () => {
-                if(auth) signInWithRedirect(auth, provider);
+                if(auth) {
+                    signInWithRedirect(auth, provider);
+                }
             });
             
-            getRedirectResult(auth)
-                .then((result) => {
-                    // Redirect se wapas aane par user mil jayega
-                }).catch((error) => {
-                    console.error("Sign-in redirect error:", error);
-                    authError.textContent = 'Sign-in failed. Please try again.';
-                    authError.classList.remove('hidden');
-                });
-
             onAuthStateChanged(auth, (user) => {
-                if (user && allowedEmails.includes(user.email.toLowerCase())) {
-                    loginScreen.style.display = 'none';
-                    siteWrapper.classList.remove('hidden');
-                    setTimeout(() => siteWrapper.classList.remove('opacity-0'), 10);
-                    initializeAppContent(user);
-                } else {
-                    if(user && !allowedEmails.includes(user.email.toLowerCase())){
-                        authError.textContent = "You are not authorized to view this page.";
+                if (user) {
+                    // User sign in hua hai
+                    const userEmail = user.email.toLowerCase();
+                    console.log("User signed in with email:", userEmail);
+                    console.log("Allowed emails:", allowedEmails);
+
+                    if (allowedEmails.includes(userEmail)) {
+                        // User authorized hai
+                        console.log("Authorization successful.");
+                        if (!isAppInitialized) {
+                            isAppInitialized = true;
+                            loginScreen.style.display = 'none';
+                            siteWrapper.classList.remove('hidden');
+                            setTimeout(() => siteWrapper.classList.remove('opacity-0'), 10);
+                            initializeAppContent(user);
+                        }
+                    } else {
+                        // User authorized nahi hai
+                        console.log("Authorization FAILED.");
+                        authError.textContent = `Access denied for ${user.email}. Not an authorized user.`;
                         authError.classList.remove('hidden');
                         signOut(auth);
                     }
+                } else {
+                    // User sign out hua hai
+                    console.log("User is signed out.");
+                    isAppInitialized = false;
                     loginScreen.style.display = 'flex';
                     siteWrapper.classList.add('hidden');
                     siteWrapper.classList.add('opacity-0');
                 }
             });
+
+            getRedirectResult(auth).catch((error) => {
+                console.error("Sign-in redirect error:", error);
+                authError.textContent = `Sign-in failed: ${error.message}`;
+                authError.classList.remove('hidden');
+            });
         }
         
-        // Yeh event listener page load hone ke baad Firebase ko initialize karega
         window.addEventListener('load', () => {
-            // Thoda intezaar karein taaki firebase-config.js load ho sake
             setTimeout(initializeFirebase, 500); 
         });
 
-
+        // Baaki saara code waisa hi hai
         function showWelcomePopup(user) {
             if (!welcomePopup || !user) return;
             
