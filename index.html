@@ -7,6 +7,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Teko:wght@400;600&family=Jost:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Yeh file GitHub Action dwara banayi jayegi -->
+    <script src="firebase-config.js" defer></script>
     <style>
         html {
             scroll-behavior: smooth;
@@ -499,44 +501,12 @@
         </div>
     </div>
     
-    <!-- This file will be CREATED AUTOMATICALLY by the GitHub Action -->
-    <script src="firebase-config.js"></script>
-
     <!-- Firebase SDKs -->
     <script type="module">
-        // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
         
-        // --- Naya Feature: Local Testing ke liye ek switch ---
-        // Agar aap computer par test kar rahe hain, toh isko 'true' kar dein aur neeche apni keys daal dein.
-        // GitHub par upload karne se pehle isse HAMESHA 'false' kar dein.
-        const IS_LOCAL_TESTING = false;
-
-        if (IS_LOCAL_TESTING) {
-            console.warn("AAP LOCAL TESTING MODE ME HAIN. Asli website par daalne se pehle IS_LOCAL_TESTING ko false kar dein.");
-            // --- LOCAL TESTING KE LIYE APNI KEYS YAHAN DAALEIN ---
-            window.firebaseConfig = {
-                apiKey: "YOUR_LOCAL_API_KEY", // Apni key yahan daalein
-                authDomain: "YOUR_LOCAL_AUTH_DOMAIN",
-                projectId: "YOUR_LOCAL_PROJECT_ID",
-                storageBucket: "YOUR_LOCAL_STORAGE_BUCKET",
-                messagingSenderId: "YOUR_LOCAL_SENDER_ID",
-                appId: "YOUR_LOCAL_APP_ID",
-                measurementId: "YOUR_LOCAL_MEASUREMENT_ID"
-            };
-        } else if (typeof window.firebaseConfig === 'undefined') {
-             // Yeh live website (GitHub Pages) ke liye hai
-             console.log("Live website par hain. firebase-config.js se configuration load karne ki koshish ki ja rahi hai.");
-             // Agar file nahi milti hai, toh login button disable ho jayega
-             document.getElementById('login-button').disabled = true;
-             document.getElementById('auth-error').textContent = "Configuration file not found. Login is disabled.";
-             document.getElementById('auth-error').classList.remove('hidden');
-        }
-
-
-        // --- 2. YAHAN ALLOWED EMAIL ADDRESSES DAALEIN ---
-        // Jinko access dena hai, unke Google account emails yahan daalein.
+        // --- ALLOWED EMAIL ADDRESSES YAHAN DAALEIN ---
         const allowedEmails = [
             '2023.hardeep@gmail.com', 
             'officialdjharshad1993@gmail.com'
@@ -593,68 +563,57 @@
             'not-booked': { header: 'bg-red-500', chip: 'bg-white text-red-800', train: '#ef4444', durationCircle: 'bg-red-50 border-red-200', durationText: 'text-red-800', icon: '<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>' },
             'no-stay': { header: 'bg-blue-600', chip: 'bg-white text-blue-800', icon: '<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>' }
         };
-
-        // Initialize Firebase
+        
         let auth;
-        if (window.firebaseConfig && window.firebaseConfig.apiKey !== "DUMMY_KEY_FOR_TESTING") {
-            try {
-                const app = initializeApp(window.firebaseConfig);
-                auth = getAuth(app);
-            } catch (error) {
-                console.error("Firebase initialization failed:", error);
-                authError.textContent = 'Configuration error. Please contact admin.';
-                authError.classList.remove('hidden');
-            }
-        } else if (!IS_LOCAL_TESTING) {
-             console.error("Asli Firebase config nahi mili aur local testing band hai.");
-        }
-
-        const provider = new GoogleAuthProvider();
-
-        // --- AUTH FUNCTIONS ---
-        const signIn = () => {
-            if (auth) {
-                signInWithRedirect(auth, provider);
+        
+        // Yeh function Firebase ko initialize karega
+        function initializeFirebase() {
+            if (typeof firebaseConfig !== 'undefined') {
+                try {
+                    const app = initializeApp(firebaseConfig);
+                    auth = getAuth(app);
+                    setupAuthListeners();
+                    console.log("Firebase initialized successfully.");
+                } catch (error) {
+                    console.error("Firebase initialization failed:", error);
+                    authError.textContent = 'Configuration error. Please contact admin.';
+                    authError.classList.remove('hidden');
+                }
             } else {
-                 authError.textContent = 'Authentication service is not ready. Login only works on the live site.';
+                 console.error("Firebase config object not found.");
+                 authError.textContent = 'Configuration file not found. Login is disabled.';
                  authError.classList.remove('hidden');
             }
-        };
-        
-        const signOutUser = () => {
-            if (auth) {
-                signOut(auth).catch((error) => console.error('Sign Out Error', error));
-            }
-        };
-        
-        if (auth) {
-            // Handle the result of the redirect after the user signs in and returns to the app
+        }
+
+        // Yeh function Auth listeners ko set karega
+        function setupAuthListeners() {
+            const provider = new GoogleAuthProvider();
+            
+            loginButton.addEventListener('click', () => {
+                if(auth) signInWithRedirect(auth, provider);
+            });
+            
             getRedirectResult(auth)
                 .then((result) => {
-                    if (result) {
-                        // User is signed in. The onAuthStateChanged observer will handle showing the main content.
-                        console.log("Signed in via redirect:", result.user.displayName);
-                    }
+                    // Redirect se wapas aane par user mil jayega
                 }).catch((error) => {
                     console.error("Sign-in redirect error:", error);
                     authError.textContent = 'Sign-in failed. Please try again.';
                     authError.classList.remove('hidden');
                 });
 
-
             onAuthStateChanged(auth, (user) => {
-                if (user && allowedEmails.includes(user.email)) {
-                    // User is signed in and authorized
+                if (user && allowedEmails.includes(user.email.toLowerCase())) {
                     loginScreen.style.display = 'none';
                     siteWrapper.classList.remove('hidden');
                     setTimeout(() => siteWrapper.classList.remove('opacity-0'), 10);
                     initializeAppContent(user);
                 } else {
-                    // User is not signed in or not authorized
-                    if(user && !allowedEmails.includes(user.email)){
+                    if(user && !allowedEmails.includes(user.email.toLowerCase())){
                         authError.textContent = "You are not authorized to view this page.";
                         authError.classList.remove('hidden');
-                        signOutUser(); // Sign out unauthorized user
+                        signOut(auth);
                     }
                     loginScreen.style.display = 'flex';
                     siteWrapper.classList.add('hidden');
@@ -662,6 +621,13 @@
                 }
             });
         }
+        
+        // Yeh event listener page load hone ke baad Firebase ko initialize karega
+        window.addEventListener('load', () => {
+            // Thoda intezaar karein taaki firebase-config.js load ho sake
+            setTimeout(initializeFirebase, 500); 
+        });
+
 
         function showWelcomePopup(user) {
             if (!welcomePopup || !user) return;
@@ -1126,7 +1092,7 @@
             updateThemeIcons(isDark);
             
             // --- Regular Event Listeners ---
-            document.querySelectorAll('#signout-button, #mobile-signout-button').forEach(btn => btn.addEventListener('click', signOutUser));
+            document.querySelectorAll('#signout-button, #mobile-signout-button').forEach(btn => btn.addEventListener('click', () => signOut(auth)));
             if(closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
             if(modal) modal.addEventListener('click', (event) => {
                 if (event.target === modal) closeModal();
@@ -1219,9 +1185,6 @@
             populateTimings();
             showWelcomePopup(user);
         }
-
-        // --- GLOBAL EVENT LISTENERS ---
-        loginButton.addEventListener('click', signIn);
     </script>
 </body>
 </html>
