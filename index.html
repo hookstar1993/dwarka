@@ -159,6 +159,7 @@
             background: rgba(0, 0, 0, 0.8); z-index: 100;
             display: flex; align-items: center; justify-content: center;
             opacity: 0; transition: opacity 0.5s ease-in-out;
+            pointer-events: none;
         }
         .welcome-popup-visible { opacity: 1; }
         .welcome-content {
@@ -209,7 +210,6 @@
         #toast-notification.show { transform: translate(-50%, 0); opacity: 1; pointer-events: auto; }
 
         /* --- COUNTDOWN TIMER --- */
-        /* --- UPDATED COUNTDOWN TIMER --- */
         .countdown-item {
             background-image: url('https://hookstar1993.github.io/dwarka/img/moon.png');
             background-color: transparent; /* Explicitly remove any background color */
@@ -260,18 +260,34 @@
         }
     </style>
 </head>
-<body class="flex flex-col min-h-screen theme-text-primary transition-colors duration-500">
+<body class="theme-text-primary transition-colors duration-500">
+
+    <!-- Login Screen -->
+    <div id="login-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center p-4">
+        <div class="glass-card text-center p-8 rounded-3xl max-w-md w-full">
+             <svg class="w-16 h-16 mx-auto theme-accent-color" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 20h18" /><path d="M7 20L12 5l5 15" /><path d="M12 5V2l5 1.5L12 2" /><path d="M8 20v-3h8v3" />
+            </svg>
+            <h1 class="text-4xl font-bold mt-4 theme-text-primary page-title">Jay Dwarkadhish</h1>
+            <p class="theme-text-secondary mt-2">Please sign in to view the pilgrimage details.</p>
+            <p id="auth-error" class="text-red-500 text-sm mt-4 font-semibold hidden"></p>
+            <button id="login-button" class="w-full mt-6 bg-white/80 dark:bg-black/20 hover:bg-white dark:hover:bg-black/40 text-gray-800 dark:text-white font-semibold py-3 px-4 border border-gray-300 dark:border-gray-600 rounded-xl shadow-md transition-all duration-300 flex items-center justify-center">
+                <svg class="w-6 h-6 mr-3" viewBox="0 0 48 48"><defs><path id="a" d="M44.5 20H24v8.5h11.8C34.7 33.9 30.1 37 24 37c-7.2 0-13-5.8-13-13s5.8-13 13-13c3.1 0 5.9 1.1 8.1 2.9l6.4-6.4C34.6 4.1 29.6 2 24 2 11.8 2 2 11.8 2 24s9.8 22 22 22c11 0 21-8 21-22 0-1.3-.2-2.7-.5-4z"/></defs><clipPath id="b"><use xlink:href="#a" overflow="visible"/></clipPath><path clip-path="url(#b)" fill="#FBBC05" d="M0 37V11l17 13z"/><path clip-path="url(#b)" fill="#EA4335" d="M0 11l17 13 7-6.1L48 14V0H0z"/><path clip-path="url(#b)" fill="#34A853" d="M0 37l30-23 7.9 1L48 0v48H0z"/><path clip-path="url(#b)" fill="#4285F4" d="M48 48L17 24l-4-3 35-10z"/></svg>
+                Sign in with Google
+            </button>
+        </div>
+    </div>
 
     <!-- Welcome Popup -->
     <div id="welcome-popup" class="welcome-popup-container">
         <div class="welcome-content glass-card">
-            <h2 class="text-4xl sm:text-5xl font-bold theme-accent-color page-title">Jay Dwarkadhish 🙏</h2>
+            <h2 id="welcome-user-name" class="text-4xl sm:text-5xl font-bold theme-accent-color page-title">Jay Dwarkadhish 🙏</h2>
             <p id="slogan-text" class="theme-text-secondary mt-2 text-xl font-bold min-h-[3rem] flex items-center justify-center">Welcome to the sacred journey!</p>
         </div>
     </div>
 
     <!-- Main Site Wrapper -->
-    <div id="site-wrapper" class="opacity-100 transition-opacity duration-500">
+    <div id="site-wrapper" class="hidden opacity-0 transition-opacity duration-500 flex flex-col min-h-screen">
         <header class="glass-card fixed top-4 left-4 right-4 z-40 transition-all duration-300">
             <nav class="container mx-auto px-4 sm:px-6 py-3 flex justify-between items-center">
                 <div class="flex items-center text-xl sm:text-2xl font-bold tracking-wider theme-text-primary">
@@ -287,6 +303,7 @@
                         <a href="#" id="about-link" class="theme-text-secondary hover:theme-text-primary font-medium transition-colors duration-300">About Us</a>
                         <a href="#" id="contact-link" class="theme-text-secondary hover:theme-text-primary font-medium transition-colors duration-300">Contact</a>
                         <a href="#" id="pay-link" class="pay-button font-bold py-2 px-4 rounded-xl">Pay Me Here</a>
+                        <button id="signout-button" class="ios-button font-bold py-2 px-4 rounded-xl !bg-red-500/80 hover:!bg-red-600/90 text-white">Sign Out</button>
                     </div>
                     <!-- Theme Toggle -->
                     <button id="theme-toggle" title="Toggle Theme" class="p-2 rounded-full hover:bg-black/10 dark:hover:bg-white/10 transition-colors">
@@ -299,11 +316,12 @@
                 </div>
             </nav>
             <div id="mobile-menu" class="hidden md:hidden px-6 pb-4 glass-card rounded-b-2xl -mt-2">
-                 <a href="#" id="mobile-home-link" class="block py-2 text-center theme-text-secondary hover:theme-text-primary">Home</a>
-                 <a href="#" id="mobile-timing-link" class="block py-2 text-center theme-text-secondary hover:theme-text-primary">Mandir Timing</a>
-                 <a href="#" id="mobile-about-link" class="block py-2 text-center theme-text-secondary hover:theme-text-primary">About Us</a>
-                 <a href="#" id="mobile-contact-link" class="block py-2 text-center theme-text-secondary hover:theme-text-primary">Contact</a>
-                 <a href="#" id="mobile-pay-link" class="pay-button block py-2 mt-2 text-center font-bold rounded-xl transition-all duration-300">Pay Me Here</a>
+                <a href="#" id="mobile-home-link" class="block py-2 text-center theme-text-secondary hover:theme-text-primary">Home</a>
+                <a href="#" id="mobile-timing-link" class="block py-2 text-center theme-text-secondary hover:theme-text-primary">Mandir Timing</a>
+                <a href="#" id="mobile-about-link" class="block py-2 text-center theme-text-secondary hover:theme-text-primary">About Us</a>
+                <a href="#" id="mobile-contact-link" class="block py-2 text-center theme-text-secondary hover:theme-text-primary">Contact</a>
+                <a href="#" id="mobile-pay-link" class="pay-button block py-2 mt-2 text-center font-bold rounded-xl transition-all duration-300">Pay Me Here</a>
+                <button id="mobile-signout-button" class="ios-button w-full mt-2 font-bold py-2 px-4 rounded-xl !bg-red-500/80 hover:!bg-red-600/90 text-white">Sign Out</button>
             </div>
         </header>
 
@@ -443,7 +461,7 @@
                     <div class="flex justify-between items-center"><span class="theme-text-secondary">IFSC Code:</span><div class="flex items-center space-x-3"><span id="ifscCode" class="font-medium theme-text-primary">SBIN0060236</span><button onclick="copyToClipboard('ifscCode', this)" title="Copy IFSC Code" class="ios-button p-1.5 rounded-xl flex-shrink-0"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 theme-text-primary" viewBox="0 0 20 20" fill="currentColor"><path d="M7 9a2 2 0 012-2h6a2 2 0 012 2v6a2 2 0 01-2 2H9a2 2 0 01-2-2V9z" /><path d="M5 3a2 2 0 00-2 2v6a2 2 0 002 2V5h6a2 2 0 00-2-2H5z" /></svg></button></div></div>
                 </div>
             </div>
-            <div class="space-y-4 pt-6">
+            <div class="space-y-4 mt-6">
                 <h2 class="text-lg font-semibold theme-accent-color">5. Confirm on WhatsApp</h2>
                 <p class="text-center text-sm theme-text-secondary">After payment, click the button below to send us the screenshot for confirmation.</p>
                 <a href="https://wa.me/919824594156?text=Hello!%20I%20have%20completed%20the%20payment.%20Here%20is%20the%20screenshot." target="_blank" rel="noopener noreferrer" class="pay-button w-full font-bold py-3 px-4 rounded-xl flex items-center justify-center space-x-3 transition-all duration-300 transform hover:scale-105">
@@ -480,8 +498,24 @@
             <p class="theme-text-secondary">Thank you for reaching out. We will get back to you shortly.</p>
         </div>
     </div>
+    
+    <!-- This file will be CREATED AUTOMATICALLY by the GitHub Action -->
+    <script src="firebase-config.js"></script>
 
-    <script>
+    <!-- Firebase SDKs -->
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+        
+        // --- 2. ADD ALLOWED EMAIL ADDRESSES HERE ---
+        // Add the Google account emails of users who should have access.
+        const allowedEmails = [
+            'user1@example.com', 
+            'user2@example.com',
+            'anotheruser@gmail.com'
+        ];
+
         // --- PASTE YOUR GOOGLE SHEET CSV LINK HERE ---
         const googleSheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSqINNmQ6CtGixfyo5goqhTKfVwIMGjQi_5MIc4FtTx053jXO2QftjgUt26XLQXE8Ld7kt7VEPK4TJO/pub?output=csv';
 
@@ -504,9 +538,14 @@
             { year: 2027, month: 'September', day: 15 }, { year: 2027, month: 'October', day: 15 },
             { year: 2027, month: 'November', day: 13 }, { year: 2027, month: 'December', day: 13 }
         ];
-
+        
         // --- DOM Element References ---
+        const loginScreen = document.getElementById('login-screen');
+        const siteWrapper = document.getElementById('site-wrapper');
+        const loginButton = document.getElementById('login-button');
+        const authError = document.getElementById('auth-error');
         const welcomePopup = document.getElementById('welcome-popup');
+        const welcomeUserName = document.getElementById('welcome-user-name');
         const datesContainer = document.getElementById('poonam-dates-container');
         const countdownContainer = document.getElementById('countdown-container');
         const modal = document.getElementById('ticketModal');
@@ -529,8 +568,65 @@
             'no-stay': { header: 'bg-blue-600', chip: 'bg-white text-blue-800', icon: '<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>' }
         };
 
-        function showWelcomePopup() {
-            if (!welcomePopup) return;
+        // Initialize Firebase
+        let auth;
+        try {
+            const app = initializeApp(firebaseConfig);
+            auth = getAuth(app);
+        } catch (error) {
+            console.error("Firebase initialization failed:", error);
+            authError.textContent = 'Configuration error. Please contact admin.';
+            authError.classList.remove('hidden');
+        }
+        
+        const provider = new GoogleAuthProvider();
+
+        // --- AUTH FUNCTIONS ---
+        const signIn = () => {
+            signInWithPopup(auth, provider)
+            .then((result) => {
+                // This is handled by onAuthStateChanged, no need for code here.
+                authError.classList.add('hidden');
+            }).catch((error) => {
+                console.error("Sign-in error:", error);
+                authError.textContent = 'Sign-in failed. Please try again.';
+                authError.classList.remove('hidden');
+            });
+        };
+        
+        const signOutUser = () => {
+            signOut(auth).then(() => {
+                // This is handled by onAuthStateChanged
+            }).catch((error) => {
+                console.error('Sign Out Error', error);
+            });
+        };
+        
+        onAuthStateChanged(auth, (user) => {
+            if (user && allowedEmails.includes(user.email)) {
+                // User is signed in and authorized
+                loginScreen.style.display = 'none';
+                siteWrapper.classList.remove('hidden');
+                setTimeout(() => siteWrapper.classList.remove('opacity-0'), 10);
+                initializeAppContent(user);
+            } else {
+                // User is not signed in or not authorized
+                if(user && !allowedEmails.includes(user.email)){
+                    authError.textContent = "You are not authorized to view this page.";
+                    authError.classList.remove('hidden');
+                    signOutUser(); // Sign out unauthorized user
+                }
+                loginScreen.style.display = 'flex';
+                siteWrapper.classList.add('hidden');
+                siteWrapper.classList.add('opacity-0');
+            }
+        });
+
+        function showWelcomePopup(user) {
+            if (!welcomePopup || !user) return;
+            
+            const firstName = user.displayName.split(' ')[0];
+            welcomeUserName.innerHTML = `Jai Shree Krishna, ${firstName}! 🙏`;
 
             welcomePopup.style.display = 'flex';
             setTimeout(() => {
@@ -544,7 +640,7 @@
                 setTimeout(() => {
                     welcomePopup.style.display = 'none';
                 }, 500);
-            }, 2000);
+            }, 2500);
         }
 
         function setupDropdowns() {
@@ -579,19 +675,16 @@
             });
             datesContainer.innerHTML = detailsHtml;
 
-            // --- NEW ANIMATION LOGIC ---
             const cards = datesContainer.querySelectorAll('.card-item');
             cards.forEach((card, index) => {
-                // Use a timeout to apply the 'visible' class, creating a staggered animation
                 setTimeout(() => {
                     card.classList.add('visible');
-                }, 100 * index); // 100ms delay between each card
+                }, 100 * index); 
             });
-            // --- END OF NEW LOGIC ---
 
             attachModalListeners();
         }
-
+        
         function createStayCard(stay) {
             let guestHtml = '';
             stay.passengers.forEach(guest => {
@@ -741,7 +834,7 @@
                     </div>
                 </div>`;
         }
-
+        
         function startCountdown() {
             const now = new Date();
             let nextPoonamDate = null;
@@ -808,11 +901,8 @@
                     if (ticketUrl && ticketUrl.trim() !== '#') {
                         iframe.src = ticketUrl;
                         downloadBtn.href = ticketUrl;
-
-                        // --- NEW LOGIC TO SET FILENAME ---
                         const fileName = ticketUrl.substring(ticketUrl.lastIndexOf('/') + 1);
                         downloadBtn.setAttribute('download', fileName);
-
                         modal.classList.remove('hidden');
                     } else {
                         showToast('Tickets not available right now, check back later.', 'error');
@@ -899,7 +989,7 @@
             });
             scheduleContainer.innerHTML = html;
         };
-
+        
         function parseCSV(csvText) {
             const lines = csvText.split(/\r?\n/).filter(line => line.trim());
             if (lines.length < 2) return [];
@@ -968,8 +1058,8 @@
                 datesContainer.innerHTML = `<p class="text-center text-red-400 p-10">Error loading booking data. Please check the data source and network connection.</p>`;
             }
         }
-
-        document.addEventListener('DOMContentLoaded', async function() {
+        
+        async function initializeAppContent(user){
             // --- Theme Toggle Logic ---
             const themeToggle = document.getElementById('theme-toggle');
             const sunIcon = document.getElementById('sun-icon');
@@ -993,9 +1083,9 @@
             htmlTag.classList.toggle('dark', isDark);
             htmlTag.classList.toggle('light', !isDark);
             updateThemeIcons(isDark);
-
-
-            // --- Original Event Listeners ---
+            
+            // --- Regular Event Listeners ---
+            document.querySelectorAll('#signout-button, #mobile-signout-button').forEach(btn => btn.addEventListener('click', signOutUser));
             if(closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
             if(modal) modal.addEventListener('click', (event) => {
                 if (event.target === modal) closeModal();
@@ -1022,7 +1112,7 @@
             [aboutModal, contactModal, paymentModal, timingModal, successModal].forEach(m => {
                  m.addEventListener('click', (e) => { if(e.target === m) m.classList.add('hidden'); });
             });
-
+            
             contactForm.addEventListener('submit', async function(e) {
                 e.preventDefault();
                 const form = e.target;
@@ -1056,7 +1146,7 @@
             yearFilter.addEventListener('change', (e) => {
                 const selectedYear = e.target.value;
                 datesContainer.innerHTML = '';
-                dateMonthFilter.innerHTML = '<option value="">-- First, Choose a Year --</option>';
+                dateMonthFilter.innerHTML = '<option value="">-- Choose a Date --</option>';
 
                 if (selectedYear && groupedData[selectedYear]) {
                     dateMonthFilter.disabled = false;
@@ -1086,8 +1176,12 @@
             await fetchAndProcessData();
             startCountdown();
             populateTimings();
-            showWelcomePopup();
-        });
+            showWelcomePopup(user);
+        }
+
+        // --- GLOBAL EVENT LISTENERS ---
+        loginButton.addEventListener('click', signIn);
     </script>
 </body>
 </html>
+
