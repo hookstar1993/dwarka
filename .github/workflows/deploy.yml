@@ -3,7 +3,8 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - main # Or your default branch name
+      - main
+      - master # Action ab 'main' aur 'master' dono branch par chalega
 
 jobs:
   build-and-deploy:
@@ -31,5 +32,6 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./
-          publish_branch: gh-pages # Force the creation of the gh-pages branch
+          publish_branch: gh-pages 
+          force_orphan: true # Yeh har baar ek fresh 'gh-pages' branch banayega
 
