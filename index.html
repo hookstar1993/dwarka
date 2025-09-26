@@ -509,9 +509,9 @@
         import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
         
         // --- FIX: Provide a fallback config for local testing ---
-        // Yeh check karega ki asli config file hai ya nahi. Agar nahi, toh local testing ke liye ek dummy config use karega.
-        if (typeof firebaseConfig === 'undefined') {
-            console.warn("Firebase config asli nahi mili. Local testing ke liye dummy values istemal ki ja rahi hain. Agar aap GitHub Pages par nahi hain toh yeh normal hai.");
+        // This checks if the real config file exists. If not, it uses a dummy config for local testing.
+        if (typeof window.firebaseConfig === 'undefined') {
+            console.warn("Firebase config not found. Using dummy values for local testing. This is normal if you are not on the live GitHub Pages site.");
             window.firebaseConfig = {
                 apiKey: "DUMMY_KEY_FOR_TESTING",
                 authDomain: "DUMMY_DOMAIN.firebaseapp.com",
@@ -522,15 +522,15 @@
             };
         }
 
-        // --- 2. YAHAN ALLOWED EMAIL ADDRESSES DAALEIN ---
-        // Jinko access dena hai, unke Google account emails yahan daalein.
+        // --- 2. ADD ALLOWED EMAIL ADDRESSES HERE ---
+        // Add the Google account emails of users who should have access.
         const allowedEmails = [
             'user1@example.com', 
             'user2@example.com',
             'anotheruser@gmail.com'
         ];
 
-        // --- APNI GOOGLE SHEET CSV LINK YAHAN PASTE KAREIN ---
+        // --- PASTE YOUR GOOGLE SHEET CSV LINK HERE ---
         const googleSheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSqINNmQ6CtGixfyo5goqhTKfVwIMGjQi_5MIc4FtTx053jXO2QftjgUt26XLQXE8Ld7kt7VEPK4TJO/pub?output=csv';
 
         // --- GLOBAL VARIABLES ---
@@ -585,7 +585,7 @@
         // Initialize Firebase
         let auth;
         try {
-            const app = initializeApp(firebaseConfig);
+            const app = initializeApp(window.firebaseConfig);
             auth = getAuth(app);
         } catch (error) {
             console.error("Firebase initialization failed:", error);
