@@ -505,32 +505,44 @@
     <!-- Firebase SDKs -->
     <script type="module">
         // Import the functions you need from the SDKs you need
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-        import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
         
-        // --- FIX: Provide a fallback config for local testing ---
-        // This checks if the real config file exists. If not, it uses a dummy config for local testing.
-        if (typeof window.firebaseConfig === 'undefined') {
-            console.warn("Firebase config not found. Using dummy values for local testing. This is normal if you are not on the live GitHub Pages site.");
+        // --- Naya Feature: Local Testing ke liye ek switch ---
+        // Agar aap computer par test kar rahe hain, toh isko 'true' kar dein aur neeche apni keys daal dein.
+        // GitHub par upload karne se pehle isse HAMESHA 'false' kar dein.
+        const IS_LOCAL_TESTING = false;
+
+        if (IS_LOCAL_TESTING) {
+            console.warn("AAP LOCAL TESTING MODE ME HAIN. Asli website par daalne se pehle IS_LOCAL_TESTING ko false kar dein.");
+            // --- LOCAL TESTING KE LIYE APNI KEYS YAHAN DAALEIN ---
             window.firebaseConfig = {
-                apiKey: "DUMMY_KEY_FOR_TESTING",
-                authDomain: "DUMMY_DOMAIN.firebaseapp.com",
-                projectId: "DUMMY_PROJECT_ID",
-                storageBucket: "DUMMY_BUCKET.appspot.com",
-                messagingSenderId: "DUMMY_SENDER_ID",
-                appId: "DUMMY_APP_ID"
+                apiKey: "YOUR_LOCAL_API_KEY", // Apni key yahan daalein
+                authDomain: "YOUR_LOCAL_AUTH_DOMAIN",
+                projectId: "YOUR_LOCAL_PROJECT_ID",
+                storageBucket: "YOUR_LOCAL_STORAGE_BUCKET",
+                messagingSenderId: "YOUR_LOCAL_SENDER_ID",
+                appId: "YOUR_LOCAL_APP_ID",
+                measurementId: "YOUR_LOCAL_MEASUREMENT_ID"
             };
+        } else if (typeof window.firebaseConfig === 'undefined') {
+             // Yeh live website (GitHub Pages) ke liye hai
+             console.log("Live website par hain. firebase-config.js se configuration load karne ki koshish ki ja rahi hai.");
+             // Agar file nahi milti hai, toh login button disable ho jayega
+             document.getElementById('login-button').disabled = true;
+             document.getElementById('auth-error').textContent = "Configuration file not found. Login is disabled.";
+             document.getElementById('auth-error').classList.remove('hidden');
         }
 
-        // --- 2. ADD ALLOWED EMAIL ADDRESSES HERE ---
-        // Add the Google account emails of users who should have access.
+
+        // --- 2. YAHAN ALLOWED EMAIL ADDRESSES DAALEIN ---
+        // Jinko access dena hai, unke Google account emails yahan daalein.
         const allowedEmails = [
-            'user1@example.com', 
-            'user2@example.com',
-            'anotheruser@gmail.com'
+            '2023.hardeep@gmail.com', 
+            'officialdjharshad1993@gmail.com'
         ];
 
-        // --- PASTE YOUR GOOGLE SHEET CSV LINK HERE ---
+        // --- APNI GOOGLE SHEET CSV LINK YAHAN PASTE KAREIN ---
         const googleSheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSqINNmQ6CtGixfyo5goqhTKfVwIMGjQi_5MIc4FtTx053jXO2QftjgUt26XLQXE8Ld7kt7VEPK4TJO/pub?output=csv';
 
         // --- GLOBAL VARIABLES ---
@@ -584,15 +596,19 @@
 
         // Initialize Firebase
         let auth;
-        try {
-            const app = initializeApp(window.firebaseConfig);
-            auth = getAuth(app);
-        } catch (error) {
-            console.error("Firebase initialization failed:", error);
-            authError.textContent = 'Configuration error. Please contact admin.';
-            authError.classList.remove('hidden');
+        if (window.firebaseConfig && window.firebaseConfig.apiKey !== "DUMMY_KEY_FOR_TESTING") {
+            try {
+                const app = initializeApp(window.firebaseConfig);
+                auth = getAuth(app);
+            } catch (error) {
+                console.error("Firebase initialization failed:", error);
+                authError.textContent = 'Configuration error. Please contact admin.';
+                authError.classList.remove('hidden');
+            }
+        } else if (!IS_LOCAL_TESTING) {
+             console.error("Asli Firebase config nahi mili aur local testing band hai.");
         }
-        
+
         const provider = new GoogleAuthProvider();
 
         // --- AUTH FUNCTIONS ---
@@ -600,7 +616,7 @@
             if (auth) {
                 signInWithRedirect(auth, provider);
             } else {
-                 authError.textContent = 'Authentication service is not ready.';
+                 authError.textContent = 'Authentication service is not ready. Login only works on the live site.';
                  authError.classList.remove('hidden');
             }
         };
