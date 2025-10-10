@@ -185,7 +185,7 @@
         @keyframes move-train { 0% { left: -12px; } 100% { left: calc(100% - 12px); } }
 
         .ticket-card { position: relative; transition: transform 0.3s, box-shadow 0.3s; }
-        .ticket-card:hover { 
+        .ticket-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 15px 30px rgba(0,0,0,0.2);
         }
@@ -252,11 +252,27 @@
             transform: translateY(0);
         }
 
+        /* --- COLLAPSIBLE CARD STYLES --- */
+        .collapsible-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-in-out;
+        }
+        .chevron-icon {
+            transition: transform 0.3s ease-in-out;
+        }
+        .collapsible-trigger.active .chevron-icon {
+            transform: rotate(180deg);
+        }
+
         @media (max-width: 640px) {
             .countdown-item {
                 width: 70px; height: 70px;
             }
             #countdown-timer { gap: 0.5rem; }
+            .ticket-card::before, .ticket-card::after {
+                width: 30px; height: 30px;
+            }
         }
     </style>
 </head>
@@ -562,6 +578,35 @@
             datesContainer.innerHTML = `<p class="text-center theme-text-secondary p-10">Please select a year and date to see booking details.</p>`;
         }
 
+        function attachCollapsibleListeners() {
+            const triggers = document.querySelectorAll('.collapsible-trigger');
+
+            triggers.forEach(trigger => {
+                trigger.addEventListener('click', function() {
+                    const content = this.nextElementSibling;
+                    const isActive = this.classList.contains('active');
+
+                    // Close all other cards first
+                    triggers.forEach(otherTrigger => {
+                        if (otherTrigger !== this) {
+                            otherTrigger.classList.remove('active');
+                            otherTrigger.nextElementSibling.style.maxHeight = null;
+                        }
+                    });
+
+                    // Toggle the clicked card
+                    if (isActive) {
+                        this.classList.remove('active');
+                        content.style.maxHeight = null;
+                    } else {
+                        this.classList.add('active');
+                        content.style.maxHeight = content.scrollHeight + "px";
+                    }
+                });
+            });
+        }
+
+
         function renderCards(year, dateMonth) {
             const bookings = groupedData[year]?.[dateMonth];
             if (!bookings) {
@@ -572,9 +617,9 @@
             let detailsHtml = '';
             bookings.forEach(item => {
                 if (item.type === 'stay') {
-                     detailsHtml += createStayCard(item);
+                         detailsHtml += createStayCard(item);
                 } else if (item.type === 'travel') {
-                     detailsHtml += createTravelCard(item);
+                         detailsHtml += createTravelCard(item);
                 }
             });
             datesContainer.innerHTML = detailsHtml;
@@ -590,6 +635,7 @@
             // --- END OF NEW LOGIC ---
 
             attachModalListeners();
+            attachCollapsibleListeners();
         }
 
         function createStayCard(stay) {
@@ -612,62 +658,65 @@
 
             return `
                 <div class="glass-card overflow-hidden ticket-card card-item">
-                    <div class="p-4 text-center relative ${statusColors.header}">
-                        <h2 class="text-xl font-bold text-white uppercase flex items-center justify-center gap-2">
+                    <div class="p-4 text-center relative ${statusColors.header} collapsible-trigger cursor-pointer">
+                        <h2 class="text-lg sm:text-xl font-bold text-white uppercase flex items-center justify-center gap-2">
                             <i class="fas fa-bed"></i>
                             <span>Stay Information</span>
                         </h2>
-                        <div class="bg-white text-blue-800 text-sm font-semibold px-3 py-1.5 rounded-full flex items-center absolute top-4 right-4">
+                        <i class="fas fa-chevron-down chevron-icon absolute top-1/2 -translate-y-1/2 right-6 text-white"></i>
+                        <div class="bg-white text-blue-800 text-xs sm:text-sm font-semibold px-2 sm:px-3 py-1 sm:py-1.5 rounded-full flex items-center absolute top-4 left-6">
                             <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">${statusColors.icon}</svg>
                             <span>${stay.status.charAt(0).toUpperCase() + stay.status.slice(1)}</span>
                         </div>
                     </div>
-                    <div class="p-6">
-                        <div class="flex justify-between items-start -mt-2 mb-4">
-                            <div>
-                                <p class="text-sm theme-text-secondary">Hotel/Dharamshala/Guest House</p>
-                                <p class="font-semibold theme-text-primary">${stay.name}</p>
-                            </div>
-                            <div class="text-right">
-                                <p class="text-sm theme-text-secondary">Booking No.</p>
-                                <p class="font-mono font-bold theme-text-primary">${stay.booking_no_pnr}</p>
-                            </div>
-                        </div>
-                        <div class="flex flex-col sm:flex-row items-center justify-between text-center mt-8 space-y-4 sm:space-y-0">
-                            <div class="w-full sm:w-1/3">
-                                <p class="text-sm theme-text-secondary">Check In</p>
-                                <p class="font-bold theme-text-primary flex items-center justify-center gap-2 mt-1">
-                                    <i class="fas fa-calendar-days theme-text-secondary"></i><span>${stay.check_in_date}</span>
-                                </p>
-                                <p class="theme-text-secondary text-sm flex items-center justify-center gap-2">
-                                    <i class="fas fa-clock theme-text-secondary"></i><span>${stay.check_in_time}</span>
-                                </p>
-                            </div>
-                            <div class="w-full sm:w-1/3 flex justify-center">
-                                <div class="w-24 h-24 rounded-full flex flex-col items-center justify-center border-4" style="border-color: var(--accent-color); background-color: color-mix(in srgb, var(--accent-color) 15%, transparent);">
-                                    <p class="font-bold theme-accent-color text-2xl">${stay.duration_days}</p>
-                                    <p class="text-xs theme-accent-color">${stay.duration_hours}</p>
+                    <div class="collapsible-content">
+                        <div class="p-6">
+                            <div class="flex justify-between items-start -mt-2 mb-4">
+                                <div>
+                                    <p class="text-sm theme-text-secondary">Hotel/Dharamshala/Guest House</p>
+                                    <p class="font-semibold theme-text-primary">${stay.name}</p>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-sm theme-text-secondary">Booking No.</p>
+                                    <p class="font-mono font-bold theme-text-primary text-sm sm:text-base">${stay.booking_no_pnr}</p>
                                 </div>
                             </div>
-                            <div class="w-full sm:w-1/3">
-                                <p class="text-sm theme-text-secondary">Check Out</p>
-                                <p class="font-bold theme-text-primary flex items-center justify-center gap-2 mt-1">
-                                    <i class="fas fa-calendar-days theme-text-secondary"></i><span>${stay.check_out_date}</span>
-                                </p>
-                                <p class="theme-text-secondary text-sm flex items-center justify-center gap-2">
-                                    <i class="fas fa-clock theme-text-secondary"></i><span>${stay.check_out_time}</span>
-                                </p>
+                            <div class="flex flex-col sm:flex-row items-center justify-between text-center mt-8 space-y-4 sm:space-y-0">
+                                <div class="w-full sm:w-1/3">
+                                    <p class="text-sm theme-text-secondary">Check In</p>
+                                    <p class="font-bold theme-text-primary flex items-center justify-center gap-2 mt-1">
+                                        <i class="fas fa-calendar-days theme-text-secondary"></i><span>${stay.check_in_date}</span>
+                                    </p>
+                                    <p class="theme-text-secondary text-sm flex items-center justify-center gap-2">
+                                        <i class="fas fa-clock theme-text-secondary"></i><span>${stay.check_in_time}</span>
+                                    </p>
+                                </div>
+                                <div class="w-full sm:w-1/3 flex justify-center">
+                                    <div class="w-24 h-24 rounded-full flex flex-col items-center justify-center border-4" style="border-color: var(--accent-color); background-color: color-mix(in srgb, var(--accent-color) 15%, transparent);">
+                                        <p class="font-bold theme-accent-color text-2xl">${stay.duration_days}</p>
+                                        <p class="text-xs theme-accent-color">${stay.duration_hours}</p>
+                                    </div>
+                                </div>
+                                <div class="w-full sm:w-1/3">
+                                    <p class="text-sm theme-text-secondary">Check Out</p>
+                                    <p class="font-bold theme-text-primary flex items-center justify-center gap-2 mt-1">
+                                        <i class="fas fa-calendar-days theme-text-secondary"></i><span>${stay.check_out_date}</span>
+                                    </p>
+                                    <p class="theme-text-secondary text-sm flex items-center justify-center gap-2">
+                                        <i class="fas fa-clock theme-text-secondary"></i><span>${stay.check_out_time}</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="border-t pt-4 mt-8" style="border-color: var(--glass-border)">
+                                <div class="space-y-2">${guestHtml}</div>
                             </div>
                         </div>
-                        <div class="border-t pt-4 mt-8" style="border-color: var(--glass-border)">
-                            <div class="space-y-2">${guestHtml}</div>
+                        <div class="px-6 py-4" style="background:var(--input-bg)">
+                            <button data-ticket-url="${stay.pdf_link}" class="view-ticket-btn w-full bg-blue-600/80 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-700/80 transition duration-300 flex items-center justify-center ${!stay.pdf_link || stay.pdf_link === '#' ? 'opacity-50 cursor-not-allowed' : ''}">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                                View Booking PDF
+                            </button>
                         </div>
-                    </div>
-                    <div class="px-6 py-4" style="background:var(--input-bg)">
-                        <button data-ticket-url="${stay.pdf_link}" class="view-ticket-btn w-full bg-blue-600/80 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-700/80 transition duration-300 flex items-center justify-center ${!stay.pdf_link || stay.pdf_link === '#' ? 'opacity-50 cursor-not-allowed' : ''}">
-                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                            View Booking PDF
-                        </button>
                     </div>
                 </div>`;
         }
@@ -686,58 +735,61 @@
 
             return `
                 <div class="glass-card overflow-hidden ticket-card card-item">
-                    <div class="status-header p-4 text-center relative ${statusColors.header}">
-                         <h2 class="text-xl font-bold text-white uppercase flex items-center justify-center gap-2">
+                    <div class="status-header p-4 text-center relative ${statusColors.header} collapsible-trigger cursor-pointer">
+                         <h2 class="text-lg sm:text-xl font-bold text-white uppercase flex items-center justify-center gap-2">
                             <i class="fas fa-train-subway"></i>
                             <span>${travel.departure_city} to ${travel.arrival_city}</span>
                         </h2>
-                        <div class="status-chip text-sm font-semibold px-3 py-1.5 rounded-full flex items-center absolute top-4 right-4 ${statusColors.chip}">
+                        <i class="fas fa-chevron-down chevron-icon absolute top-1/2 -translate-y-1/2 right-6 text-white"></i>
+                        <div class="status-chip text-xs sm:text-sm font-semibold px-2 sm:px-3 py-1 sm:py-1.5 rounded-full flex items-center absolute top-4 left-6 ${statusColors.chip}">
                             <span class="status-icon w-4 h-4 mr-2"><svg fill="currentColor" viewBox="0 0 20 20">${statusColors.icon}</svg></span>
                             <span class="status-text">${statusColors.chipText || travel.status.charAt(0).toUpperCase() + travel.status.slice(1)}</span>
                         </div>
                     </div>
-                    <div class="p-6">
-                        <div class="flex justify-between items-start -mt-2 mb-4">
-                            <div>
-                                <p class="text-sm theme-text-secondary">Train</p>
-                                <p class="font-semibold theme-text-primary">${travel.name} (${travel.train_no})</p>
-                            </div>
-                            <div class="pnr-container text-right">
-                                <p class="text-sm theme-text-secondary">PNR</p><p class="font-mono font-bold theme-text-primary flex items-center justify-end gap-1.5"><i class="fas fa-ticket-alt theme-text-secondary"></i><span>${travel.booking_no_pnr}</span></p>
-                            </div>
-                        </div>
-                        <div class="flex flex-col sm:flex-row items-center justify-between text-center my-8 space-y-4 sm:space-y-0">
-                            <div class="w-full sm:w-1/3 flex flex-col items-center">
-                                <p class="text-sm theme-text-secondary mb-1">Departure</p>
-                                <svg class="w-8 h-8 theme-text-secondary mb-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955a1.5 1.5 0 012.122 0l8.954 8.955M2.25 12v10.5a1.5 1.5 0 001.5 1.5h16.5a1.5 1.5 0 001.5-1.5V12M10.5 21V15a1.5 1.5 0 011.5-1.5h0a1.5 1.5 0 011.5 1.5v6" /></svg>
-                                <p class="font-bold theme-text-primary text-lg">${travel.departure_city}</p>
-                                <p class="theme-text-secondary text-sm flex items-center gap-1.5 mt-1"><i class="fas fa-calendar-days fa-xs"></i><span>${travel.start_date}</span></p>
-                                <p class="theme-text-secondary text-sm flex items-center gap-1.5"><i class="fas fa-clock fa-xs"></i><span>${travel.start_time}</span></p>
-                            </div>
-                            <div class="w-full sm:w-1/3 px-2 train-container">
-                                <div class="train-track"><i class="fas fa-train fa-lg train" style="color: ${statusColors.train};"></i></div>
-                                <div class="status-duration-circle w-24 h-24 rounded-full flex flex-col items-center justify-center relative z-10 border-[6px] ${statusColors.durationCircle}">
-                                    <p class="status-duration-text font-bold text-lg ${statusColors.durationText}">${travel.duration_days}</p>
-                                    <p class="text-xs ${statusColors.durationText}">${travel.duration_hours}</p>
+                    <div class="collapsible-content">
+                        <div class="p-6">
+                            <div class="flex justify-between items-start -mt-2 mb-4">
+                                <div>
+                                    <p class="text-sm theme-text-secondary">Train</p>
+                                    <p class="font-semibold theme-text-primary">${travel.name} (${travel.train_no})</p>
+                                </div>
+                                <div class="pnr-container text-right">
+                                    <p class="text-sm theme-text-secondary">PNR</p><p class="font-mono font-bold theme-text-primary flex items-center justify-end gap-1.5 text-sm sm:text-base"><i class="fas fa-ticket-alt theme-text-secondary"></i><span>${travel.booking_no_pnr}</span></p>
                                 </div>
                             </div>
-                            <div class="w-full sm:w-1/3 flex flex-col items-center">
-                                <p class="text-sm theme-text-secondary mb-1">Arrival</p>
-                                <svg class="w-8 h-8 theme-text-secondary mb-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0012 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75z" /></svg>
-                                <p class="font-bold theme-text-primary text-lg">${travel.arrival_city}</p>
-                                <p class="theme-text-secondary text-sm flex items-center gap-1.5 mt-1"><i class="fas fa-calendar-days fa-xs"></i><span>${travel.end_date}</span></p>
-                                <p class="theme-text-secondary text-sm flex items-center gap-1.5"><i class="fas fa-clock fa-xs"></i><span>${travel.end_time}</span></p>
+                            <div class="flex flex-col sm:flex-row items-center justify-between text-center my-8 space-y-4 sm:space-y-0">
+                                <div class="w-full sm:w-1/3 flex flex-col items-center">
+                                    <p class="text-sm theme-text-secondary mb-1">Departure</p>
+                                    <svg class="w-8 h-8 theme-text-secondary mb-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955a1.5 1.5 0 012.122 0l8.954 8.955M2.25 12v10.5a1.5 1.5 0 001.5 1.5h16.5a1.5 1.5 0 001.5-1.5V12M10.5 21V15a1.5 1.5 0 011.5-1.5h0a1.5 1.5 0 011.5 1.5v6" /></svg>
+                                    <p class="font-bold theme-text-primary text-base sm:text-lg">${travel.departure_city}</p>
+                                    <p class="theme-text-secondary text-sm flex items-center gap-1.5 mt-1"><i class="fas fa-calendar-days fa-xs"></i><span>${travel.start_date}</span></p>
+                                    <p class="theme-text-secondary text-sm flex items-center gap-1.5"><i class="fas fa-clock fa-xs"></i><span>${travel.start_time}</span></p>
+                                </div>
+                                <div class="w-full sm:w-1/3 px-2 train-container">
+                                    <div class="train-track"><i class="fas fa-train fa-lg train" style="color: ${statusColors.train};"></i></div>
+                                    <div class="status-duration-circle w-24 h-24 rounded-full flex flex-col items-center justify-center relative z-10 border-[6px] ${statusColors.durationCircle}">
+                                        <p class="status-duration-text font-bold text-lg ${statusColors.durationText}">${travel.duration_days}</p>
+                                        <p class="text-xs ${statusColors.durationText}">${travel.duration_hours}</p>
+                                    </div>
+                                </div>
+                                <div class="w-full sm:w-1/3 flex flex-col items-center">
+                                    <p class="text-sm theme-text-secondary mb-1">Arrival</p>
+                                    <svg class="w-8 h-8 theme-text-secondary mb-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0012 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75z" /></svg>
+                                    <p class="font-bold theme-text-primary text-base sm:text-lg">${travel.arrival_city}</p>
+                                    <p class="theme-text-secondary text-sm flex items-center gap-1.5 mt-1"><i class="fas fa-calendar-days fa-xs"></i><span>${travel.end_date}</span></p>
+                                    <p class="theme-text-secondary text-sm flex items-center gap-1.5"><i class="fas fa-clock fa-xs"></i><span>${travel.end_time}</span></p>
+                                </div>
+                            </div>
+                            <div class="passenger-details-container border-t pt-4 space-y-2" style="border-color: var(--glass-border)">
+                                ${passengerHtml}
                             </div>
                         </div>
-                        <div class="passenger-details-container border-t pt-4 space-y-2" style="border-color: var(--glass-border)">
-                            ${passengerHtml}
+                        <div class="px-6 py-4" style="background:var(--input-bg)">
+                            <button data-ticket-url="${travel.pdf_link}" class="view-ticket-btn w-full ${travel.status === 'confirmed' ? 'bg-green-600/80 hover:bg-green-700/80' : 'bg-red-600/80 hover:bg-red-700/80'} text-white font-bold py-3 px-4 rounded-lg transition duration-300 flex items-center justify-center ${!travel.pdf_link || travel.pdf_link === '#' ? 'opacity-50 cursor-not-allowed' : ''}">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                                View Booking PDF
+                            </button>
                         </div>
-                    </div>
-                    <div class="px-6 py-4" style="background:var(--input-bg)">
-                        <button data-ticket-url="${travel.pdf_link}" class="view-ticket-btn w-full ${travel.status === 'confirmed' ? 'bg-green-600/80 hover:bg-green-700/80' : 'bg-red-600/80 hover:bg-red-700/80'} text-white font-bold py-3 px-4 rounded-lg transition duration-300 flex items-center justify-center ${!travel.pdf_link || travel.pdf_link === '#' ? 'opacity-50 cursor-not-allowed' : ''}">
-                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                            View Booking PDF
-                        </button>
                     </div>
                 </div>`;
         }
@@ -838,7 +890,7 @@
         };
 
         const updateButtonState = (button) => {
-            const originalHTML = button.innerHTML; 
+            const originalHTML = button.innerHTML;
             button.disabled = true;
             button.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 theme-text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>`;
 
@@ -1091,3 +1143,4 @@
     </script>
 </body>
 </html>
+
