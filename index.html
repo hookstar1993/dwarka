@@ -539,11 +539,43 @@
         const dateMonthFilter = document.getElementById('date-month-filter');
 
         const cardColors = {
-            'confirmed': { header: 'bg-green-600', chip: 'bg-white text-green-800', train: '#16a34a', durationCircle: 'bg-green-50 border-green-200', durationText: 'text-green-800', icon: '<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>' },
-            'pending': { header: 'bg-yellow-500', chip: 'bg-white text-yellow-800', train: '#f59e0b', durationCircle: 'bg-yellow-50 border-yellow-200', durationText: 'text-yellow-800', icon: '<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path>' },
-            'not-booked': { header: 'bg-red-500', chip: 'bg-white text-red-800', train: '#ef4444', durationCircle: 'bg-red-50 border-red-200', durationText: 'text-red-800', icon: '<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>' },
-            'no-stay': { header: 'bg-blue-600', chip: 'bg-white text-blue-800', icon: '<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>' }
+            travel: {
+                'confirmed': { header: 'bg-emerald-600', chip: 'bg-white text-emerald-800', train: '#059669', durationCircle: 'bg-emerald-50 border-emerald-200', durationText: 'text-emerald-800', icon: '<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>' },
+                'pending': { header: 'bg-amber-500', chip: 'bg-white text-amber-800', train: '#d97706', durationCircle: 'bg-amber-50 border-amber-200', durationText: 'text-amber-800', icon: '<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path>' },
+                'not-booked': { header: 'bg-red-600', chip: 'bg-white text-red-800', train: '#dc2626', durationCircle: 'bg-red-50 border-red-200', durationText: 'text-red-800', icon: '<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>' },
+                'no-stay': { header: 'bg-slate-600', chip: 'bg-white text-slate-800', icon: '<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>' }
+            },
+            stay: {
+                'confirmed': { header: 'bg-indigo-600', chip: 'bg-white text-indigo-800', icon: '<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>' },
+                'pending': { header: 'bg-orange-500', chip: 'bg-white text-orange-800', icon: '<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path>' },
+                'not-booked': { header: 'bg-rose-600', chip: 'bg-white text-rose-800', icon: '<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>' },
+                'no-stay': { header: 'bg-slate-600', chip: 'bg-white text-slate-800', icon: '<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>' }
+            }
         };
+
+        // --- Helper function to get Day Name ---
+        function getWeekdayName(dateStr) {
+            if (!dateStr) return '';
+            try {
+                // Handle DD/MM/YYYY or DD-MM-YYYY formats commonly used in India
+                const parts = dateStr.split(/[\/\-]/);
+                let dateObj;
+                if (parts.length === 3 && parts[2].length === 4) {
+                    // Assuming DD-MM-YYYY or DD/MM/YYYY
+                    dateObj = new Date(parts[2], parts[1] - 1, parts[0]);
+                } else {
+                    // Fallback to standard parser
+                    dateObj = new Date(dateStr);
+                }
+
+                if (isNaN(dateObj.getTime())) return '';
+
+                const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+                return days[dateObj.getDay()];
+            } catch (e) {
+                return '';
+            }
+        }
 
         function showWelcomePopup() {
             if (!welcomePopup) return;
@@ -654,20 +686,45 @@
                     </div>`;
             });
 
-            const statusColors = cardColors[stay.status] || cardColors['no-stay'];
+            // Use the 'stay' specific colors from cardColors
+            const statusColors = cardColors.stay[stay.status] || cardColors.stay['no-stay'];
+            const checkInDay = getWeekdayName(stay.check_in_date);
+            const checkOutDay = getWeekdayName(stay.check_out_date);
 
             return `
                 <div class="glass-card overflow-hidden ticket-card card-item">
                     <div class="p-4 text-center relative ${statusColors.header} collapsible-trigger cursor-pointer">
-                        <h2 class="text-lg sm:text-xl font-bold text-white uppercase flex items-center justify-center gap-2">
-                            <i class="fas fa-bed"></i>
-                            <span>Stay Information</span>
-                        </h2>
-                        <i class="fas fa-chevron-down chevron-icon absolute top-1/2 -translate-y-1/2 right-6 text-white"></i>
-                        <div class="bg-white text-blue-800 text-xs sm:text-sm font-semibold px-2 sm:px-3 py-1 sm:py-1.5 rounded-full flex items-center absolute top-4 left-6">
+                        
+                        <!-- Status Badge: Left Side (Vertically Centered) -->
+                        <div class="absolute top-1/2 -translate-y-1/2 left-4 sm:left-6 bg-white text-blue-800 text-xs sm:text-sm font-semibold px-2 sm:px-3 py-1 sm:py-1.5 rounded-full flex items-center shadow-sm z-20 ${statusColors.chip || ''}">
                             <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">${statusColors.icon}</svg>
                             <span>${stay.status.charAt(0).toUpperCase() + stay.status.slice(1)}</span>
                         </div>
+
+                        <!-- Content Container (Centered) -->
+                        <div class="flex flex-col items-center justify-center w-full px-8 sm:px-0">
+                             <!-- Title -->
+                             <h2 class="text-lg sm:text-xl font-bold text-white uppercase flex items-center justify-center gap-2 mb-1">
+                                <i class="fas fa-bed"></i>
+                                <span>Stay Information</span>
+                            </h2>
+                            
+                            <!-- Time/Date Row -->
+                            <div class="flex items-center justify-center gap-3 text-white w-full">
+                                <div class="flex flex-col items-end">
+                                    <span class="text-sm font-bold leading-tight">${stay.check_in_date}</span>
+                                    <span class="text-[10px] uppercase opacity-90 leading-tight">${checkInDay} • ${stay.check_in_time}</span>
+                                </div>
+                                <i class="fas fa-arrow-right text-xs opacity-75"></i>
+                                <div class="flex flex-col items-start">
+                                    <span class="text-sm font-bold leading-tight">${stay.check_out_date}</span>
+                                    <span class="text-[10px] uppercase opacity-90 leading-tight">${checkOutDay} • ${stay.check_out_time}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Chevron -->
+                        <i class="fas fa-chevron-down chevron-icon absolute top-1/2 -translate-y-1/2 right-4 sm:right-6 text-white z-10"></i>
                     </div>
                     <div class="collapsible-content">
                         <div class="p-6">
@@ -685,7 +742,7 @@
                                 <div class="w-full sm:w-1/3">
                                     <p class="text-sm theme-text-secondary">Check In</p>
                                     <p class="font-bold theme-text-primary flex items-center justify-center gap-2 mt-1">
-                                        <i class="fas fa-calendar-days theme-text-secondary"></i><span>${stay.check_in_date}</span>
+                                        <i class="fas fa-calendar-days theme-text-secondary"></i><span>${stay.check_in_date} <span class="text-xs opacity-75">(${checkInDay})</span></span>
                                     </p>
                                     <p class="theme-text-secondary text-sm flex items-center justify-center gap-2">
                                         <i class="fas fa-clock theme-text-secondary"></i><span>${stay.check_in_time}</span>
@@ -700,7 +757,7 @@
                                 <div class="w-full sm:w-1/3">
                                     <p class="text-sm theme-text-secondary">Check Out</p>
                                     <p class="font-bold theme-text-primary flex items-center justify-center gap-2 mt-1">
-                                        <i class="fas fa-calendar-days theme-text-secondary"></i><span>${stay.check_out_date}</span>
+                                        <i class="fas fa-calendar-days theme-text-secondary"></i><span>${stay.check_out_date} <span class="text-xs opacity-75">(${checkOutDay})</span></span>
                                     </p>
                                     <p class="theme-text-secondary text-sm flex items-center justify-center gap-2">
                                         <i class="fas fa-clock theme-text-secondary"></i><span>${stay.check_out_time}</span>
@@ -731,20 +788,45 @@
                  passengerHtml = `<div class="text-center"><p class="theme-text-secondary">You have not booked a ticket for this journey.</p></div>`;
             }
 
-            const statusColors = cardColors[travel.status] || cardColors['not-booked'];
+            // Use the 'travel' specific colors from cardColors
+            const statusColors = cardColors.travel[travel.status] || cardColors.travel['not-booked'];
+            const startDay = getWeekdayName(travel.start_date);
+            const endDay = getWeekdayName(travel.end_date);
 
             return `
                 <div class="glass-card overflow-hidden ticket-card card-item">
                     <div class="status-header p-4 text-center relative ${statusColors.header} collapsible-trigger cursor-pointer">
-                         <h2 class="text-lg sm:text-xl font-bold text-white uppercase flex items-center justify-center gap-2">
-                            <i class="fas fa-train-subway"></i>
-                            <span>${travel.departure_city} to ${travel.arrival_city}</span>
-                        </h2>
-                        <i class="fas fa-chevron-down chevron-icon absolute top-1/2 -translate-y-1/2 right-6 text-white"></i>
-                        <div class="status-chip text-xs sm:text-sm font-semibold px-2 sm:px-3 py-1 sm:py-1.5 rounded-full flex items-center absolute top-4 left-6 ${statusColors.chip}">
+                        
+                        <!-- Status Badge: Left Side (Vertically Centered) -->
+                        <div class="absolute top-1/2 -translate-y-1/2 left-4 sm:left-6 bg-white text-blue-800 text-xs sm:text-sm font-semibold px-2 sm:px-3 py-1 sm:py-1.5 rounded-full flex items-center shadow-sm z-20 ${statusColors.chip}">
                             <span class="status-icon w-4 h-4 mr-2"><svg fill="currentColor" viewBox="0 0 20 20">${statusColors.icon}</svg></span>
                             <span class="status-text">${statusColors.chipText || travel.status.charAt(0).toUpperCase() + travel.status.slice(1)}</span>
                         </div>
+
+                        <!-- Content Container (Centered) -->
+                        <div class="flex flex-col items-center justify-center w-full px-8 sm:px-0">
+                            <!-- Title -->
+                            <h2 class="text-lg sm:text-xl font-bold text-white uppercase flex items-center justify-center gap-2 mb-1">
+                                <i class="fas fa-train-subway"></i>
+                                <span>${travel.departure_city} to ${travel.arrival_city}</span>
+                            </h2>
+                            
+                            <!-- Time/Date Row -->
+                            <div class="flex items-center justify-center gap-3 text-white w-full">
+                                <div class="flex flex-col items-end">
+                                    <span class="text-sm font-bold leading-tight">${travel.start_date}</span>
+                                    <span class="text-[10px] uppercase opacity-90 leading-tight">${startDay} • ${travel.start_time}</span>
+                                </div>
+                                <i class="fas fa-arrow-right text-xs opacity-75"></i>
+                                <div class="flex flex-col items-start">
+                                    <span class="text-sm font-bold leading-tight">${travel.end_date}</span>
+                                    <span class="text-[10px] uppercase opacity-90 leading-tight">${endDay} • ${travel.end_time}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Chevron -->
+                        <i class="fas fa-chevron-down chevron-icon absolute top-1/2 -translate-y-1/2 right-4 sm:right-6 text-white z-10"></i>
                     </div>
                     <div class="collapsible-content">
                         <div class="p-6">
@@ -762,7 +844,7 @@
                                     <p class="text-sm theme-text-secondary mb-1">Departure</p>
                                     <svg class="w-8 h-8 theme-text-secondary mb-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955a1.5 1.5 0 012.122 0l8.954 8.955M2.25 12v10.5a1.5 1.5 0 001.5 1.5h16.5a1.5 1.5 0 001.5-1.5V12M10.5 21V15a1.5 1.5 0 011.5-1.5h0a1.5 1.5 0 011.5 1.5v6" /></svg>
                                     <p class="font-bold theme-text-primary text-base sm:text-lg">${travel.departure_city}</p>
-                                    <p class="theme-text-secondary text-sm flex items-center gap-1.5 mt-1"><i class="fas fa-calendar-days fa-xs"></i><span>${travel.start_date}</span></p>
+                                    <p class="theme-text-secondary text-sm flex items-center gap-1.5 mt-1"><i class="fas fa-calendar-days fa-xs"></i><span>${travel.start_date} <span class="text-xs opacity-75">(${startDay})</span></span></p>
                                     <p class="theme-text-secondary text-sm flex items-center gap-1.5"><i class="fas fa-clock fa-xs"></i><span>${travel.start_time}</span></p>
                                 </div>
                                 <div class="w-full sm:w-1/3 px-2 train-container">
@@ -776,7 +858,7 @@
                                     <p class="text-sm theme-text-secondary mb-1">Arrival</p>
                                     <svg class="w-8 h-8 theme-text-secondary mb-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0012 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75z" /></svg>
                                     <p class="font-bold theme-text-primary text-base sm:text-lg">${travel.arrival_city}</p>
-                                    <p class="theme-text-secondary text-sm flex items-center gap-1.5 mt-1"><i class="fas fa-calendar-days fa-xs"></i><span>${travel.end_date}</span></p>
+                                    <p class="theme-text-secondary text-sm flex items-center gap-1.5 mt-1"><i class="fas fa-calendar-days fa-xs"></i><span>${travel.end_date} <span class="text-xs opacity-75">(${endDay})</span></span></p>
                                     <p class="theme-text-secondary text-sm flex items-center gap-1.5"><i class="fas fa-clock fa-xs"></i><span>${travel.end_time}</span></p>
                                 </div>
                             </div>
@@ -1116,7 +1198,12 @@
                     dateMonths.forEach(dm => {
                         const option = document.createElement('option');
                         option.value = dm;
-                        option.textContent = dm;
+                        
+                        // Calculate day for dropdown option
+                        const fullDateString = `${dm} ${selectedYear}`;
+                        const dayName = getWeekdayName(fullDateString);
+                        option.textContent = dayName ? `${dm} (${dayName})` : dm;
+                        
                         dateMonthFilter.appendChild(option);
                     });
                 } else {
@@ -1143,4 +1230,3 @@
     </script>
 </body>
 </html>
-
