@@ -396,6 +396,14 @@
                 </ul>
                 <h3 class="text-2xl font-bold theme-accent-color mt-6">About the Organizers</h3>
                 <p>The journey is organized by <span class="font-semibold theme-text-primary">Hardeep Savani</span> from Surat, Gujarat. With a deep reverence for our spiritual heritage and a passion for community, Hardeep is committed to guiding everyone on a blessed and memorable pilgrimage.</p>
+
+                <h3 class="text-2xl font-bold theme-accent-color mt-6">New Features & Updates</h3>
+                <ul class="list-disc list-inside space-y-2">
+                    <li><span class="font-semibold theme-text-primary">Live Train Status:</span> Click on the Train Name to see live running status instantly.</li>
+                    <li><span class="font-semibold theme-text-primary">Smart PNR:</span> Click on PNR Number to check status or use the copy button.</li>
+                    <li><span class="font-semibold theme-text-primary">Location Map:</span> Added "View on Google Maps" link for Hotels & Dharamshalas.</li>
+                    <li><span class="font-semibold theme-text-primary">Better Interface:</span> Added Day names (e.g., Monday) and distinct colors for Travel vs Stay cards.</li>
+                </ul>
             </div>
         </div>
     </div>
@@ -577,6 +585,38 @@
             }
         }
 
+        // New helper for direct text copying
+        window.copyText = function(text) {
+            if (!text) return;
+            
+            // Create a temporary textarea element
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            
+            // Ensure it's not visible but part of the DOM
+            textArea.style.position = "fixed";
+            textArea.style.left = "-9999px";
+            textArea.style.top = "0";
+            document.body.appendChild(textArea);
+            
+            textArea.focus();
+            textArea.select();
+            
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    showToast(`Copied: ${text}`);
+                } else {
+                    showToast('Failed to copy', 'error');
+                }
+            } catch (err) {
+                console.error('Fallback: Oops, unable to copy', err);
+                showToast('Failed to copy', 'error');
+            }
+            
+            document.body.removeChild(textArea);
+        };
+
         function showWelcomePopup() {
             if (!welcomePopup) return;
 
@@ -647,13 +687,25 @@
             }
 
             let detailsHtml = '';
+            // Track if we found an expense link across any of the bookings for this date
+            let foundExpenseLink = null;
+
             bookings.forEach(item => {
                 if (item.type === 'stay') {
                          detailsHtml += createStayCard(item);
                 } else if (item.type === 'travel') {
                          detailsHtml += createTravelCard(item);
                 }
+                
+                // Check for expense link in this row
+                if (item.expenses_pdf_link && item.expenses_pdf_link.trim() !== '' && item.expenses_pdf_link.trim() !== '#') {
+                    foundExpenseLink = item.expenses_pdf_link;
+                }
             });
+
+            // --- Add Expenses Section ---
+            detailsHtml += createExpenseCard(foundExpenseLink);
+
             datesContainer.innerHTML = detailsHtml;
 
             // --- NEW ANIMATION LOGIC ---
@@ -668,6 +720,40 @@
 
             attachModalListeners();
             attachCollapsibleListeners();
+        }
+
+        function createExpenseCard(link) {
+            const hasLink = link && link !== '#';
+            const buttonClass = hasLink 
+                ? 'bg-purple-600/90 hover:bg-purple-700/90 text-white shadow-lg hover:shadow-purple-500/30' 
+                : 'bg-gray-400/50 text-gray-200 cursor-not-allowed';
+            
+            const buttonText = hasLink ? 'View Expense Report' : 'No Expenses Available Right Now';
+            const buttonIcon = hasLink ? '<i class="fas fa-file-pdf mr-2"></i>' : '<i class="fas fa-ban mr-2"></i>';
+            const clickAttr = hasLink ? `data-ticket-url="${link}"` : 'disabled';
+
+            return `
+                <div class="glass-card overflow-hidden ticket-card card-item mt-8">
+                    <div class="p-4 text-center relative bg-slate-700 text-white collapsible-trigger cursor-pointer">
+                        <h2 class="text-lg sm:text-xl font-bold uppercase flex items-center justify-center gap-2">
+                            <i class="fas fa-file-invoice-dollar"></i>
+                            <span>Trip Expenses</span>
+                        </h2>
+                        <i class="fas fa-chevron-down chevron-icon absolute top-1/2 -translate-y-1/2 right-4 sm:right-6 text-white"></i>
+                    </div>
+                    <div class="collapsible-content">
+                        <div class="p-8 flex flex-col items-center justify-center" style="background:var(--input-bg)">
+                            <p class="theme-text-secondary mb-4 text-center text-sm">
+                                ${hasLink ? 'Review the detailed breakdown of expenses for this journey.' : 'The expense report for this trip has not been uploaded yet.'}
+                            </p>
+                            <button ${clickAttr} class="view-ticket-btn w-full sm:w-auto px-8 py-3 rounded-xl font-bold transition-all duration-300 flex items-center justify-center ${buttonClass}">
+                                ${buttonIcon}
+                                ${buttonText}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
         }
 
         function createStayCard(stay) {
@@ -690,6 +776,11 @@
             const statusColors = cardColors.stay[stay.status] || cardColors.stay['no-stay'];
             const checkInDay = getWeekdayName(stay.check_in_date);
             const checkOutDay = getWeekdayName(stay.check_out_date);
+            
+            // Construct Google Maps Query
+            // We append 'Dwarka' to the search to ensure better accuracy since this is a Dwarka trip site
+            const mapQuery = encodeURIComponent(stay.name + " Dwarka");
+            const mapUrl = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
 
             return `
                 <div class="glass-card overflow-hidden ticket-card card-item">
@@ -731,7 +822,11 @@
                             <div class="flex justify-between items-start -mt-2 mb-4">
                                 <div>
                                     <p class="text-sm theme-text-secondary">Hotel/Dharamshala/Guest House</p>
-                                    <p class="font-semibold theme-text-primary">${stay.name}</p>
+                                    <p class="font-semibold theme-text-primary text-lg">${stay.name}</p>
+                                    ${stay.name ? `
+                                    <a href="${mapUrl}" target="_blank" class="inline-flex items-center text-xs font-bold text-blue-500 hover:text-blue-600 mt-1 transition-colors">
+                                        <i class="fas fa-map-marked-alt mr-1"></i> View on Google Maps
+                                    </a>` : ''}
                                 </div>
                                 <div class="text-right">
                                     <p class="text-sm theme-text-secondary">Booking No.</p>
@@ -793,17 +888,50 @@
             const startDay = getWeekdayName(travel.start_date);
             const endDay = getWeekdayName(travel.end_date);
 
+            // --- PNR Handling Logic (From previous step) ---
+            let pnrDisplayHtml = '';
+            if (travel.booking_no_pnr) {
+                const parts = travel.booking_no_pnr.toString().split(/[\/,]+/).map(s => s.trim());
+                const pnrItems = parts.map(part => {
+                    if (/^\d{10}$/.test(part)) {
+                        const link = `https://www.confirmtkt.com/pnr-status/${part}`;
+                        return `
+                            <div class="flex items-center justify-end gap-2">
+                                <a href="${link}" target="_blank" class="font-mono font-bold theme-text-primary hover:text-blue-500 transition-colors flex items-center gap-1" title="Check PNR Status">
+                                    <i class="fas fa-ticket-alt theme-text-secondary text-xs"></i> 
+                                    <span>${part}</span>
+                                    <i class="fas fa-external-link-alt text-[10px] opacity-70"></i>
+                                </a>
+                                <button onclick="copyText('${part}')" class="text-gray-400 hover:text-green-500 transition-colors p-1" title="Copy PNR">
+                                    <i class="far fa-copy text-xs"></i>
+                                </button>
+                            </div>
+                        `;
+                    } else {
+                        return `<div class="font-mono font-bold theme-text-primary text-sm sm:text-base text-right">${part}</div>`;
+                    }
+                });
+                pnrDisplayHtml = pnrItems.join('');
+            } else {
+                pnrDisplayHtml = `<span class="theme-text-secondary">-</span>`;
+            }
+
+            // --- NEW: Live Train Status Link Logic ---
+            // Extract number from string if needed, or use train_no directly
+            const trainNumber = travel.train_no; 
+            const liveStatusLink = `https://www.confirmtkt.com/train-running-status/${trainNumber}`;
+
             return `
                 <div class="glass-card overflow-hidden ticket-card card-item">
                     <div class="status-header p-4 text-center relative ${statusColors.header} collapsible-trigger cursor-pointer">
                         
-                        <!-- Status Badge: Left Side (Vertically Centered) -->
+                        <!-- Status Badge -->
                         <div class="absolute top-1/2 -translate-y-1/2 left-4 sm:left-6 bg-white text-blue-800 text-xs sm:text-sm font-semibold px-2 sm:px-3 py-1 sm:py-1.5 rounded-full flex items-center shadow-sm z-20 ${statusColors.chip}">
                             <span class="status-icon w-4 h-4 mr-2"><svg fill="currentColor" viewBox="0 0 20 20">${statusColors.icon}</svg></span>
                             <span class="status-text">${statusColors.chipText || travel.status.charAt(0).toUpperCase() + travel.status.slice(1)}</span>
                         </div>
 
-                        <!-- Content Container (Centered) -->
+                        <!-- Content Container -->
                         <div class="flex flex-col items-center justify-center w-full px-8 sm:px-0">
                             <!-- Title -->
                             <h2 class="text-lg sm:text-xl font-bold text-white uppercase flex items-center justify-center gap-2 mb-1">
@@ -833,10 +961,16 @@
                             <div class="flex justify-between items-start -mt-2 mb-4">
                                 <div>
                                     <p class="text-sm theme-text-secondary">Train</p>
-                                    <p class="font-semibold theme-text-primary">${travel.name} (${travel.train_no})</p>
+                                    <!-- UPDATED LINK HERE -->
+                                    <a href="${liveStatusLink}" target="_blank" class="font-semibold theme-text-primary hover:text-blue-600 transition-colors flex items-center gap-1 group">
+                                        ${travel.name} (${travel.train_no})
+                                        <i class="fas fa-satellite-dish text-xs text-green-500 animate-pulse" title="Live Status"></i>
+                                        <span class="text-xs text-blue-500 opacity-0 group-hover:opacity-100 transition-opacity">Check Status</span>
+                                    </a>
                                 </div>
-                                <div class="pnr-container text-right">
-                                    <p class="text-sm theme-text-secondary">PNR</p><p class="font-mono font-bold theme-text-primary flex items-center justify-end gap-1.5 text-sm sm:text-base"><i class="fas fa-ticket-alt theme-text-secondary"></i><span>${travel.booking_no_pnr}</span></p>
+                                <div class="pnr-container text-right flex flex-col items-end">
+                                    <p class="text-sm theme-text-secondary mb-1">PNR</p>
+                                    ${pnrDisplayHtml}
                                 </div>
                             </div>
                             <div class="flex flex-col sm:flex-row items-center justify-between text-center my-8 space-y-4 sm:space-y-0">
@@ -984,10 +1118,33 @@
 
         window.copyToClipboard = function(elementId, button) {
             const textToCopy = document.getElementById(elementId).innerText;
-            navigator.clipboard.writeText(textToCopy).then(() => {
-                showToast('Copied to clipboard!');
-                updateButtonState(button);
-            }).catch(err => console.error('Failed to copy', err));
+            
+            // Create a temporary textarea element
+            const textArea = document.createElement("textarea");
+            textArea.value = textToCopy;
+            
+            // Ensure it's not visible but part of the DOM
+            textArea.style.position = "fixed";
+            textArea.style.left = "-9999px";
+            textArea.style.top = "0";
+            document.body.appendChild(textArea);
+            
+            textArea.focus();
+            textArea.select();
+            
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    showToast('Copied to clipboard!');
+                    updateButtonState(button);
+                } else {
+                    console.error('Fallback: Oops, unable to copy');
+                }
+            } catch (err) {
+                console.error('Fallback: Oops, unable to copy', err);
+            }
+            
+            document.body.removeChild(textArea);
         };
 
         const populateTimings = () => {
