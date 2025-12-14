@@ -802,13 +802,25 @@
                  // Check if tripDate is today or future
                  if (tripDate >= now) {
                      const potentialYear = date.year.toString();
-                     const potentialDateMonth = `${date.day} ${date.month}`; // Matches CSV "Date Month" format
+                     
+                     // Try both "9 August" and "09 August" format to be safe
+                     const dayStr = date.day.toString();
+                     const paddedDayStr = dayStr.padStart(2, '0');
+                     
+                     const potentialDateMonth1 = `${dayStr} ${date.month}`; 
+                     const potentialDateMonth2 = `${paddedDayStr} ${date.month}`;
 
                      // CRITICAL CHECK: Do we actually have data for this date in the CSV?
-                     if (groupedData[potentialYear] && groupedData[potentialYear][potentialDateMonth]) {
-                         targetYear = potentialYear;
-                         targetDateMonth = potentialDateMonth;
-                         break; // Found the immediate next valid trip
+                     if (groupedData[potentialYear]) {
+                         if (groupedData[potentialYear][potentialDateMonth1]) {
+                             targetYear = potentialYear;
+                             targetDateMonth = potentialDateMonth1;
+                             break;
+                         } else if (groupedData[potentialYear][potentialDateMonth2]) {
+                             targetYear = potentialYear;
+                             targetDateMonth = potentialDateMonth2;
+                             break;
+                         }
                      }
                  }
             }
