@@ -141,8 +141,19 @@
             transform: scale(0.95); opacity: 0;
             transition: transform 0.2s ease-out, opacity 0.2s ease-out;
         }
+        /* New responsive class for Places Modal */
+        .modal-content-places {
+            width: 95%; /* Mobile width */
+            max-width: 1100px; /* Desktop max width */
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: scale(0.95);
+            opacity: 0;
+            transition: transform 0.2s ease-out, opacity 0.2s ease-out;
+        }
         .modal-backdrop:not(.hidden) .modal-content,
-        .modal-backdrop:not(.hidden) .modal-content-ticket {
+        .modal-backdrop:not(.hidden) .modal-content-ticket,
+        .modal-backdrop:not(.hidden) .modal-content-places {
             transform: scale(1); opacity: 1;
         }
         .modal-content { width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto; }
@@ -265,6 +276,14 @@
             transform: rotate(180deg);
         }
 
+        /* Places Modal Styles */
+        .place-card {
+            transition: all 0.3s ease;
+        }
+        .place-card:hover {
+            transform: translateY(-3px);
+        }
+
         @media (max-width: 640px) {
             .countdown-item {
                 width: 70px; height: 70px;
@@ -299,6 +318,10 @@
                 <div class="flex items-center space-x-2">
                     <div class="hidden md:flex items-center space-x-6">
                         <a href="#" id="home-link" class="theme-text-secondary hover:theme-text-primary font-medium transition-colors duration-300">Home</a>
+                        <!-- NEW NEARBY PLACES LINK -->
+                        <a href="#" id="places-link" class="theme-text-secondary hover:theme-text-primary font-medium transition-colors duration-300 flex items-center gap-1">
+                            <i class="fas fa-map-location-dot text-sm"></i> Nearby Places
+                        </a>
                         <a href="#" id="timing-link" class="theme-text-secondary hover:theme-text-primary font-medium transition-colors duration-300">Mandir Timing</a>
                         <a href="#" id="about-link" class="theme-text-secondary hover:theme-text-primary font-medium transition-colors duration-300">About Us</a>
                         <a href="#" id="contact-link" class="theme-text-secondary hover:theme-text-primary font-medium transition-colors duration-300">Contact</a>
@@ -316,6 +339,7 @@
             </nav>
             <div id="mobile-menu" class="hidden md:hidden px-6 pb-4 glass-card rounded-b-2xl -mt-2">
                  <a href="#" id="mobile-home-link" class="block py-2 text-center theme-text-secondary hover:theme-text-primary">Home</a>
+                 <a href="#" id="mobile-places-link" class="block py-2 text-center theme-text-secondary hover:theme-text-primary">Nearby Places</a>
                  <a href="#" id="mobile-timing-link" class="block py-2 text-center theme-text-secondary hover:theme-text-primary">Mandir Timing</a>
                  <a href="#" id="mobile-about-link" class="block py-2 text-center theme-text-secondary hover:theme-text-primary">About Us</a>
                  <a href="#" id="mobile-contact-link" class="block py-2 text-center theme-text-secondary hover:theme-text-primary">Contact</a>
@@ -381,6 +405,21 @@
         </div>
     </div>
 
+    <!-- Nearby Places Modal -->
+    <div id="places-modal" class="modal-backdrop hidden">
+        <div class="modal-content-places glass-card p-6 relative flex flex-col h-[90vh]">
+            <button id="close-places-modal" class="absolute top-4 right-4 theme-text-secondary hover:theme-text-primary transition-colors text-3xl z-50">&times;</button>
+            <h2 class="text-3xl font-bold theme-accent-color page-title mb-6 text-center">Nearby Places to Visit</h2>
+            
+            <div id="places-container" class="overflow-y-auto pr-2 space-y-4">
+                <!-- Places will be loaded here -->
+                <div class="text-center p-8">
+                    <p class="theme-text-secondary">Loading places...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- About Us Modal -->
     <div id="about-modal" class="modal-backdrop hidden">
         <div class="modal-content glass-card p-6 sm:p-8 relative flex flex-col">
@@ -399,10 +438,10 @@
 
                 <h3 class="text-2xl font-bold theme-accent-color mt-6">New Features & Updates</h3>
                 <ul class="list-disc list-inside space-y-2">
+                    <li><span class="font-semibold theme-text-primary">Nearby Places Guide:</span> Explore famous places around Dwarka with distance, timings, and map links.</li>
                     <li><span class="font-semibold theme-text-primary">Live Train Status:</span> Click on the Train Name to see live running status instantly.</li>
                     <li><span class="font-semibold theme-text-primary">Smart PNR:</span> Click on PNR Number to check status or use the copy button.</li>
                     <li><span class="font-semibold theme-text-primary">Location Map:</span> Added "View on Google Maps" link for Hotels & Dharamshalas.</li>
-                    <li><span class="font-semibold theme-text-primary">Better Interface:</span> Added Day names (e.g., Monday) and distinct colors for Travel vs Stay cards.</li>
                 </ul>
             </div>
         </div>
@@ -485,9 +524,10 @@
 
     <!-- Mandir Timing Modal -->
     <div id="timing-modal" class="modal-backdrop hidden">
-        <div class="modal-content glass-card p-6 sm:p-8 relative flex flex-col">
+        <!-- Updated max-width to 900px to fit side-by-side columns comfortably -->
+        <div class="modal-content glass-card p-6 sm:p-8 relative flex flex-col" style="max-width: 900px;">
             <button id="close-timing-modal" class="absolute top-4 right-4 theme-text-secondary hover:theme-text-primary transition-colors text-3xl">&times;</button>
-            <h2 class="text-3xl font-bold theme-accent-color page-title mb-4">Dwarkadhish Mandir Timings</h2>
+            <h2 class="text-3xl font-bold theme-accent-color page-title mb-4 text-center">Dwarkadhish Mandir & Dhwaja Timings</h2>
             <div id="timing-schedule" class="theme-text-secondary overflow-y-auto pr-4 space-y-2">
                 <!-- Timings will be injected here by JavaScript -->
             </div>
@@ -508,9 +548,98 @@
     <script>
         // --- PASTE YOUR GOOGLE SHEET CSV LINK HERE ---
         const googleSheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSqINNmQ6CtGixfyo5goqhTKfVwIMGjQi_5MIc4FtTx053jXO2QftjgUt26XLQXE8Ld7kt7VEPK4TJO/pub?output=csv';
+        // --- REPLACE THIS WITH YOUR SHEET 2 CSV LINK ---
+        const googleSheetUrlPlaces = 'https://docs.google.com/spreadsheets/d/e/YOUR_SHEET_2_ID/pub?gid=YOUR_GID&output=csv'; 
 
         // --- GLOBAL VARIABLES ---
         let groupedData = {};
+        // UPDATED PLACES DATA WITH DISTANCE FROM MANDIR AND RENTS
+        let placesData = [
+            {
+                place_name: "Gomti Ghat & Samudra Narayan",
+                distance: "0.5 km",
+                auto_fare: "Walking / ₹30 Auto",
+                timings: "6:00 AM - 8:00 PM",
+                map_link: "https://maps.app.goo.gl/qgEyPLjzRE2SNZ588",
+                address: "Gomti Ghat, Dwarka",
+                description: "Sacred ghats for holy dip and a beautiful temple dedicated to Samudra Dev at the confluence.",
+                image_url: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Samudra_Narayan_Temple%2C_Dwarka.jpg/640px-Samudra_Narayan_Temple%2C_Dwarka.jpg" 
+            },
+            {
+                place_name: "Bhadkeshwar Mahadev Mandir",
+                distance: "2 km",
+                auto_fare: "₹100 - ₹150 (Auto Round Trip)",
+                timings: "Open all day",
+                map_link: "https://maps.app.goo.gl/fMXMhXtg4bVP6QWZ6",
+                address: "Near Geeta Mandir, Dwarka",
+                description: "A serene Shiva temple on a hillock in the sea, offering breathtaking sunset views.",
+                image_url: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Samudra_Narayan_Temple%2C_Dwarka.jpg/640px-Samudra_Narayan_Temple%2C_Dwarka.jpg" 
+            },
+            {
+                place_name: "Rukmini Devi Mandir",
+                distance: "2.5 km",
+                auto_fare: "₹150 - ₹200 (Auto Round Trip)",
+                timings: "6:00 AM - 12:00 PM, 5:00 PM - 9:00 PM",
+                map_link: "https://maps.app.goo.gl/KuLpifHa69izgFJa9",
+                address: "Rukmini Devi Temple, Dwarka",
+                description: "Dedicated to Rukmini, Lord Krishna's chief queen. Known for its rich carvings and history.",
+                image_url: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Rukmini_Devi_Temple%2C_Dwarka.jpg/640px-Rukmini_Devi_Temple%2C_Dwarka.jpg" 
+            },
+            {
+                place_name: "Nageshwar Jyotirling",
+                distance: "17 km",
+                auto_fare: "₹700 - ₹900 (Auto Round Trip)",
+                timings: "6:00 AM - 12:30 PM, 5:00 PM - 9:30 PM",
+                map_link: "https://maps.app.goo.gl/xbQcvMzDo2saKZHz8",
+                address: "Daarukavanam, Gujarat 361335",
+                description: "One of the 12 Jyotirlingas of Lord Shiva. Features a giant statue of Lord Shiva.",
+                image_url: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Nageshwar_Jyotirlinga_Temple_Dwarka.jpg/640px-Nageshwar_Jyotirlinga_Temple_Dwarka.jpg" 
+            },
+            {
+                place_name: "Gopi Talav",
+                distance: "22 km",
+                auto_fare: "Part of Full Day Tour",
+                timings: "6:00 AM - 6:00 PM",
+                map_link: "https://maps.app.goo.gl/xggHDjCrRURNmz5s8",
+                address: "Gopi Talav, Dwarka",
+                description: "A sacred pond associated with the Gopis of Vrindavan and Lord Krishna's Raas Leela.",
+                image_url: "" 
+            },
+            {
+                place_name: "Shivrajpur Beach",
+                distance: "13 km",
+                auto_fare: "₹600 - ₹800 (Auto Round Trip)",
+                timings: "8:00 AM - 7:00 PM",
+                map_link: "https://maps.app.goo.gl/PCenDXDfC9QhvqAN7",
+                address: "Shivrajpur, Gujarat",
+                description: "Blue Flag certified pristine beach with white sand and clear water. Ideal for water sports.",
+                image_url: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Shivrajpur_Beach.jpg/640px-Shivrajpur_Beach.jpg" 
+            },
+            {
+                place_name: "Bet Dwarka (Okha Jetty)",
+                distance: "32 km",
+                auto_fare: "Taxi: ₹1200-₹1500 / Bus: ₹40",
+                timings: "Ferry runs 6:00 AM to 7:00 PM",
+                map_link: "https://maps.app.goo.gl/mLiwWCAyp1B3ewVu5",
+                address: "Bet Dwarka Island",
+                description: "The original residence of Lord Krishna. Requires a ferry ride from Okha port.",
+                image_url: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Dwarkadhish_Temple_Dwarka.jpg/640px-Dwarkadhish_Temple_Dwarka.jpg" 
+            },
+            {
+                place_name: "Dwarka Light House",
+                distance: "2 km",
+                auto_fare: "₹100 (Auto)",
+                timings: "4:00 PM - 6:00 PM",
+                map_link: "https://maps.app.goo.gl/VHXm2BuMHnY4eZdN8",
+                address: "Near Bhadkeshwar, Dwarka",
+                description: "Offers panoramic views of the Arabian Sea and the city. Best visited in the evening.",
+                image_url: "" 
+            }
+        ];
+        
+        // --- Dummy Data for Places (Will be replaced by sheet data if provided) ---
+        const dummyPlacesData = [];
+
         const poonamDates = [
             { year: 2025, month: 'August', day: 9 }, { year: 2025, month: 'September', day: 7 },
             { year: 2025, month: 'October', day: 7 }, { year: 2025, month: 'November', day: 5 },
@@ -541,6 +670,8 @@
         const contactModal = document.getElementById('contact-modal');
         const paymentModal = document.getElementById('payment-modal');
         const timingModal = document.getElementById('timing-modal');
+        const placesModal = document.getElementById('places-modal');
+        const placesContainer = document.getElementById('places-container');
         const contactForm = document.getElementById('contact-form');
         const successModal = document.getElementById('success-modal');
         const yearFilter = document.getElementById('year-filter');
@@ -565,43 +696,30 @@
         function getWeekdayName(dateStr) {
             if (!dateStr) return '';
             try {
-                // Handle DD/MM/YYYY or DD-MM-YYYY formats commonly used in India
                 const parts = dateStr.split(/[\/\-]/);
                 let dateObj;
                 if (parts.length === 3 && parts[2].length === 4) {
-                    // Assuming DD-MM-YYYY or DD/MM/YYYY
                     dateObj = new Date(parts[2], parts[1] - 1, parts[0]);
                 } else {
-                    // Fallback to standard parser
                     dateObj = new Date(dateStr);
                 }
-
                 if (isNaN(dateObj.getTime())) return '';
-
                 const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
                 return days[dateObj.getDay()];
-            } catch (e) {
-                return '';
-            }
+            } catch (e) { return ''; }
         }
 
-        // New helper for direct text copying
+        // Helper for direct text copying
         window.copyText = function(text) {
             if (!text) return;
-            
-            // Create a temporary textarea element
             const textArea = document.createElement("textarea");
             textArea.value = text;
-            
-            // Ensure it's not visible but part of the DOM
             textArea.style.position = "fixed";
             textArea.style.left = "-9999px";
             textArea.style.top = "0";
             document.body.appendChild(textArea);
-            
             textArea.focus();
             textArea.select();
-            
             try {
                 const successful = document.execCommand('copy');
                 if (successful) {
@@ -613,25 +731,20 @@
                 console.error('Fallback: Oops, unable to copy', err);
                 showToast('Failed to copy', 'error');
             }
-            
             document.body.removeChild(textArea);
         };
 
         function showWelcomePopup() {
             if (!welcomePopup) return;
-
             welcomePopup.style.display = 'flex';
             setTimeout(() => {
                 welcomePopup.classList.add('welcome-popup-visible');
                 welcomePopup.querySelector('.welcome-content').classList.add('welcome-content-visible');
             }, 10);
-
             setTimeout(() => {
                 welcomePopup.classList.remove('welcome-popup-visible');
                 welcomePopup.querySelector('.welcome-content').classList.remove('welcome-content-visible');
-                setTimeout(() => {
-                    welcomePopup.style.display = 'none';
-                }, 500);
+                setTimeout(() => { welcomePopup.style.display = 'none'; }, 500);
             }, 2000);
         }
 
@@ -644,29 +757,199 @@
                 option.textContent = year;
                 yearFilter.appendChild(option);
             });
-
             dateMonthFilter.innerHTML = '<option value="">-- First, Choose a Year --</option>';
             dateMonthFilter.disabled = true;
             datesContainer.innerHTML = `<p class="text-center theme-text-secondary p-10">Please select a year and date to see booking details.</p>`;
         }
 
+        // --- NEW: Function to Populate Date/Month Dropdown Independently ---
+        function populateDateMonthDropdown(selectedYear) {
+            dateMonthFilter.innerHTML = '<option value="">-- Select a Journey Date --</option>';
+            
+            if (selectedYear && groupedData[selectedYear]) {
+                dateMonthFilter.disabled = false;
+                const dateMonths = Object.keys(groupedData[selectedYear]);
+                dateMonths.forEach(dm => {
+                    const option = document.createElement('option');
+                    option.value = dm;
+                    
+                    const fullDateString = `${dm} ${selectedYear}`;
+                    const dayName = getWeekdayName(fullDateString);
+                    option.textContent = dayName ? `${dm} (${dayName})` : dm;
+                    
+                    dateMonthFilter.appendChild(option);
+                });
+            } else {
+                dateMonthFilter.innerHTML = '<option value="">-- First, Choose a Year --</option>';
+                dateMonthFilter.disabled = true;
+            }
+        }
+
+        // --- NEW: Auto Select Next Trip Function ---
+        function autoSelectNextTrip() {
+            const now = new Date();
+            // Reset time to start of day for accurate comparison
+            now.setHours(0,0,0,0);
+            
+            let targetYear = null;
+            let targetDateMonth = null;
+
+            // Find the next Poonam date from schedule that is >= today
+            for (const date of poonamDates) {
+                 const monthIndex = new Date(Date.parse(date.month +" 1, 2012")).getMonth();
+                 const tripDate = new Date(date.year, monthIndex, date.day);
+
+                 // Check if tripDate is today or future
+                 if (tripDate >= now) {
+                     const potentialYear = date.year.toString();
+                     const potentialDateMonth = `${date.day} ${date.month}`; // Matches CSV "Date Month" format
+
+                     // CRITICAL CHECK: Do we actually have data for this date in the CSV?
+                     if (groupedData[potentialYear] && groupedData[potentialYear][potentialDateMonth]) {
+                         targetYear = potentialYear;
+                         targetDateMonth = potentialDateMonth;
+                         break; // Found the immediate next valid trip
+                     }
+                 }
+            }
+
+            // If we found a valid upcoming trip with data, load it!
+            if (targetYear && targetDateMonth) {
+                // 1. Set Year Dropdown
+                yearFilter.value = targetYear;
+                
+                // 2. Populate Date Dropdown based on Year
+                populateDateMonthDropdown(targetYear);
+                
+                // 3. Set Date Dropdown
+                dateMonthFilter.value = targetDateMonth;
+                
+                // 4. Render the cards
+                renderCards(targetYear, targetDateMonth);
+            }
+        }
+
+        function startCountdown() {
+            const now = new Date();
+            let nextPoonamDate = null;
+
+            for (const date of poonamDates) {
+                const monthIndex = new Date(Date.parse(date.month +" 1, 2012")).getMonth();
+                const poonamDateTime = new Date(date.year, monthIndex, date.day);
+                if (poonamDateTime > now) {
+                    nextPoonamDate = poonamDateTime;
+                    break;
+                }
+            }
+
+            if (!nextPoonamDate) {
+                countdownContainer.innerHTML = `<h2 class="text-2xl text-center theme-accent-color">All scheduled journeys for this period are complete.</h2>`;
+                return;
+            }
+
+            const nextPoonamMonthYear = `${nextPoonamDate.toLocaleString('default', { month: 'long' })} ${nextPoonamDate.getFullYear()}`;
+            countdownContainer.innerHTML = `
+                <div class="text-center">
+                    <h2 class="text-3xl sm:text-4xl font-semibold theme-accent-color page-title">Next Journey Countdown: ${nextPoonamMonthYear}</h2>
+                    <div id="countdown-timer" class="flex flex-wrap justify-center gap-2 sm:gap-4 lg:gap-8 mt-4">
+                        <div class="countdown-item"><span id="days" class="text-4xl sm:text-6xl">00</span><p class="text-xs sm:text-sm">Days</p></div>
+                        <div class="countdown-item"><span id="hours" class="text-4xl sm:text-6xl">00</span><p class="text-xs sm:text-sm">Hours</p></div>
+                        <div class="countdown-item"><span id="minutes" class="text-4xl sm:text-6xl">00</span><p class="text-xs sm:text-sm">Minutes</p></div>
+                        <div class="countdown-item"><span id="seconds" class="text-4xl sm:text-6xl">00</span><p class="text-xs sm:text-sm">Seconds</p></div>
+                    </div>
+                </div>
+            `;
+
+            const daysEl = document.getElementById('days');
+            const hoursEl = document.getElementById('hours');
+            const minutesEl = document.getElementById('minutes');
+            const secondsEl = document.getElementById('seconds');
+
+            const timerInterval = setInterval(() => {
+                const now = new Date().getTime();
+                const distance = nextPoonamDate - now;
+
+                if (distance < 0) {
+                    clearInterval(timerInterval);
+                    startCountdown();
+                    return;
+                }
+
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                daysEl.textContent = String(days).padStart(2, '0');
+                hoursEl.textContent = String(hours).padStart(2, '0');
+                minutesEl.textContent = String(minutes).padStart(2, '0');
+                secondsEl.textContent = String(seconds).padStart(2, '0');
+
+            }, 1000);
+        }
+
+        const attachModalListeners = () => {
+            document.querySelectorAll('.view-ticket-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    const ticketUrl = button.dataset.ticketUrl;
+                    if (ticketUrl && ticketUrl.trim() !== '#' && ticketUrl !== 'undefined') {
+                        iframe.src = ticketUrl;
+                        downloadBtn.href = ticketUrl;
+                        const fileName = ticketUrl.substring(ticketUrl.lastIndexOf('/') + 1);
+                        downloadBtn.setAttribute('download', fileName);
+                        modal.classList.remove('hidden');
+                    } else {
+                        showToast('Document not available right now.', 'error');
+                    }
+                });
+            });
+        };
+
+        const closeModal = () => {
+            if(modal) modal.classList.add('hidden');
+            if(iframe) iframe.src = '';
+        };
+
+        const showToast = (message, type = 'success') => {
+            const toast = document.getElementById('toast-notification');
+            toast.textContent = message;
+            toast.style.background = type === 'error' ? 'var(--accent-color)' : '#28a745';
+            toast.style.color = 'white';
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        };
+
+        const updateButtonState = (button) => {
+            const originalHTML = button.innerHTML;
+            button.disabled = true;
+            button.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 theme-text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>`;
+
+            setTimeout(() => {
+                button.innerHTML = originalHTML;
+                button.disabled = false;
+            }, 2000);
+        };
+
+        window.copyToClipboard = function(elementId, button) {
+            const textToCopy = document.getElementById(elementId).innerText;
+            window.copyText(textToCopy);
+            updateButtonState(button);
+        };
+
         function attachCollapsibleListeners() {
             const triggers = document.querySelectorAll('.collapsible-trigger');
-
             triggers.forEach(trigger => {
                 trigger.addEventListener('click', function() {
                     const content = this.nextElementSibling;
                     const isActive = this.classList.contains('active');
-
-                    // Close all other cards first
                     triggers.forEach(otherTrigger => {
                         if (otherTrigger !== this) {
                             otherTrigger.classList.remove('active');
                             otherTrigger.nextElementSibling.style.maxHeight = null;
                         }
                     });
-
-                    // Toggle the clicked card
                     if (isActive) {
                         this.classList.remove('active');
                         content.style.maxHeight = null;
@@ -678,46 +961,29 @@
             });
         }
 
-
         function renderCards(year, dateMonth) {
             const bookings = groupedData[year]?.[dateMonth];
             if (!bookings) {
                 datesContainer.innerHTML = `<p class="text-center theme-text-secondary p-10">No bookings found for this date.</p>`;
                 return;
             }
-
             let detailsHtml = '';
-            // Track if we found an expense link across any of the bookings for this date
             let foundExpenseLink = null;
-
             bookings.forEach(item => {
-                if (item.type === 'stay') {
-                         detailsHtml += createStayCard(item);
-                } else if (item.type === 'travel') {
-                         detailsHtml += createTravelCard(item);
-                }
+                if (item.type === 'stay') detailsHtml += createStayCard(item);
+                else if (item.type === 'travel') detailsHtml += createTravelCard(item);
                 
-                // Check for expense link in this row
                 if (item.expenses_pdf_link && item.expenses_pdf_link.trim() !== '' && item.expenses_pdf_link.trim() !== '#') {
                     foundExpenseLink = item.expenses_pdf_link;
                 }
             });
-
-            // --- Add Expenses Section ---
             detailsHtml += createExpenseCard(foundExpenseLink);
-
             datesContainer.innerHTML = detailsHtml;
-
-            // --- NEW ANIMATION LOGIC ---
+            
             const cards = datesContainer.querySelectorAll('.card-item');
             cards.forEach((card, index) => {
-                // Use a timeout to apply the 'visible' class, creating a staggered animation
-                setTimeout(() => {
-                    card.classList.add('visible');
-                }, 100 * index); // 100ms delay between each card
+                setTimeout(() => { card.classList.add('visible'); }, 100 * index);
             });
-            // --- END OF NEW LOGIC ---
-
             attachModalListeners();
             attachCollapsibleListeners();
         }
@@ -727,7 +993,6 @@
             const buttonClass = hasLink 
                 ? 'bg-purple-600/90 hover:bg-purple-700/90 text-white shadow-lg hover:shadow-purple-500/30' 
                 : 'bg-gray-400/50 text-gray-200 cursor-not-allowed';
-            
             const buttonText = hasLink ? 'View Expense Report' : 'No Expenses Available Right Now';
             const buttonIcon = hasLink ? '<i class="fas fa-file-pdf mr-2"></i>' : '<i class="fas fa-ban mr-2"></i>';
             const clickAttr = hasLink ? `data-ticket-url="${link}"` : 'disabled';
@@ -771,50 +1036,36 @@
                         </div>
                     </div>`;
             });
-
-            // Use the 'stay' specific colors from cardColors
             const statusColors = cardColors.stay[stay.status] || cardColors.stay['no-stay'];
             const checkInDay = getWeekdayName(stay.check_in_date);
             const checkOutDay = getWeekdayName(stay.check_out_date);
-            
-            // Construct Google Maps Query
-            // We append 'Dwarka' to the search to ensure better accuracy since this is a Dwarka trip site
             const mapQuery = encodeURIComponent(stay.name + " Dwarka");
             const mapUrl = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
 
             return `
                 <div class="glass-card overflow-hidden ticket-card card-item">
-                    <div class="p-4 text-center relative ${statusColors.header} collapsible-trigger cursor-pointer">
-                        
-                        <!-- Status Badge: Left Side (Vertically Centered) -->
+                    <div class="p-4 text-center relative ${statusColors.header} collapsible-trigger cursor-pointer flex flex-col justify-center items-center">
+                        <div class="w-full flex justify-center items-center gap-2 mb-1">
+                            <h2 class="text-lg sm:text-xl font-bold text-white uppercase flex items-center justify-center gap-2">
+                                <i class="fas fa-bed"></i>
+                                <span>Stay Information</span>
+                            </h2>
+                        </div>
+                        <div class="flex items-center justify-center gap-3 text-white w-full">
+                            <div class="flex flex-col items-end">
+                                <span class="text-sm font-bold leading-tight">${stay.check_in_date}</span>
+                                <span class="text-[10px] uppercase opacity-90 leading-tight">${checkInDay} • ${stay.check_in_time}</span>
+                            </div>
+                            <i class="fas fa-arrow-right text-xs opacity-75"></i>
+                            <div class="flex flex-col items-start">
+                                <span class="text-sm font-bold leading-tight">${stay.check_out_date}</span>
+                                <span class="text-[10px] uppercase opacity-90 leading-tight">${checkOutDay} • ${stay.check_out_time}</span>
+                            </div>
+                        </div>
                         <div class="absolute top-1/2 -translate-y-1/2 left-4 sm:left-6 bg-white text-blue-800 text-xs sm:text-sm font-semibold px-2 sm:px-3 py-1 sm:py-1.5 rounded-full flex items-center shadow-sm z-20 ${statusColors.chip || ''}">
                             <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">${statusColors.icon}</svg>
                             <span>${stay.status.charAt(0).toUpperCase() + stay.status.slice(1)}</span>
                         </div>
-
-                        <!-- Content Container (Centered) -->
-                        <div class="flex flex-col items-center justify-center w-full px-8 sm:px-0">
-                             <!-- Title -->
-                             <h2 class="text-lg sm:text-xl font-bold text-white uppercase flex items-center justify-center gap-2 mb-1">
-                                <i class="fas fa-bed"></i>
-                                <span>Stay Information</span>
-                            </h2>
-                            
-                            <!-- Time/Date Row -->
-                            <div class="flex items-center justify-center gap-3 text-white w-full">
-                                <div class="flex flex-col items-end">
-                                    <span class="text-sm font-bold leading-tight">${stay.check_in_date}</span>
-                                    <span class="text-[10px] uppercase opacity-90 leading-tight">${checkInDay} • ${stay.check_in_time}</span>
-                                </div>
-                                <i class="fas fa-arrow-right text-xs opacity-75"></i>
-                                <div class="flex flex-col items-start">
-                                    <span class="text-sm font-bold leading-tight">${stay.check_out_date}</span>
-                                    <span class="text-[10px] uppercase opacity-90 leading-tight">${checkOutDay} • ${stay.check_out_time}</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Chevron -->
                         <i class="fas fa-chevron-down chevron-icon absolute top-1/2 -translate-y-1/2 right-4 sm:right-6 text-white z-10"></i>
                     </div>
                     <div class="collapsible-content">
@@ -882,13 +1133,9 @@
             } else if (travel.status === 'not-booked') {
                  passengerHtml = `<div class="text-center"><p class="theme-text-secondary">You have not booked a ticket for this journey.</p></div>`;
             }
-
-            // Use the 'travel' specific colors from cardColors
             const statusColors = cardColors.travel[travel.status] || cardColors.travel['not-booked'];
             const startDay = getWeekdayName(travel.start_date);
             const endDay = getWeekdayName(travel.end_date);
-
-            // --- PNR Handling Logic (From previous step) ---
             let pnrDisplayHtml = '';
             if (travel.booking_no_pnr) {
                 const parts = travel.booking_no_pnr.toString().split(/[\/,]+/).map(s => s.trim());
@@ -915,45 +1162,33 @@
             } else {
                 pnrDisplayHtml = `<span class="theme-text-secondary">-</span>`;
             }
-
-            // --- NEW: Live Train Status Link Logic ---
-            // Extract number from string if needed, or use train_no directly
             const trainNumber = travel.train_no; 
             const liveStatusLink = `https://www.confirmtkt.com/train-running-status/${trainNumber}`;
 
             return `
                 <div class="glass-card overflow-hidden ticket-card card-item">
-                    <div class="status-header p-4 text-center relative ${statusColors.header} collapsible-trigger cursor-pointer">
-                        
-                        <!-- Status Badge -->
+                    <div class="status-header p-4 text-center relative ${statusColors.header} collapsible-trigger cursor-pointer flex flex-col justify-center items-center">
+                        <div class="w-full flex justify-center items-center gap-2 mb-1">
+                            <h2 class="text-lg sm:text-xl font-bold text-white uppercase flex items-center justify-center gap-2">
+                                <i class="fas fa-train-subway"></i>
+                                <span>${travel.departure_city} to ${travel.arrival_city}</span>
+                            </h2>
+                        </div>
+                        <div class="flex items-center justify-center gap-3 text-white w-full">
+                            <div class="flex flex-col items-end">
+                                <span class="text-sm font-bold leading-tight">${travel.start_date}</span>
+                                <span class="text-[10px] uppercase opacity-90 leading-tight">${startDay} • ${travel.start_time}</span>
+                            </div>
+                            <i class="fas fa-arrow-right text-xs opacity-75"></i>
+                            <div class="flex flex-col items-start">
+                                <span class="text-sm font-bold leading-tight">${travel.end_date}</span>
+                                <span class="text-[10px] uppercase opacity-90 leading-tight">${endDay} • ${travel.end_time}</span>
+                            </div>
+                        </div>
                         <div class="absolute top-1/2 -translate-y-1/2 left-4 sm:left-6 bg-white text-blue-800 text-xs sm:text-sm font-semibold px-2 sm:px-3 py-1 sm:py-1.5 rounded-full flex items-center shadow-sm z-20 ${statusColors.chip}">
                             <span class="status-icon w-4 h-4 mr-2"><svg fill="currentColor" viewBox="0 0 20 20">${statusColors.icon}</svg></span>
                             <span class="status-text">${statusColors.chipText || travel.status.charAt(0).toUpperCase() + travel.status.slice(1)}</span>
                         </div>
-
-                        <!-- Content Container -->
-                        <div class="flex flex-col items-center justify-center w-full px-8 sm:px-0">
-                            <!-- Title -->
-                            <h2 class="text-lg sm:text-xl font-bold text-white uppercase flex items-center justify-center gap-2 mb-1">
-                                <i class="fas fa-train-subway"></i>
-                                <span>${travel.departure_city} to ${travel.arrival_city}</span>
-                            </h2>
-                            
-                            <!-- Time/Date Row -->
-                            <div class="flex items-center justify-center gap-3 text-white w-full">
-                                <div class="flex flex-col items-end">
-                                    <span class="text-sm font-bold leading-tight">${travel.start_date}</span>
-                                    <span class="text-[10px] uppercase opacity-90 leading-tight">${startDay} • ${travel.start_time}</span>
-                                </div>
-                                <i class="fas fa-arrow-right text-xs opacity-75"></i>
-                                <div class="flex flex-col items-start">
-                                    <span class="text-sm font-bold leading-tight">${travel.end_date}</span>
-                                    <span class="text-[10px] uppercase opacity-90 leading-tight">${endDay} • ${travel.end_time}</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Chevron -->
                         <i class="fas fa-chevron-down chevron-icon absolute top-1/2 -translate-y-1/2 right-4 sm:right-6 text-white z-10"></i>
                     </div>
                     <div class="collapsible-content">
@@ -961,7 +1196,6 @@
                             <div class="flex justify-between items-start -mt-2 mb-4">
                                 <div>
                                     <p class="text-sm theme-text-secondary">Train</p>
-                                    <!-- UPDATED LINK HERE -->
                                     <a href="${liveStatusLink}" target="_blank" class="font-semibold theme-text-primary hover:text-blue-600 transition-colors flex items-center gap-1 group">
                                         ${travel.name} (${travel.train_no})
                                         <i class="fas fa-satellite-dish text-xs text-green-500 animate-pulse" title="Live Status"></i>
@@ -1010,191 +1244,87 @@
                 </div>`;
         }
 
-        function startCountdown() {
-            const now = new Date();
-            let nextPoonamDate = null;
-
-            for (const date of poonamDates) {
-                const monthIndex = new Date(Date.parse(date.month +" 1, 2012")).getMonth();
-                const poonamDateTime = new Date(date.year, monthIndex, date.day);
-                if (poonamDateTime > now) {
-                    nextPoonamDate = poonamDateTime;
-                    break;
-                }
-            }
-
-            if (!nextPoonamDate) {
-                countdownContainer.innerHTML = `<h2 class="text-2xl text-center theme-accent-color">All scheduled journeys for this period are complete.</h2>`;
+        // --- NEW: Render Nearby Places Function ---
+        function renderPlaces() {
+            const dataToRender = placesData.length > 0 ? placesData : dummyPlacesData;
+            
+            if (dataToRender.length === 0) {
+                placesContainer.innerHTML = `<p class="text-center theme-text-secondary">No places information available at the moment.</p>`;
                 return;
             }
 
-            const nextPoonamMonthYear = `${nextPoonamDate.toLocaleString('default', { month: 'long' })} ${nextPoonamDate.getFullYear()}`;
-            countdownContainer.innerHTML = `
-                <div class="text-center">
-                    <h2 class="text-3xl sm:text-4xl font-semibold theme-accent-color page-title">Next Journey Countdown: ${nextPoonamMonthYear}</h2>
-                    <div id="countdown-timer" class="flex flex-wrap justify-center gap-2 sm:gap-4 lg:gap-8 mt-4">
-                        <div class="countdown-item"><span id="days" class="text-4xl sm:text-6xl">00</span><p class="text-xs sm:text-sm">Days</p></div>
-                        <div class="countdown-item"><span id="hours" class="text-4xl sm:text-6xl">00</span><p class="text-xs sm:text-sm">Hours</p></div>
-                        <div class="countdown-item"><span id="minutes" class="text-4xl sm:text-6xl">00</span><p class="text-xs sm:text-sm">Minutes</p></div>
-                        <div class="countdown-item"><span id="seconds" class="text-4xl sm:text-6xl">00</span><p class="text-xs sm:text-sm">Seconds</p></div>
-                    </div>
-                </div>
-            `;
-
-            const daysEl = document.getElementById('days');
-            const hoursEl = document.getElementById('hours');
-            const minutesEl = document.getElementById('minutes');
-            const secondsEl = document.getElementById('seconds');
-
-            const timerInterval = setInterval(() => {
-                const now = new Date().getTime();
-                const distance = nextPoonamDate - now;
-
-                if (distance < 0) {
-                    clearInterval(timerInterval);
-                    startCountdown();
-                    return;
-                }
-
-                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-                daysEl.textContent = String(days).padStart(2, '0');
-                hoursEl.textContent = String(hours).padStart(2, '0');
-                minutesEl.textContent = String(minutes).padStart(2, '0');
-                secondsEl.textContent = String(seconds).padStart(2, '0');
-
-            }, 1000);
-        }
-
-        const attachModalListeners = () => {
-            document.querySelectorAll('.view-ticket-btn').forEach(button => {
-                button.addEventListener('click', () => {
-                    const ticketUrl = button.dataset.ticketUrl;
-                    if (ticketUrl && ticketUrl.trim() !== '#') {
-                        iframe.src = ticketUrl;
-                        downloadBtn.href = ticketUrl;
-
-                        // --- NEW LOGIC TO SET FILENAME ---
-                        const fileName = ticketUrl.substring(ticketUrl.lastIndexOf('/') + 1);
-                        downloadBtn.setAttribute('download', fileName);
-
-                        modal.classList.remove('hidden');
-                    } else {
-                        showToast('Tickets not available right now, check back later.', 'error');
-                    }
-                });
-            });
-        };
-
-        const closeModal = () => {
-            if(modal) modal.classList.add('hidden');
-            if(iframe) iframe.src = '';
-        };
-
-        const showToast = (message, type = 'success') => {
-            const toast = document.getElementById('toast-notification');
-            toast.textContent = message;
-            toast.style.background = type === 'error' ? 'var(--accent-color)' : '#28a745';
-            toast.style.color = 'white';
-            toast.classList.add('show');
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3000);
-        };
-
-        const updateButtonState = (button) => {
-            const originalHTML = button.innerHTML;
-            button.disabled = true;
-            button.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 theme-text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>`;
-
-            setTimeout(() => {
-                button.innerHTML = originalHTML;
-                button.disabled = false;
-            }, 2000);
-        };
-
-        window.copyToClipboard = function(elementId, button) {
-            const textToCopy = document.getElementById(elementId).innerText;
+            let html = '<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">';
             
-            // Create a temporary textarea element
-            const textArea = document.createElement("textarea");
-            textArea.value = textToCopy;
-            
-            // Ensure it's not visible but part of the DOM
-            textArea.style.position = "fixed";
-            textArea.style.left = "-9999px";
-            textArea.style.top = "0";
-            document.body.appendChild(textArea);
-            
-            textArea.focus();
-            textArea.select();
-            
-            try {
-                const successful = document.execCommand('copy');
-                if (successful) {
-                    showToast('Copied to clipboard!');
-                    updateButtonState(button);
-                } else {
-                    console.error('Fallback: Oops, unable to copy');
-                }
-            } catch (err) {
-                console.error('Fallback: Oops, unable to copy', err);
-            }
-            
-            document.body.removeChild(textArea);
-        };
-
-        const populateTimings = () => {
-            const scheduleContainer = document.getElementById('timing-schedule');
-            const now = new Date();
-            const currentTime = now.getHours() + now.getMinutes() / 60;
-            let html = '';
-
-            const timings = [
-                { time: "6:30 AM", event: "Mangla Aarti", type: "open", start: 6.5, end: 8.0 },
-                { time: "8:00 AM - 9:00 AM", event: "Mangla Darshan", type: "open", start: 8.0, end: 9.0 },
-                { time: "9:00 AM - 9:30 AM", event: "Abhishek Pooja (Darshan Closed)", type: "closed", start: 9.0, end: 9.5 },
-                { time: "9:30 AM - 10:15 AM", event: "Shringar Darshan", type: "open", start: 9.5, end: 10.25 },
-                { time: "10:15 AM - 10:30 AM", event: "Shringar Bhog (Darshan Closed)", type: "closed", start: 10.25, end: 10.5 },
-                { time: "10:30 AM - 10:45 AM", event: "Shringar Aarti", type: "open", start: 10.5, end: 10.75 },
-                { time: "11:05 AM - 11:20 AM", event: "Gwal Bhog (Darshan Closed)", type: "closed", start: 11.08, end: 11.33 },
-                { time: "11:20 AM - 12:00 PM", event: "Darshan Open", type: "open", start: 11.33, end: 12.0 },
-                { time: "12:00 PM - 12:20 PM", event: "Rajbhog (Darshan Closed)", type: "closed", start: 12.0, end: 12.33 },
-                { time: "12:20 PM - 1:00 PM", event: "Darshan Open", type: "open", start: 12.33, end: 13.0 },
-                { time: "1:00 PM - 5:00 PM", event: "Anosar (Mandir Closed)", type: "closed", start: 13.0, end: 17.0 },
-                { time: "5:00 PM - 5:30 PM", event: "Uthapan Darshan", type: "open", start: 17.0, end: 17.5 },
-                { time: "5:45 PM - 6:00 PM", event: "Uthapan Bhog (Darshan Closed)", type: "closed", start: 17.75, end: 18.0 },
-                { time: "6:15 PM - 6:45 PM", event: "Darshan Open", type: "open", start: 18.25, end: 18.75 },
-                { time: "7:00 PM - 7:25 PM", event: "Sandhya Bhog (Darshan Closed)", type: "closed", start: 19.0, end: 19.42 },
-                { time: "7:25 PM - 7:45 PM", event: "Sandhya Aarti", type: "open", start: 19.42, end: 19.75 },
-                { time: "8:00 PM - 8:10 PM", event: "Shayan Bhog (Darshan Closed)", type: "closed", start: 20.0, end: 20.17 },
-                { time: "8:10 PM - 8:35 PM", event: "Shayan Darshan", type: "open", start: 20.17, end: 20.58 },
-                { time: "8:35 PM", event: "Shayan Aarti", type: "open", start: 20.58, end: 21.0 },
-                { time: "9:00 PM", event: "Mandir Closed", type: "closed", start: 21.0, end: 24.0 }
-            ];
-
-            timings.forEach(item => {
-                const isCurrent = currentTime >= item.start && currentTime < item.end;
-                const colorClass = item.type === 'open' ? 'text-green-400' : 'text-red-400';
-                const currentClass = isCurrent ? 'current-timing' : '';
+            dataToRender.forEach(place => {
+                const imgUrl = place.image_url && place.image_url.trim() !== '' 
+                    ? place.image_url 
+                    : 'https://placehold.co/600x400/orange/white?text=' + encodeURIComponent(place.place_name);
 
                 html += `
-                    <div class="flex justify-between items-center p-3 rounded-lg ${currentClass} transition-all duration-300">
-                        <span class="font-semibold theme-text-primary">${item.event}</span>
-                        <span class="${colorClass} font-bold">${item.time}</span>
+                    <div class="place-card rounded-xl overflow-hidden shadow-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 flex flex-col h-full">
+                        <div class="h-48 overflow-hidden relative group">
+                            <img src="${imgUrl}" alt="${place.place_name}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                            <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/80 to-transparent p-4">
+                                <h3 class="text-xl font-bold text-white">${place.place_name}</h3>
+                                <p class="text-yellow-300 text-xs font-semibold"><i class="fas fa-road mr-1"></i> ${place.distance} from Mandir</p>
+                            </div>
+                        </div>
+                        <div class="p-4 flex-grow flex flex-col justify-between">
+                            <div class="space-y-2 mb-4">
+                                ${place.description ? `<p class="text-sm theme-text-secondary line-clamp-2 mb-3">${place.description}</p>` : ''}
+                                
+                                <div class="flex items-start text-sm theme-text-secondary">
+                                    <i class="fas fa-clock mt-1 mr-2 w-4 text-center theme-accent-color"></i>
+                                    <span>${place.timings}</span>
+                                </div>
+                                
+                                <div class="flex items-start text-sm theme-text-secondary">
+                                    <i class="fas fa-taxi mt-1 mr-2 w-4 text-center theme-accent-color"></i>
+                                    <span><strong>Rent:</strong> ${place.auto_fare}</span>
+                                </div>
+                                
+                                <div class="flex items-start text-sm theme-text-secondary">
+                                    <i class="fas fa-map-marker-alt mt-1 mr-2 w-4 text-center theme-accent-color"></i>
+                                    <span class="line-clamp-1">${place.address}</span>
+                                </div>
+                            </div>
+                            
+                            <a href="${place.map_link}" target="_blank" class="w-full bg-blue-100 hover:bg-blue-200 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 dark:hover:bg-blue-800/50 py-2 rounded-lg text-center font-semibold text-sm transition-colors flex items-center justify-center gap-2">
+                                <i class="fas fa-location-arrow"></i> Navigate
+                            </a>
+                        </div>
                     </div>
                 `;
             });
-            scheduleContainer.innerHTML = html;
-        };
+            
+            html += '</div>';
+            placesContainer.innerHTML = html;
+        }
 
+        // --- NEW: Fetch Places Data Function ---
+        async function fetchPlacesData() {
+            if (googleSheetUrlPlaces.includes('YOUR_SHEET_2_ID')) {
+                renderPlaces();
+                return;
+            }
+
+            try {
+                const response = await fetch(`${googleSheetUrlPlaces}&_=${new Date().getTime()}`);
+                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+                const csvText = await response.text();
+                placesData = parseCSV(csvText);
+                renderPlaces();
+            } catch (error) {
+                console.error('Error fetching places data:', error);
+                renderPlaces();
+            }
+        }
+
+        // --- Function to parse CSV ---
         function parseCSV(csvText) {
             const lines = csvText.split(/\r?\n/).filter(line => line.trim());
             if (lines.length < 2) return [];
-            const headers = lines[0].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(h => h.trim().replace(/"/g, '').toLowerCase());
+            const headers = lines[0].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(h => h.trim().replace(/"/g, '').toLowerCase().replace(/\s+/g, '_'));
             const data = [];
             for (let i = 1; i < lines.length; i++) {
                 const obj = {};
@@ -1209,6 +1339,7 @@
             return data;
         }
 
+        // --- Function to fetch and process data ---
         async function fetchAndProcessData() {
             if (!googleSheetUrl || googleSheetUrl.includes('YOUR_GOOGLE_SHEET')) {
                 datesContainer.innerHTML = `<p class="text-center text-red-400 p-10">Please add your Google Sheet CSV link in the script.</p>`;
@@ -1253,6 +1384,8 @@
                 }, {});
 
                 setupDropdowns();
+                // --- TRIGGER AUTO SELECT ---
+                autoSelectNextTrip();
 
             } catch (error) {
                 console.error('Error fetching or processing data:', error);
@@ -1260,8 +1393,106 @@
             }
         }
 
+        // --- Mandir Timing Function ---
+        const populateTimings = () => {
+            const scheduleContainer = document.getElementById('timing-schedule');
+            const now = new Date();
+            const currentTime = now.getHours() + now.getMinutes() / 60;
+            
+            const mandirTimings = [
+                { time: "6:30 AM", event: "Mangla Aarti", type: "open", start: 6.5, end: 8.0 },
+                { time: "8:00 AM - 9:00 AM", event: "Mangla Darshan", type: "open", start: 8.0, end: 9.0 },
+                { time: "9:00 AM - 9:30 AM", event: "Abhishek Pooja (Closed)", type: "closed", start: 9.0, end: 9.5 },
+                { time: "9:30 AM - 10:15 AM", event: "Shringar Darshan", type: "open", start: 9.5, end: 10.25 },
+                { time: "10:15 AM - 10:30 AM", event: "Shringar Bhog (Closed)", type: "closed", start: 10.25, end: 10.5 },
+                { time: "10:30 AM - 10:45 AM", event: "Shringar Aarti", type: "open", start: 10.5, end: 10.75 },
+                { time: "11:05 AM - 11:20 AM", event: "Gwal Bhog (Closed)", type: "closed", start: 11.08, end: 11.33 },
+                { time: "11:20 AM - 12:00 PM", event: "Darshan Open", type: "open", start: 11.33, end: 12.0 },
+                { time: "12:00 PM - 12:20 PM", event: "Rajbhog (Closed)", type: "closed", start: 12.0, end: 12.33 },
+                { time: "12:20 PM - 1:00 PM", event: "Darshan Open", type: "open", start: 12.33, end: 13.0 },
+                { time: "1:00 PM - 5:00 PM", event: "Anosar (Mandir Closed)", type: "closed", start: 13.0, end: 17.0 },
+                { time: "5:00 PM - 5:30 PM", event: "Uthapan Darshan", type: "open", start: 17.0, end: 17.5 },
+                { time: "5:45 PM - 6:00 PM", event: "Uthapan Bhog (Closed)", type: "closed", start: 17.75, end: 18.0 },
+                { time: "6:15 PM - 6:45 PM", event: "Darshan Open", type: "open", start: 18.25, end: 18.75 },
+                { time: "7:00 PM - 7:25 PM", event: "Sandhya Bhog (Closed)", type: "closed", start: 19.0, end: 19.42 },
+                { time: "7:25 PM - 7:45 PM", event: "Sandhya Aarti", type: "open", start: 19.42, end: 19.75 },
+                { time: "8:00 PM - 8:10 PM", event: "Shayan Bhog (Closed)", type: "closed", start: 20.0, end: 20.17 },
+                { time: "8:10 PM - 8:35 PM", event: "Shayan Darshan", type: "open", start: 20.17, end: 20.58 },
+                { time: "8:35 PM", event: "Shayan Aarti", type: "open", start: 20.58, end: 21.0 },
+                { time: "9:00 PM", event: "Mandir Closed", type: "closed", start: 21.0, end: 24.0 }
+            ];
+
+            const dhwajaTimings = [
+                { event: "First Dhwaja Arohan", time: "7:00 AM - 8:30 AM", start: 7.0, end: 8.5 },
+                { event: "Second Dhwaja Arohan", time: "8:39 AM - 10:30 AM", start: 8.65, end: 10.5 },
+                { event: "Third Dhwaja Arohan", time: "10:30 AM - 12:30 PM", start: 10.5, end: 12.5 },
+                { event: "Fourth Dhwaja Arohan", time: "5:30 PM", start: 17.0, end: 18.5 } 
+            ];
+
+            let mandirHtml = '';
+            mandirTimings.forEach(item => {
+                const isCurrent = currentTime >= item.start && currentTime < item.end;
+                const colorClass = item.type === 'open' ? 'text-green-500' : 'text-red-400';
+                const currentClass = isCurrent ? 'current-timing ring-2 ring-offset-1 ring-orange-400' : '';
+
+                mandirHtml += `
+                    <div class="flex justify-between items-center p-2 rounded-lg ${currentClass} hover:bg-black/5 dark:hover:bg-white/5 transition-colors text-sm mb-1">
+                        <span class="font-medium theme-text-primary">${item.event}</span>
+                        <span class="${colorClass} font-bold text-right ml-2 whitespace-nowrap">${item.time}</span>
+                    </div>
+                `;
+            });
+
+            let dhwajaHtml = '';
+            dhwajaTimings.forEach(item => {
+                const isCurrent = currentTime >= item.start && currentTime < item.end;
+                const activeClass = isCurrent ? 'current-timing ring-2 ring-offset-1 ring-orange-400' : '';
+                const timeColor = isCurrent ? 'text-green-500' : 'theme-accent-color';
+
+                dhwajaHtml += `
+                    <div class="flex justify-between items-center p-3 rounded-lg ${activeClass} hover:bg-black/5 dark:hover:bg-white/5 transition-colors text-sm mb-2 shadow-sm" style="background:var(--input-bg)">
+                        <span class="font-medium theme-text-primary flex items-center gap-2">
+                            <i class="fas fa-flag theme-accent-color text-xs"></i> ${item.event}
+                        </span>
+                        <span class="${timeColor} font-bold text-right ml-2 whitespace-nowrap">${item.time}</span>
+                    </div>
+                `;
+            });
+
+            scheduleContainer.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+                    <!-- Mandir Darshan Column -->
+                    <div>
+                        <div class="sticky top-0 bg-white/10 backdrop-blur-md z-10 py-2 mb-2 border-b border-gray-500/20">
+                            <h3 class="text-xl font-bold theme-text-primary text-center flex items-center justify-center gap-2">
+                                <i class="fas fa-gopuram theme-accent-color"></i> Darshan Timing
+                            </h3>
+                        </div>
+                        <div class="space-y-1">
+                            ${mandirHtml}
+                        </div>
+                    </div>
+
+                    <!-- Dhwaja Arohan Column -->
+                    <div>
+                        <div class="sticky top-0 bg-white/10 backdrop-blur-md z-10 py-2 mb-2 border-b border-gray-500/20">
+                            <h3 class="text-xl font-bold theme-text-primary text-center flex items-center justify-center gap-2">
+                                <i class="fas fa-flag theme-accent-color"></i> Dhwaja Timing
+                            </h3>
+                        </div>
+                        <div class="space-y-1">
+                            ${dhwajaHtml}
+                            <div class="mt-4 p-3 rounded-lg bg-orange-100/10 border border-orange-500/30 text-xs theme-text-secondary text-center">
+                                <p><i class="fas fa-info-circle mr-1"></i> Note: Dhwaja timings are subject to change during festivals.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        };
+
         document.addEventListener('DOMContentLoaded', async function() {
-            // --- Theme Toggle Logic ---
+            // ... existing theme toggle logic ...
             const themeToggle = document.getElementById('theme-toggle');
             const sunIcon = document.getElementById('sun-icon');
             const moonIcon = document.getElementById('moon-icon');
@@ -1285,12 +1516,9 @@
             htmlTag.classList.toggle('light', !isDark);
             updateThemeIcons(isDark);
 
-
             // --- Original Event Listeners ---
             if(closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
-            if(modal) modal.addEventListener('click', (event) => {
-                if (event.target === modal) closeModal();
-            });
+            if(modal) modal.addEventListener('click', (event) => { if (event.target === modal) closeModal(); });
 
             document.querySelectorAll('#about-link, #mobile-about-link').forEach(link => {
                 link.addEventListener('click', (e) => { e.preventDefault(); aboutModal.classList.remove('hidden'); });
@@ -1304,13 +1532,23 @@
             document.querySelectorAll('#timing-link, #mobile-timing-link').forEach(link => {
                 link.addEventListener('click', (e) => { e.preventDefault(); timingModal.classList.remove('hidden'); });
             });
+            document.querySelectorAll('#places-link, #mobile-places-link').forEach(link => {
+                link.addEventListener('click', (e) => { 
+                    e.preventDefault(); 
+                    placesModal.classList.remove('hidden'); 
+                    if(placesContainer.innerHTML.includes('Loading')) {
+                        fetchPlacesData(); 
+                    }
+                });
+            });
 
             document.getElementById('close-about-modal').addEventListener('click', () => aboutModal.classList.add('hidden'));
             document.getElementById('close-contact-modal').addEventListener('click', () => contactModal.classList.add('hidden'));
             document.getElementById('close-payment-modal').addEventListener('click', () => paymentModal.classList.add('hidden'));
             document.getElementById('close-timing-modal').addEventListener('click', () => timingModal.classList.add('hidden'));
+            document.getElementById('close-places-modal').addEventListener('click', () => placesModal.classList.add('hidden'));
 
-            [aboutModal, contactModal, paymentModal, timingModal, successModal].forEach(m => {
+            [aboutModal, contactModal, paymentModal, timingModal, successModal, placesModal].forEach(m => {
                  m.addEventListener('click', (e) => { if(e.target === m) m.classList.add('hidden'); });
             });
 
@@ -1344,28 +1582,11 @@
             document.getElementById('home-link').addEventListener('click', (e) => { e.preventDefault(); window.location.reload(); });
             document.getElementById('mobile-home-link').addEventListener('click', (e) => { e.preventDefault(); window.location.reload(); });
 
+            // --- REFACTORED YEAR FILTER LOGIC ---
             yearFilter.addEventListener('change', (e) => {
                 const selectedYear = e.target.value;
                 datesContainer.innerHTML = '';
-                dateMonthFilter.innerHTML = '<option value="">-- First, Choose a Year --</option>';
-
-                if (selectedYear && groupedData[selectedYear]) {
-                    dateMonthFilter.disabled = false;
-                    const dateMonths = Object.keys(groupedData[selectedYear]);
-                    dateMonths.forEach(dm => {
-                        const option = document.createElement('option');
-                        option.value = dm;
-                        
-                        // Calculate day for dropdown option
-                        const fullDateString = `${dm} ${selectedYear}`;
-                        const dayName = getWeekdayName(fullDateString);
-                        option.textContent = dayName ? `${dm} (${dayName})` : dm;
-                        
-                        dateMonthFilter.appendChild(option);
-                    });
-                } else {
-                    dateMonthFilter.disabled = true;
-                }
+                populateDateMonthDropdown(selectedYear); // Using the new helper function
             });
 
             dateMonthFilter.addEventListener('change', (e) => {
@@ -1383,6 +1604,7 @@
             startCountdown();
             populateTimings();
             showWelcomePopup();
+            fetchPlacesData();
         });
     </script>
 </body>
