@@ -141,8 +141,8 @@
             transform: scale(0.95); opacity: 0;
             transition: transform 0.2s ease-out, opacity 0.2s ease-out;
         }
-        /* New responsive class for Places Modal */
-        .modal-content-places {
+        /* New responsive class for Places/Food/Stay Modal */
+        .modal-content-places, .modal-content-food, .modal-content-stay {
             width: 95%; /* Mobile width */
             max-width: 1100px; /* Desktop max width */
             max-height: 90vh;
@@ -153,7 +153,9 @@
         }
         .modal-backdrop:not(.hidden) .modal-content,
         .modal-backdrop:not(.hidden) .modal-content-ticket,
-        .modal-backdrop:not(.hidden) .modal-content-places {
+        .modal-backdrop:not(.hidden) .modal-content-places,
+        .modal-backdrop:not(.hidden) .modal-content-food,
+        .modal-backdrop:not(.hidden) .modal-content-stay {
             transform: scale(1); opacity: 1;
         }
         .modal-content { width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto; }
@@ -309,37 +311,55 @@
     <div id="site-wrapper" class="opacity-100 transition-opacity duration-500">
         <header class="glass-card fixed top-4 left-4 right-4 z-40 transition-all duration-300">
             <nav class="container mx-auto px-4 sm:px-6 py-3 flex justify-between items-center">
-                <div class="flex items-center text-xl sm:text-2xl font-bold tracking-wider theme-text-primary">
+                <div class="flex items-center text-xl sm:text-2xl font-bold tracking-wider theme-text-primary flex-shrink-0">
                     <svg class="w-8 h-8 mr-2 theme-accent-color" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M3 20h18" /><path d="M7 20L12 5l5 15" /><path d="M12 5V2l5 1.5L12 2" /><path d="M8 20v-3h8v3" />
                     </svg>
-                    Jay Dwarkadhish
+                    <!-- Fixed: whitespace-nowrap prevents line break -->
+                    <span class="hidden sm:inline whitespace-nowrap">Jay Dwarkadhish</span>
                 </div>
                 <div class="flex items-center space-x-2">
-                    <div class="hidden md:flex items-center space-x-6">
-                        <a href="#" id="home-link" class="theme-text-secondary hover:theme-text-primary font-medium transition-colors duration-300">Home</a>
-                        <!-- NEW NEARBY PLACES LINK -->
-                        <a href="#" id="places-link" class="theme-text-secondary hover:theme-text-primary font-medium transition-colors duration-300 flex items-center gap-1">
-                            <i class="fas fa-map-location-dot text-sm"></i> Nearby Places
+                    <!-- 
+                        RESPONSIVE NAVIGATION FIX (FULL NAMES)
+                        - Changed 'hidden xl:flex' back to 'hidden md:flex' so tablets see the menu.
+                        - Used smaller font sizes ([10px], xs) on md/lg screens to fit full names.
+                        - Added 'gap-0.5' to squeeze items together on smaller screens.
+                    -->
+                    <div class="hidden md:flex items-center gap-0.5 lg:gap-1.5 xl:gap-4">
+                        <a href="#" id="home-link" class="theme-text-secondary hover:theme-text-primary font-medium text-[10px] lg:text-xs xl:text-base px-1.5 py-1 rounded-lg hover:bg-white/10 transition-colors whitespace-nowrap">Home</a>
+                        <a href="#" id="places-link" class="theme-text-secondary hover:theme-text-primary font-medium text-[10px] lg:text-xs xl:text-base px-1.5 py-1 rounded-lg hover:bg-white/10 transition-colors whitespace-nowrap flex items-center gap-1">
+                            <i class="fas fa-map-location-dot text-[10px] lg:text-xs"></i> Nearby Places
                         </a>
-                        <a href="#" id="timing-link" class="theme-text-secondary hover:theme-text-primary font-medium transition-colors duration-300">Mandir Timing</a>
-                        <a href="#" id="about-link" class="theme-text-secondary hover:theme-text-primary font-medium transition-colors duration-300">About Us</a>
-                        <a href="#" id="contact-link" class="theme-text-secondary hover:theme-text-primary font-medium transition-colors duration-300">Contact</a>
-                        <a href="#" id="pay-link" class="pay-button font-bold py-2 px-4 rounded-xl">Pay Me Here</a>
+                        <a href="#" id="food-link" class="theme-text-secondary hover:theme-text-primary font-medium text-[10px] lg:text-xs xl:text-base px-1.5 py-1 rounded-lg hover:bg-white/10 transition-colors whitespace-nowrap flex items-center gap-1">
+                            <i class="fas fa-utensils text-[10px] lg:text-xs"></i> Food & Travel
+                        </a>
+                        <a href="#" id="stay-link" class="theme-text-secondary hover:theme-text-primary font-medium text-[10px] lg:text-xs xl:text-base px-1.5 py-1 rounded-lg hover:bg-white/10 transition-colors whitespace-nowrap flex items-center gap-1">
+                            <i class="fas fa-bed text-[10px] lg:text-xs"></i> Best Stay
+                        </a>
+                        <a href="#" id="timing-link" class="theme-text-secondary hover:theme-text-primary font-medium text-[10px] lg:text-xs xl:text-base px-1.5 py-1 rounded-lg hover:bg-white/10 transition-colors whitespace-nowrap">Mandir Timing</a>
+                        <a href="#" id="about-link" class="theme-text-secondary hover:theme-text-primary font-medium text-[10px] lg:text-xs xl:text-base px-1.5 py-1 rounded-lg hover:bg-white/10 transition-colors whitespace-nowrap">About Us</a>
+                        <a href="#" id="contact-link" class="theme-text-secondary hover:theme-text-primary font-medium text-[10px] lg:text-xs xl:text-base px-1.5 py-1 rounded-lg hover:bg-white/10 transition-colors whitespace-nowrap">Contact</a>
+                        <a href="#" id="pay-link" class="pay-button font-bold py-1 px-2 lg:py-1.5 lg:px-3 xl:py-2 xl:px-4 rounded-xl text-[10px] lg:text-xs xl:text-base whitespace-nowrap transition-all duration-300">Pay Me Here</a>
                     </div>
+
                     <!-- Theme Toggle -->
-                    <button id="theme-toggle" title="Toggle Theme" class="p-2 rounded-full hover:bg-black/10 dark:hover:bg-white/10 transition-colors">
-                        <svg id="sun-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="theme-text-secondary"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
-                        <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="hidden theme-text-secondary"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                    <button id="theme-toggle" title="Toggle Theme" class="p-2 rounded-full hover:bg-black/10 dark:hover:bg-white/10 transition-colors flex-shrink-0">
+                        <svg id="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="theme-text-secondary"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                        <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="hidden theme-text-secondary"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
                     </button>
-                    <button class="md:hidden" id="mobile-menu-button">
+
+                    <!-- Mobile Menu Button (Visible < md) -->
+                    <button class="md:hidden p-2" id="mobile-menu-button">
                         <svg class="w-6 h-6 theme-text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
                     </button>
                 </div>
             </nav>
+            <!-- Mobile Menu Dropdown (Visible < md) -->
             <div id="mobile-menu" class="hidden md:hidden px-6 pb-4 glass-card rounded-b-2xl -mt-2">
                  <a href="#" id="mobile-home-link" class="block py-2 text-center theme-text-secondary hover:theme-text-primary">Home</a>
                  <a href="#" id="mobile-places-link" class="block py-2 text-center theme-text-secondary hover:theme-text-primary">Nearby Places</a>
+                 <a href="#" id="mobile-food-link" class="block py-2 text-center theme-text-secondary hover:theme-text-primary">Food & Travel</a>
+                 <a href="#" id="mobile-stay-link" class="block py-2 text-center theme-text-secondary hover:theme-text-primary">Best Stay</a>
                  <a href="#" id="mobile-timing-link" class="block py-2 text-center theme-text-secondary hover:theme-text-primary">Mandir Timing</a>
                  <a href="#" id="mobile-about-link" class="block py-2 text-center theme-text-secondary hover:theme-text-primary">About Us</a>
                  <a href="#" id="mobile-contact-link" class="block py-2 text-center theme-text-secondary hover:theme-text-primary">Contact</a>
@@ -416,6 +436,30 @@
                 <div class="text-center p-8">
                     <p class="theme-text-secondary">Loading places...</p>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Food & Travel Info Modal -->
+    <div id="food-travel-modal" class="modal-backdrop hidden">
+        <div class="modal-content-food glass-card p-6 relative flex flex-col h-[90vh]">
+            <button id="close-food-modal" class="absolute top-4 right-4 theme-text-secondary hover:theme-text-primary transition-colors text-3xl z-50">&times;</button>
+            <h2 class="text-3xl font-bold theme-accent-color page-title mb-6 text-center">Food & Travel Info</h2>
+            
+            <div id="food-travel-container" class="overflow-y-auto pr-2 flex-grow">
+                <!-- Content injected via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Best Stay Modal (NEW) -->
+    <div id="stay-modal" class="modal-backdrop hidden">
+        <div class="modal-content-stay glass-card p-6 relative flex flex-col h-[90vh]">
+            <button id="close-stay-modal" class="absolute top-4 right-4 theme-text-secondary hover:theme-text-primary transition-colors text-3xl z-50">&times;</button>
+            <h2 class="text-3xl font-bold theme-accent-color page-title mb-6 text-center">Best Stay Options</h2>
+            
+            <div id="stay-container" class="overflow-y-auto pr-2 flex-grow">
+                <!-- Content injected via JS -->
             </div>
         </div>
     </div>
@@ -551,6 +595,182 @@
         // --- REPLACE THIS WITH YOUR SHEET 2 CSV LINK ---
         const googleSheetUrlPlaces = 'https://docs.google.com/spreadsheets/d/e/YOUR_SHEET_2_ID/pub?gid=YOUR_GID&output=csv'; 
 
+        // --- DUMMY DATA FOR BEST STAY ---
+        const stayData = [
+            // Dharamshalas (Updated)
+            {
+                name: "Dwarka - Gayatri Shantivan",
+                type: "dharamshala",
+                image: "https://yatrinivash.in/assets/State/Gujarat/Dwarka%20-%20Gayatri%20Shantivan/2021-11-09.jpg",
+                cost: "Start @ ₹210/Person",
+                address: "Ratneshwar Road, Opp. Dwarkadhish Lords Eco Inn",
+                map_link: "https://maps.app.goo.gl/uSk6NsX54caaTXEG9",
+                booking_link: "https://yatradham.org/gayatri-shantivan-dwarka.html",
+                food: { available: true, price: "Facility Available" },
+                contact: "9824594156",
+                distance: "2.0 km",
+                roomDetails: [
+                    { type: "5 Bed Non AC (Wing A)", price: "995 + Tax", person: "~210" }, 
+                    { type: "4 Bed Non AC (Wing B)", price: "850 + Tax", person: "~223" },
+                    { type: "4 Bed Non AC (Wing D)", price: "1350 + Tax", person: "~354" },
+                    { type: "2 Bed Non AC (Wing C)", price: "750 + Tax", person: "~394" },
+                    { type: "2 Bed Non AC (1st/2nd)", price: "950 + Tax", person: "~499" },
+                    { type: "2 Bed AC Ground (Wing D)", price: "1400 + Tax", person: "~735" },
+                    { type: "2 Bed AC (Wing D)", price: "1850 + Tax", person: "~971" },
+                    { type: "2 Bed Std AC (Wing D)", price: "2350 + Tax", person: "~1234" }
+                ]
+            },
+            {
+                name: "Shri Swaminarayan Bhaktidham",
+                type: "dharamshala",
+                image: "https://www.yatrinivash.in/assets/State/Gujarat/Dwarka%20-%20Swaminarayan%20Bhakti%20Dham/180106_1bce88bb9b0dc7bfce9a96a882a58c52_600.jpg",
+                cost: "Start @ ₹263/Person",
+                address: "Nageshwar Road, Near Railway Crossing",
+                map_link: "https://maps.app.goo.gl/ve2zngjhoskevhDq5",
+                booking_link: "https://yatradham.org/dwarka-shri-swaminarayan-bhaktidham.html",
+                food: { available: true, price: "Facility Available" },
+                contact: "9824594156",
+                distance: "2.5 km",
+                roomDetails: [
+                    { type: "8 Bed Non AC Room", price: "2,100", person: "~263" }, 
+                    { type: "8 Bed AC Room", price: "2,600", person: "~325" },
+                    { type: "4 Bed Non AC Room", price: "1,350", person: "~338" },
+                    { type: "4 Bed AC Room", price: "1,700", person: "~425" }
+                ]
+            },
+            {
+                name: "Dwarka - Maharaja Agarasen Bhawan",
+                type: "dharamshala",
+                image: "https://content3.jdmagicbox.com/v2/comp/vrindavan/u3/9999px565.x565.231106142646.y4u3/catalogue/agarsen-dharamshal-raman-rati-vrindavan-dharamshalas-S22UWyBChB.jpg",
+                cost: "Start @ ₹263/Person",
+                address: "Siddhnath Road, Behind Home Ground, Near Market",
+                map_link: "https://maps.app.goo.gl/dYLhFK7jHjYFhX88A",
+                booking_link: "https://yatradham.org/dwarka-maharaja-agarasen-bhawan.html",
+                food: { available: false },
+                contact: "9824594156",
+                distance: "1.5 km",
+                roomDetails: [
+                    { type: "10 Bed Non AC Room", price: "2,500 + 125 Tax", person: "~263" },
+                    { type: "12 Bed Non AC Room", price: "3,000 + 150 Tax", person: "~263" },
+                    { type: "2 Bed AC Room", price: "1,000 + 50 Tax", person: "~525" },
+                    { type: "4 Bed AC Room", price: "2,000 + 100 Tax", person: "~525" },
+                    { type: "5 Bed AC Room", price: "2,500 + 125 Tax", person: "~525" },
+                    { type: "6 Bed AC Room", price: "3,000 + 150 Tax", person: "~525" },
+                    { type: "7 Bed AC Room", price: "3,500 + 175 Tax", person: "~525" },
+                    { type: "5 Bed Non AC Room", price: "3,500 + 175 Tax", person: "~735" }
+                ]
+            },
+            
+            // Hotels
+            {
+                name: "Hotel Vraj Inn",
+                type: "hotel",
+                image: "https://cf.bstatic.com/xdata/images/hotel/max1024x768/123456.jpg", // Placeholder
+                cost: "Start @ ₹1000/Person",
+                address: "Teen Batti Chowk",
+                map_link: "https://maps.app.goo.gl/dummyStay4",
+                food: { available: true, price: "Restaurant Menu" },
+                contact: "02892-234000",
+                distance: "0.8 km"
+            },
+            {
+                name: "Hawthorn Suites by Wyndham",
+                type: "hotel",
+                image: "https://cf.bstatic.com/xdata/images/hotel/max1024x768/789012.jpg", // Placeholder
+                cost: "Start @ ₹2500/Person",
+                address: "Porbandar - Dwarka Highway",
+                map_link: "https://maps.app.goo.gl/dummyStay5",
+                food: { available: true, price: "Luxury Dining" },
+                contact: "02892-235000",
+                distance: "6 km"
+            },
+            {
+                name: "Hotel Gomti (TCGL)",
+                type: "hotel",
+                image: "https://gujarattourism.com/content/dam/gujrattourism/images/hotels/hotel-gomti/Thumbnail.jpg", // Placeholder
+                cost: "Start @ ₹750/Person",
+                address: "Near Dwarkadhish Temple",
+                map_link: "https://maps.app.goo.gl/dummyStay6",
+                food: { available: true, price: "A la carte" },
+                contact: "02892-234111",
+                distance: "0.5 km"
+            }
+        ];
+
+        // --- DUMMY DATA FOR FOOD & TRAVEL ---
+        const foodData = [
+            {
+                name: "Dwarkadhish Bhojanalay",
+                type: "Gujarati Thali",
+                category: "meal",
+                address: "Near Temple Gate, Main Market",
+                map_link: "https://maps.app.goo.gl/dummyLink1"
+            },
+            {
+                name: "Shrinathji Dining Hall",
+                type: "Lunch / Dinner",
+                category: "meal",
+                address: "Bhadrakali Road, Dwarka",
+                map_link: "https://maps.app.goo.gl/dummyLink2"
+            },
+            {
+                name: "Chai Thela",
+                type: "Best Masala Chai",
+                category: "beverage",
+                address: "Gomti Ghat Steps",
+                map_link: "https://maps.app.goo.gl/dummyLink3"
+            },
+            {
+                name: "Govinda's Restaurant",
+                type: "Multi-Cuisine",
+                category: "meal",
+                address: "ISKCON Gate, Dwarka",
+                map_link: "https://maps.app.goo.gl/dummyLink4"
+            },
+            {
+                name: "Katu Shyam Nasta House",
+                type: "Khaman / Dhokla",
+                category: "snack",
+                address: "Teen Batti Chowk",
+                map_link: "https://maps.app.goo.gl/dummyLink5"
+            },
+            {
+                name: "Jay Jalaram Farsan",
+                type: "Samosa / Kachori",
+                category: "snack",
+                address: "Station Road",
+                map_link: "#"
+            }
+        ];
+
+        const driverData = [
+            {
+                name: "Somabhai Mordav (Rabari)",
+                vehicle: "Auto Rickshaw Available",
+                contact: "9825161321"
+            },
+            {
+                name: "Suresh Kumar",
+                vehicle: "Taxi (Innova)",
+                contact: "9123456780"
+            },
+            {
+                name: "Dinesh Bhai",
+                vehicle: "Chhakda (Local)",
+                contact: "9988776655"
+            },
+            {
+                name: "Rajesh Tours",
+                vehicle: "Taxi (Ertiga)",
+                contact: "9000011111"
+            },
+            {
+                name: "Mahesh Auto",
+                vehicle: "Auto Rickshaw",
+                contact: "8888899999"
+            }
+        ];
+
         // --- GLOBAL VARIABLES ---
         let groupedData = {};
         // UPDATED PLACES DATA WITH DISTANCE FROM MANDIR AND RENTS
@@ -563,7 +783,7 @@
                 map_link: "https://maps.app.goo.gl/qgEyPLjzRE2SNZ588",
                 address: "Gomti Ghat, Dwarka",
                 description: "Sacred ghats for holy dip and a beautiful temple dedicated to Samudra Dev at the confluence.",
-                image_url: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Samudra_Narayan_Temple%2C_Dwarka.jpg/640px-Samudra_Narayan_Temple%2C_Dwarka.jpg" 
+                image_url: "https://touringwithpk.com/wp-content/uploads/2025/11/IMG_6123a-700x432.jpg" 
             },
             {
                 place_name: "Bhadkeshwar Mahadev Mandir",
@@ -573,7 +793,7 @@
                 map_link: "https://maps.app.goo.gl/fMXMhXtg4bVP6QWZ6",
                 address: "Near Geeta Mandir, Dwarka",
                 description: "A serene Shiva temple on a hillock in the sea, offering breathtaking sunset views.",
-                image_url: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Samudra_Narayan_Temple%2C_Dwarka.jpg/640px-Samudra_Narayan_Temple%2C_Dwarka.jpg" 
+                image_url: "https://temple.yatradham.org/public/Product/temple/temple_rLrAgqEI_202507021532410.webp" 
             },
             {
                 place_name: "Rukmini Devi Mandir",
@@ -583,7 +803,7 @@
                 map_link: "https://maps.app.goo.gl/KuLpifHa69izgFJa9",
                 address: "Rukmini Devi Temple, Dwarka",
                 description: "Dedicated to Rukmini, Lord Krishna's chief queen. Known for its rich carvings and history.",
-                image_url: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Rukmini_Devi_Temple%2C_Dwarka.jpg/640px-Rukmini_Devi_Temple%2C_Dwarka.jpg" 
+                image_url: "https://s7ap1.scene7.com/is/image/incredibleindia/rukmini-devi-temple-01-attr-hero?qlt=82&ts=1726734757812" 
             },
             {
                 place_name: "Nageshwar Jyotirling",
@@ -593,7 +813,7 @@
                 map_link: "https://maps.app.goo.gl/xbQcvMzDo2saKZHz8",
                 address: "Daarukavanam, Gujarat 361335",
                 description: "One of the 12 Jyotirlingas of Lord Shiva. Features a giant statue of Lord Shiva.",
-                image_url: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Nageshwar_Jyotirlinga_Temple_Dwarka.jpg/640px-Nageshwar_Jyotirlinga_Temple_Dwarka.jpg" 
+                image_url: "https://blog.yatradham.org/wp-content/uploads/2023/08/Nageshwar-Jyotirlinga-Temple-Timings.jpg" 
             },
             {
                 place_name: "Gopi Talav",
@@ -603,7 +823,7 @@
                 map_link: "https://maps.app.goo.gl/xggHDjCrRURNmz5s8",
                 address: "Gopi Talav, Dwarka",
                 description: "A sacred pond associated with the Gopis of Vrindavan and Lord Krishna's Raas Leela.",
-                image_url: "" 
+                image_url: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Gopi_Talab_Dwarka_during_Dwaraka_DWARASPDB_2015_%2819%29.jpg/2560px-Gopi_Talab_Dwarka_during_Dwaraka_DWARASPDB_2015_%2819%29.jpg" 
             },
             {
                 place_name: "Shivrajpur Beach",
@@ -613,7 +833,7 @@
                 map_link: "https://maps.app.goo.gl/PCenDXDfC9QhvqAN7",
                 address: "Shivrajpur, Gujarat",
                 description: "Blue Flag certified pristine beach with white sand and clear water. Ideal for water sports.",
-                image_url: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Shivrajpur_Beach.jpg/640px-Shivrajpur_Beach.jpg" 
+                image_url: "https://s7ap1.scene7.com/is/image/incredibleindia/shivrajpur-beach-dwarka-gujarat-3-musthead-hero?qlt=82&ts=1726734727403" 
             },
             {
                 place_name: "Bet Dwarka (Okha Jetty)",
@@ -623,7 +843,7 @@
                 map_link: "https://maps.app.goo.gl/mLiwWCAyp1B3ewVu5",
                 address: "Bet Dwarka Island",
                 description: "The original residence of Lord Krishna. Requires a ferry ride from Okha port.",
-                image_url: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Dwarkadhish_Temple_Dwarka.jpg/640px-Dwarkadhish_Temple_Dwarka.jpg" 
+                image_url: "https://thrillingtravel.in/wp-content/uploads/2021/07/Bet-Dwarka-Temple-Gujarat.jpg" 
             },
             {
                 place_name: "Dwarka Light House",
@@ -633,7 +853,7 @@
                 map_link: "https://maps.app.goo.gl/VHXm2BuMHnY4eZdN8",
                 address: "Near Bhadkeshwar, Dwarka",
                 description: "Offers panoramic views of the Arabian Sea and the city. Best visited in the evening.",
-                image_url: "" 
+                image_url: "https://lighthouse.nic.in/sites/default/files/2025-06/Dwarka_0.png" 
             }
         ];
         
@@ -671,7 +891,11 @@
         const paymentModal = document.getElementById('payment-modal');
         const timingModal = document.getElementById('timing-modal');
         const placesModal = document.getElementById('places-modal');
+        const foodTravelModal = document.getElementById('food-travel-modal');
+        const stayModal = document.getElementById('stay-modal');
         const placesContainer = document.getElementById('places-container');
+        const foodTravelContainer = document.getElementById('food-travel-container');
+        const stayContainer = document.getElementById('stay-container');
         const contactForm = document.getElementById('contact-form');
         const successModal = document.getElementById('success-modal');
         const yearFilter = document.getElementById('year-filter');
@@ -692,7 +916,7 @@
             }
         };
 
-        // --- Helper function to get Day Name ---
+        // ... (Helper Functions stay the same) ...
         function getWeekdayName(dateStr) {
             if (!dateStr) return '';
             try {
@@ -709,7 +933,6 @@
             } catch (e) { return ''; }
         }
 
-        // Helper for direct text copying
         window.copyText = function(text) {
             if (!text) return;
             const textArea = document.createElement("textarea");
@@ -748,6 +971,271 @@
             }, 2000);
         }
 
+        // --- NEW: Attach Stay Collapsible Listeners ---
+        function attachStayCollapsibleListeners() {
+            const triggers = document.querySelectorAll('.stay-rates-trigger');
+            triggers.forEach(trigger => {
+                trigger.addEventListener('click', function() {
+                    const content = this.nextElementSibling;
+                    const icon = this.querySelector('i');
+                    if (content.classList.contains('hidden')) {
+                        content.classList.remove('hidden');
+                        icon.style.transform = 'rotate(180deg)';
+                    } else {
+                        content.classList.add('hidden');
+                        icon.style.transform = 'rotate(0deg)';
+                    }
+                });
+            });
+        }
+
+        // --- NEW: Render Best Stay Function ---
+        function renderStayInfo() {
+            const dharamshalas = stayData.filter(s => s.type === 'dharamshala');
+            const hotels = stayData.filter(s => s.type === 'hotel');
+
+            let html = `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Left Side: Dharamshalas -->
+                    <div class="space-y-4">
+                        <div class="sticky top-0 bg-white/10 backdrop-blur-md z-10 py-2 mb-2 border-b border-gray-500/20">
+                            <h3 class="text-xl font-bold theme-text-primary text-center flex items-center justify-center gap-2">
+                                <i class="fas fa-place-of-worship theme-accent-color"></i> Dharamshalas
+                            </h3>
+                        </div>
+                        <div class="space-y-4">
+                            ${dharamshalas.map(stay => `
+                                <div class="place-card rounded-xl overflow-hidden shadow-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 flex flex-col h-full">
+                                    <div class="h-40 overflow-hidden relative group">
+                                        <img src="${stay.image}" alt="${stay.name}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                                        <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/80 to-transparent p-3 flex justify-between items-end">
+                                            <h3 class="text-lg font-bold text-white shadow-black drop-shadow-md">${stay.name}</h3>
+                                            <span class="bg-yellow-400 text-black text-xs font-bold px-2 py-1 rounded shadow-sm">${stay.cost}</span>
+                                        </div>
+                                    </div>
+                                    <div class="p-4 flex-grow flex flex-col justify-between">
+                                        <div class="space-y-2 mb-3 text-sm">
+                                            <p class="theme-text-secondary flex items-start gap-2"><i class="fas fa-map-marker-alt mt-1 theme-accent-color"></i> <span>${stay.address}</span></p>
+                                            <p class="theme-text-secondary flex items-center gap-2"><i class="fas fa-road theme-accent-color"></i> ${stay.distance} from Mandir</p>
+                                            <p class="theme-text-secondary flex items-center gap-2">
+                                                <i class="fas fa-utensils mr-2 theme-accent-color"></i> 
+                                                ${stay.food.available ? `<span class="text-green-600 font-semibold">Food Available (${stay.food.price || ''})</span>` : '<span class="text-red-500">No Food Facility</span>'}
+                                            </p>
+                                            ${stay.contact ? `<p class="theme-text-secondary flex items-center gap-2"><i class="fas fa-phone theme-accent-color"></i> <a href="tel:${stay.contact}" class="hover:underline font-semibold">${stay.contact}</a></p>` : ''}
+                                            
+                                            <!-- Collapsible Room Rates -->
+                                            ${stay.roomDetails ? `
+                                            <button class="w-full text-left text-xs font-bold theme-accent-color mt-2 flex justify-between items-center stay-rates-trigger p-2 rounded hover:bg-gray-100 dark:hover:bg-white/10 transition-colors">
+                                                <span>View Room Rates & Charges</span>
+                                                <i class="fas fa-chevron-down transition-transform duration-300"></i>
+                                            </button>
+                                            <div class="hidden mt-2 border-t border-gray-200 dark:border-gray-700 pt-2 space-y-1.5">
+                                                <p class="text-[10px] text-red-500 font-semibold mb-2"><i class="fas fa-info-circle mr-1"></i> Note: GST (~₹92+) & Conversion Charges (~₹362+) extra.</p>
+                                                ${stay.roomDetails.map(room => `
+                                                    <div class="flex justify-between items-center text-xs bg-gray-50 dark:bg-white/5 p-1.5 rounded">
+                                                        <span class="theme-text-primary font-medium truncate w-1/2" title="${room.type}">${room.type}</span>
+                                                        <div class="text-right">
+                                                            <span class="block font-bold theme-accent-color">₹${room.price}</span>
+                                                            <span class="text-[10px] theme-text-secondary">(${room.person}/Person)</span>
+                                                        </div>
+                                                    </div>
+                                                `).join('')}
+                                            </div>
+                                            ` : ''}
+                                        </div>
+                                        <div class="flex gap-2 mt-2">
+                                            <a href="${stay.map_link}" target="_blank" class="flex-1 bg-blue-100 hover:bg-blue-200 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 dark:hover:bg-blue-800/50 py-2 rounded-lg text-center font-semibold text-sm transition-colors flex items-center justify-center gap-2">
+                                                <i class="fas fa-location-arrow"></i> Navigate
+                                            </a>
+                                            ${stay.booking_link ? `
+                                            <a href="${stay.booking_link}" target="_blank" class="flex-1 bg-green-100 hover:bg-green-200 text-green-700 dark:bg-green-900/30 dark:text-green-300 dark:hover:bg-green-800/50 py-2 rounded-lg text-center font-semibold text-sm transition-colors flex items-center justify-center gap-2">
+                                                <i class="fas fa-calendar-check"></i> Book Now
+                                            </a>` : ''}
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Right Side: Hotels -->
+                    <div class="space-y-4">
+                        <div class="sticky top-0 bg-white/10 backdrop-blur-md z-10 py-2 mb-2 border-b border-gray-500/20">
+                            <h3 class="text-xl font-bold theme-text-primary text-center flex items-center justify-center gap-2">
+                                <i class="fas fa-hotel theme-accent-color"></i> Hotels
+                            </h3>
+                        </div>
+                        <div class="space-y-4">
+                            ${hotels.map(stay => `
+                                <div class="place-card rounded-xl overflow-hidden shadow-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 flex flex-col h-full">
+                                    <div class="h-40 overflow-hidden relative group">
+                                        <img src="${stay.image}" alt="${stay.name}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                                        <div class="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/80 to-transparent p-3 flex justify-between items-end">
+                                            <h3 class="text-lg font-bold text-white shadow-black drop-shadow-md">${stay.name}</h3>
+                                            <span class="bg-yellow-400 text-black text-xs font-bold px-2 py-1 rounded shadow-sm">${stay.cost}</span>
+                                        </div>
+                                    </div>
+                                    <div class="p-4 flex-grow flex flex-col justify-between">
+                                        <div class="space-y-2 mb-3 text-sm">
+                                            <p class="theme-text-secondary flex items-start gap-2"><i class="fas fa-map-marker-alt mt-1 theme-accent-color"></i> <span>${stay.address}</span></p>
+                                            <p class="theme-text-secondary flex items-center gap-2"><i class="fas fa-road theme-accent-color"></i> ${stay.distance} from Mandir</p>
+                                            <p class="theme-text-secondary flex items-center gap-2">
+                                                <i class="fas fa-utensils mr-2 theme-accent-color"></i> 
+                                                ${stay.food.available ? `<span class="text-green-600 font-semibold">Restaurant Available (${stay.food.price || ''})</span>` : '<span class="text-red-500">No Restaurant</span>'}
+                                            </p>
+                                            ${stay.contact ? `<p class="theme-text-secondary flex items-center gap-2"><i class="fas fa-phone mr-2 theme-accent-color"></i> <a href="tel:${stay.contact}" class="hover:underline font-semibold">${stay.contact}</a></p>` : ''}
+                                        </div>
+                                        <a href="${stay.map_link}" target="_blank" class="w-full bg-blue-100 hover:bg-blue-200 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 dark:hover:bg-blue-800/50 py-2 rounded-lg text-center font-semibold text-sm transition-colors flex items-center justify-center gap-2 mt-2">
+                                            <i class="fas fa-location-arrow"></i> Navigate
+                                        </a>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+            stayContainer.innerHTML = html;
+            // Attach listeners after HTML injection
+            attachStayCollapsibleListeners();
+        }
+
+        // --- NEW: Render Food & Travel Function ---
+        function renderFoodAndTravel() {
+            const categorizedFood = {
+                meal: foodData.filter(f => f.category === 'meal'),
+                beverage: foodData.filter(f => f.category === 'beverage'),
+                snack: foodData.filter(f => f.category === 'snack')
+            };
+
+            let html = `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Left Side: Food Options -->
+                    <div class="space-y-6">
+                        
+                        <!-- Meals Section -->
+                        ${categorizedFood.meal.length > 0 ? `
+                        <div class="space-y-3">
+                            <div class="sticky top-0 bg-white/10 backdrop-blur-md z-10 py-1 mb-2 border-b border-gray-500/20">
+                                <h3 class="text-xl font-bold theme-text-primary text-center flex items-center justify-center gap-2">
+                                    <i class="fas fa-concierge-bell theme-accent-color"></i> Lunch / Dinner
+                                </h3>
+                            </div>
+                            ${categorizedFood.meal.map(food => `
+                                <div class="p-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white/50 dark:bg-gray-800/50 shadow-sm hover:shadow-md transition-all">
+                                    <div class="flex justify-between items-start">
+                                        <div>
+                                            <h4 class="font-bold theme-text-primary">${food.name}</h4>
+                                            <p class="text-xs theme-accent-color font-semibold">${food.type}</p>
+                                            <p class="text-xs theme-text-secondary mt-1"><i class="fas fa-map-marker-alt mr-1"></i> ${food.address}</p>
+                                        </div>
+                                        <a href="${food.map_link}" target="_blank" class="p-2 rounded-full bg-blue-100 text-blue-600 hover:bg-blue-200 transition-colors">
+                                            <i class="fas fa-location-arrow"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>` : ''}
+
+                        <!-- Beverages Section -->
+                        ${categorizedFood.beverage.length > 0 ? `
+                        <div class="space-y-3">
+                            <div class="sticky top-0 bg-white/10 backdrop-blur-md z-10 py-1 mb-2 border-b border-gray-500/20">
+                                <h3 class="text-xl font-bold theme-text-primary text-center flex items-center justify-center gap-2">
+                                    <i class="fas fa-mug-hot theme-accent-color"></i> Chai / Coffee / Drinks
+                                </h3>
+                            </div>
+                            ${categorizedFood.beverage.map(food => `
+                                <div class="p-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white/50 dark:bg-gray-800/50 shadow-sm hover:shadow-md transition-all">
+                                    <div class="flex justify-between items-start">
+                                        <div>
+                                            <h4 class="font-bold theme-text-primary">${food.name}</h4>
+                                            <p class="text-xs theme-accent-color font-semibold">${food.type}</p>
+                                            <p class="text-xs theme-text-secondary mt-1"><i class="fas fa-map-marker-alt mr-1"></i> ${food.address}</p>
+                                        </div>
+                                        <a href="${food.map_link}" target="_blank" class="p-2 rounded-full bg-blue-100 text-blue-600 hover:bg-blue-200 transition-colors">
+                                            <i class="fas fa-location-arrow"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>` : ''}
+
+                        <!-- Snacks Section -->
+                        ${categorizedFood.snack.length > 0 ? `
+                        <div class="space-y-3">
+                            <div class="sticky top-0 bg-white/10 backdrop-blur-md z-10 py-1 mb-2 border-b border-gray-500/20">
+                                <h3 class="text-xl font-bold theme-text-primary text-center flex items-center justify-center gap-2">
+                                    <i class="fas fa-hamburger theme-accent-color"></i> Fast Food / Snacks
+                                </h3>
+                            </div>
+                            ${categorizedFood.snack.map(food => `
+                                <div class="p-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white/50 dark:bg-gray-800/50 shadow-sm hover:shadow-md transition-all">
+                                    <div class="flex justify-between items-start">
+                                        <div>
+                                            <h4 class="font-bold theme-text-primary">${food.name}</h4>
+                                            <p class="text-xs theme-accent-color font-semibold">${food.type}</p>
+                                            <p class="text-xs theme-text-secondary mt-1"><i class="fas fa-map-marker-alt mr-1"></i> ${food.address}</p>
+                                        </div>
+                                        <a href="${food.map_link}" target="_blank" class="p-2 rounded-full bg-blue-100 text-blue-600 hover:bg-blue-200 transition-colors">
+                                            <i class="fas fa-location-arrow"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>` : ''}
+
+                    </div>
+
+                    <!-- Right Side: Travel Info -->
+                    <div class="space-y-4">
+                        <div class="sticky top-0 bg-white/10 backdrop-blur-md z-10 py-2 mb-2 border-b border-gray-500/20">
+                            <h3 class="text-xl font-bold theme-text-primary text-center flex items-center justify-center gap-2">
+                                <i class="fas fa-taxi theme-accent-color"></i> Auto & Taxi Drivers
+                            </h3>
+                        </div>
+
+                        <!-- Travel Warning Box -->
+                        <div class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700 rounded-xl p-4 text-sm text-yellow-800 dark:text-yellow-200 mb-4 shadow-sm">
+                            <p class="font-bold flex items-center mb-2"><i class="fas fa-exclamation-triangle mr-2 text-yellow-600"></i> Important Warning:</p>
+                            <p class="mb-3 leading-relaxed opacity-90">These driver numbers belong to private travel owners. Please <strong>decide the price and location first</strong> before booking. Prices may increase or decrease based on the exact location.</p>
+                            <div class="pt-3 border-t border-yellow-200 dark:border-yellow-700/50">
+                                <a href="tel:9824594156" class="font-bold theme-accent-color hover:underline flex items-center justify-center gap-2">
+                                    <i class="fas fa-phone-volume animate-pulse"></i> Call me before choosing best driver, I will definitely help!
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3">
+                            ${driverData.map(driver => `
+                                <div class="p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-white/50 dark:bg-gray-800/50 shadow-sm hover:shadow-md transition-all">
+                                    <div class="flex justify-between items-center">
+                                        <div class="flex items-center gap-3">
+                                            <div class="h-10 w-10 rounded-full bg-yellow-100 flex items-center justify-center text-yellow-600">
+                                                <i class="fas ${driver.vehicle.toLowerCase().includes('auto') ? 'fa-motorcycle' : 'fa-car'}"></i>
+                                            </div>
+                                            <div>
+                                                <h4 class="font-bold theme-text-primary">${driver.name}</h4>
+                                                <p class="text-xs theme-text-secondary">${driver.vehicle}</p>
+                                            </div>
+                                        </div>
+                                        <a href="tel:${driver.contact}" class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-green-100 text-green-700 hover:bg-green-200 transition-colors">
+                                            <i class="fas fa-phone-alt text-xs"></i>
+                                            <span class="text-sm font-bold">${driver.contact}</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            foodTravelContainer.innerHTML = html;
+        }
+
+        // ... (Rest of existing functions: setupDropdowns, populateDateMonthDropdown, autoSelectNextTrip, startCountdown, attachModalListeners, etc.) ...
+        
         function setupDropdowns() {
             const years = Object.keys(groupedData).sort();
             yearFilter.innerHTML = '<option value="">-- Select a Journey Year --</option>';
@@ -762,21 +1250,17 @@
             datesContainer.innerHTML = `<p class="text-center theme-text-secondary p-10">Please select a year and date to see booking details.</p>`;
         }
 
-        // --- NEW: Function to Populate Date/Month Dropdown Independently ---
         function populateDateMonthDropdown(selectedYear) {
             dateMonthFilter.innerHTML = '<option value="">-- Select a Journey Date --</option>';
-            
             if (selectedYear && groupedData[selectedYear]) {
                 dateMonthFilter.disabled = false;
                 const dateMonths = Object.keys(groupedData[selectedYear]);
                 dateMonths.forEach(dm => {
                     const option = document.createElement('option');
                     option.value = dm;
-                    
                     const fullDateString = `${dm} ${selectedYear}`;
                     const dayName = getWeekdayName(fullDateString);
                     option.textContent = dayName ? `${dm} (${dayName})` : dm;
-                    
                     dateMonthFilter.appendChild(option);
                 });
             } else {
@@ -785,32 +1269,20 @@
             }
         }
 
-        // --- NEW: Auto Select Next Trip Function ---
         function autoSelectNextTrip() {
             const now = new Date();
-            // Reset time to start of day for accurate comparison
             now.setHours(0,0,0,0);
-            
             let targetYear = null;
             let targetDateMonth = null;
-
-            // Find the next Poonam date from schedule that is >= today
             for (const date of poonamDates) {
                  const monthIndex = new Date(Date.parse(date.month +" 1, 2012")).getMonth();
                  const tripDate = new Date(date.year, monthIndex, date.day);
-
-                 // Check if tripDate is today or future
                  if (tripDate >= now) {
                      const potentialYear = date.year.toString();
-                     
-                     // Try both "9 August" and "09 August" format to be safe
                      const dayStr = date.day.toString();
                      const paddedDayStr = dayStr.padStart(2, '0');
-                     
                      const potentialDateMonth1 = `${dayStr} ${date.month}`; 
                      const potentialDateMonth2 = `${paddedDayStr} ${date.month}`;
-
-                     // CRITICAL CHECK: Do we actually have data for this date in the CSV?
                      if (groupedData[potentialYear]) {
                          if (groupedData[potentialYear][potentialDateMonth1]) {
                              targetYear = potentialYear;
@@ -824,19 +1296,10 @@
                      }
                  }
             }
-
-            // If we found a valid upcoming trip with data, load it!
             if (targetYear && targetDateMonth) {
-                // 1. Set Year Dropdown
                 yearFilter.value = targetYear;
-                
-                // 2. Populate Date Dropdown based on Year
                 populateDateMonthDropdown(targetYear);
-                
-                // 3. Set Date Dropdown
                 dateMonthFilter.value = targetDateMonth;
-                
-                // 4. Render the cards
                 renderCards(targetYear, targetDateMonth);
             }
         }
@@ -844,7 +1307,6 @@
         function startCountdown() {
             const now = new Date();
             let nextPoonamDate = null;
-
             for (const date of poonamDates) {
                 const monthIndex = new Date(Date.parse(date.month +" 1, 2012")).getMonth();
                 const poonamDateTime = new Date(date.year, monthIndex, date.day);
@@ -853,12 +1315,10 @@
                     break;
                 }
             }
-
             if (!nextPoonamDate) {
                 countdownContainer.innerHTML = `<h2 class="text-2xl text-center theme-accent-color">All scheduled journeys for this period are complete.</h2>`;
                 return;
             }
-
             const nextPoonamMonthYear = `${nextPoonamDate.toLocaleString('default', { month: 'long' })} ${nextPoonamDate.getFullYear()}`;
             countdownContainer.innerHTML = `
                 <div class="text-center">
@@ -871,32 +1331,26 @@
                     </div>
                 </div>
             `;
-
             const daysEl = document.getElementById('days');
             const hoursEl = document.getElementById('hours');
             const minutesEl = document.getElementById('minutes');
             const secondsEl = document.getElementById('seconds');
-
             const timerInterval = setInterval(() => {
                 const now = new Date().getTime();
                 const distance = nextPoonamDate - now;
-
                 if (distance < 0) {
                     clearInterval(timerInterval);
                     startCountdown();
                     return;
                 }
-
                 const days = Math.floor(distance / (1000 * 60 * 60 * 24));
                 const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                 const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
                 const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
                 daysEl.textContent = String(days).padStart(2, '0');
                 hoursEl.textContent = String(hours).padStart(2, '0');
                 minutesEl.textContent = String(minutes).padStart(2, '0');
                 secondsEl.textContent = String(seconds).padStart(2, '0');
-
             }, 1000);
         }
 
@@ -937,7 +1391,6 @@
             const originalHTML = button.innerHTML;
             button.disabled = true;
             button.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 theme-text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>`;
-
             setTimeout(() => {
                 button.innerHTML = originalHTML;
                 button.disabled = false;
@@ -973,6 +1426,8 @@
             });
         }
 
+        // ... (Render Functions: renderCards, createExpenseCard, createStayCard, createTravelCard, renderPlaces, fetchPlacesData, parseCSV, fetchAndProcessData, populateTimings stay the same) ...
+        
         function renderCards(year, dateMonth) {
             const bookings = groupedData[year]?.[dateMonth];
             if (!bookings) {
@@ -1056,29 +1511,38 @@
 
             return `
                 <div class="glass-card overflow-hidden ticket-card card-item">
-                    <div class="p-4 text-center relative ${statusColors.header} collapsible-trigger cursor-pointer flex flex-col justify-center items-center">
-                        <div class="w-full flex justify-center items-center gap-2 mb-1">
-                            <h2 class="text-lg sm:text-xl font-bold text-white uppercase flex items-center justify-center gap-2">
-                                <i class="fas fa-bed"></i>
-                                <span>Stay Information</span>
-                            </h2>
-                        </div>
-                        <div class="flex items-center justify-center gap-3 text-white w-full">
-                            <div class="flex flex-col items-end">
-                                <span class="text-sm font-bold leading-tight">${stay.check_in_date}</span>
-                                <span class="text-[10px] uppercase opacity-90 leading-tight">${checkInDay} • ${stay.check_in_time}</span>
+                    <div class="p-4 text-center relative ${statusColors.header} collapsible-trigger cursor-pointer">
+                        <div class="flex flex-col sm:flex-row items-center justify-center sm:justify-between w-full relative z-10">
+                            
+                            <!-- Status Badge -->
+                            <div class="mb-2 sm:mb-0 sm:absolute sm:left-6 sm:top-1/2 sm:-translate-y-1/2 z-20">
+                                 <div class="bg-white text-blue-800 text-[10px] sm:text-sm font-semibold px-2 sm:px-3 py-1 rounded-full flex items-center shadow-sm ${statusColors.chip || ''}">
+                                    <svg class="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" fill="currentColor" viewBox="0 0 20 20">${statusColors.icon}</svg>
+                                    <span>${stay.status.charAt(0).toUpperCase() + stay.status.slice(1)}</span>
+                                 </div>
                             </div>
-                            <i class="fas fa-arrow-right text-xs opacity-75"></i>
-                            <div class="flex flex-col items-start">
-                                <span class="text-sm font-bold leading-tight">${stay.check_out_date}</span>
-                                <span class="text-[10px] uppercase opacity-90 leading-tight">${checkOutDay} • ${stay.check_out_time}</span>
+
+                            <!-- Main Content -->
+                            <div class="w-full flex flex-col items-center">
+                                 <h2 class="text-lg sm:text-xl font-bold text-white uppercase flex items-center justify-center gap-2 mb-1">
+                                    <i class="fas fa-bed"></i> <span>Stay Information</span>
+                                 </h2>
+                                 <div class="flex items-center justify-center gap-3 text-white">
+                                    <div class="flex flex-col items-end">
+                                        <span class="text-sm font-bold leading-tight">${stay.check_in_date}</span>
+                                        <span class="text-[10px] uppercase opacity-90 leading-tight">${checkInDay} • ${stay.check_in_time}</span>
+                                    </div>
+                                    <i class="fas fa-arrow-right text-xs opacity-75"></i>
+                                    <div class="flex flex-col items-start">
+                                        <span class="text-sm font-bold leading-tight">${stay.check_out_date}</span>
+                                        <span class="text-[10px] uppercase opacity-90 leading-tight">${checkOutDay} • ${stay.check_out_time}</span>
+                                    </div>
+                                </div>
                             </div>
+                            
+                            <!-- Chevron -->
+                            <i class="fas fa-chevron-down chevron-icon absolute top-4 right-4 sm:top-1/2 sm:-translate-y-1/2 text-white z-10"></i>
                         </div>
-                        <div class="absolute top-1/2 -translate-y-1/2 left-4 sm:left-6 bg-white text-blue-800 text-xs sm:text-sm font-semibold px-2 sm:px-3 py-1 sm:py-1.5 rounded-full flex items-center shadow-sm z-20 ${statusColors.chip || ''}">
-                            <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">${statusColors.icon}</svg>
-                            <span>${stay.status.charAt(0).toUpperCase() + stay.status.slice(1)}</span>
-                        </div>
-                        <i class="fas fa-chevron-down chevron-icon absolute top-1/2 -translate-y-1/2 right-4 sm:right-6 text-white z-10"></i>
                     </div>
                     <div class="collapsible-content">
                         <div class="p-6">
@@ -1179,29 +1643,38 @@
 
             return `
                 <div class="glass-card overflow-hidden ticket-card card-item">
-                    <div class="status-header p-4 text-center relative ${statusColors.header} collapsible-trigger cursor-pointer flex flex-col justify-center items-center">
-                        <div class="w-full flex justify-center items-center gap-2 mb-1">
-                            <h2 class="text-lg sm:text-xl font-bold text-white uppercase flex items-center justify-center gap-2">
-                                <i class="fas fa-train-subway"></i>
-                                <span>${travel.departure_city} to ${travel.arrival_city}</span>
-                            </h2>
-                        </div>
-                        <div class="flex items-center justify-center gap-3 text-white w-full">
-                            <div class="flex flex-col items-end">
-                                <span class="text-sm font-bold leading-tight">${travel.start_date}</span>
-                                <span class="text-[10px] uppercase opacity-90 leading-tight">${startDay} • ${travel.start_time}</span>
+                    <div class="status-header p-4 text-center relative ${statusColors.header} collapsible-trigger cursor-pointer">
+                        <div class="flex flex-col sm:flex-row items-center justify-center sm:justify-between w-full relative z-10">
+                            
+                            <!-- Status Badge -->
+                            <div class="mb-2 sm:mb-0 sm:absolute sm:left-6 sm:top-1/2 sm:-translate-y-1/2 z-20">
+                                <div class="bg-white text-blue-800 text-[10px] sm:text-sm font-semibold px-2 sm:px-3 py-1 rounded-full flex items-center shadow-sm ${statusColors.chip}">
+                                    <span class="status-icon w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2"><svg fill="currentColor" viewBox="0 0 20 20">${statusColors.icon}</svg></span>
+                                    <span class="status-text">${statusColors.chipText || travel.status.charAt(0).toUpperCase() + travel.status.slice(1)}</span>
+                                </div>
                             </div>
-                            <i class="fas fa-arrow-right text-xs opacity-75"></i>
-                            <div class="flex flex-col items-start">
-                                <span class="text-sm font-bold leading-tight">${travel.end_date}</span>
-                                <span class="text-[10px] uppercase opacity-90 leading-tight">${endDay} • ${travel.end_time}</span>
+
+                            <!-- Main Content -->
+                            <div class="w-full flex flex-col items-center">
+                                <h2 class="text-lg sm:text-xl font-bold text-white uppercase flex items-center justify-center gap-2 mb-1 text-center">
+                                    <i class="fas fa-train-subway"></i> <span>${travel.departure_city} to ${travel.arrival_city}</span>
+                                </h2>
+                                <div class="flex items-center justify-center gap-3 text-white">
+                                    <div class="flex flex-col items-end">
+                                        <span class="text-sm font-bold leading-tight">${travel.start_date}</span>
+                                        <span class="text-[10px] uppercase opacity-90 leading-tight">${startDay} • ${travel.start_time}</span>
+                                    </div>
+                                    <i class="fas fa-arrow-right text-xs opacity-75"></i>
+                                    <div class="flex flex-col items-start">
+                                        <span class="text-sm font-bold leading-tight">${travel.end_date}</span>
+                                        <span class="text-[10px] uppercase opacity-90 leading-tight">${endDay} • ${travel.end_time}</span>
+                                    </div>
+                                </div>
                             </div>
+
+                            <!-- Chevron -->
+                            <i class="fas fa-chevron-down chevron-icon absolute top-4 right-4 sm:top-1/2 sm:-translate-y-1/2 text-white z-10"></i>
                         </div>
-                        <div class="absolute top-1/2 -translate-y-1/2 left-4 sm:left-6 bg-white text-blue-800 text-xs sm:text-sm font-semibold px-2 sm:px-3 py-1 sm:py-1.5 rounded-full flex items-center shadow-sm z-20 ${statusColors.chip}">
-                            <span class="status-icon w-4 h-4 mr-2"><svg fill="currentColor" viewBox="0 0 20 20">${statusColors.icon}</svg></span>
-                            <span class="status-text">${statusColors.chipText || travel.status.charAt(0).toUpperCase() + travel.status.slice(1)}</span>
-                        </div>
-                        <i class="fas fa-chevron-down chevron-icon absolute top-1/2 -translate-y-1/2 right-4 sm:right-6 text-white z-10"></i>
                     </div>
                     <div class="collapsible-content">
                         <div class="p-6">
@@ -1553,14 +2026,35 @@
                     }
                 });
             });
+             // NEW LISTENER FOR FOOD & TRAVEL LINK
+            document.querySelectorAll('#food-link, #mobile-food-link').forEach(link => {
+                link.addEventListener('click', (e) => { 
+                    e.preventDefault(); 
+                    foodTravelModal.classList.remove('hidden'); 
+                    // Render content when modal opens
+                    renderFoodAndTravel();
+                });
+            });
+            // NEW LISTENER FOR BEST STAY LINK
+            document.querySelectorAll('#stay-link, #mobile-stay-link').forEach(link => {
+                link.addEventListener('click', (e) => { 
+                    e.preventDefault(); 
+                    stayModal.classList.remove('hidden'); 
+                    // Render content when modal opens
+                    renderStayInfo();
+                });
+            });
+
 
             document.getElementById('close-about-modal').addEventListener('click', () => aboutModal.classList.add('hidden'));
             document.getElementById('close-contact-modal').addEventListener('click', () => contactModal.classList.add('hidden'));
             document.getElementById('close-payment-modal').addEventListener('click', () => paymentModal.classList.add('hidden'));
             document.getElementById('close-timing-modal').addEventListener('click', () => timingModal.classList.add('hidden'));
             document.getElementById('close-places-modal').addEventListener('click', () => placesModal.classList.add('hidden'));
+            document.getElementById('close-food-modal').addEventListener('click', () => foodTravelModal.classList.add('hidden'));
+            document.getElementById('close-stay-modal').addEventListener('click', () => stayModal.classList.add('hidden'));
 
-            [aboutModal, contactModal, paymentModal, timingModal, successModal, placesModal].forEach(m => {
+            [aboutModal, contactModal, paymentModal, timingModal, successModal, placesModal, foodTravelModal, stayModal].forEach(m => {
                  m.addEventListener('click', (e) => { if(e.target === m) m.classList.add('hidden'); });
             });
 
