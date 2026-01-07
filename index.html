@@ -864,7 +864,8 @@
             { year: 2025, month: 'August', day: 9 }, { year: 2025, month: 'September', day: 7 },
             { year: 2025, month: 'October', day: 7 }, { year: 2025, month: 'November', day: 5 },
             { year: 2025, month: 'December', day: 5 }, { year: 2026, month: 'January', day: 3 },
-            { year: 2026, month: 'February', day: 2 }, { year: 2026, month: 'March', day: 3 },
+            { year: 2026, month: 'February', day: 1 }, { year: 2026, month: 'February', day: 6 },
+            { year: 2026, month: 'March', day: 3 },
             { year: 2026, month: 'April', day: 2 }, { year: 2026, month: 'May', day: 1 },
             { year: 2026, month: 'May', day: 31 }, { year: 2026, month: 'June', day: 30 },
             { year: 2026, month: 'July', day: 29 }, { year: 2026, month: 'August', day: 28 },
@@ -1269,40 +1270,61 @@
             }
         }
 
-        function autoSelectNextTrip() {
-            const now = new Date();
-            now.setHours(0,0,0,0);
-            let targetYear = null;
-            let targetDateMonth = null;
-            for (const date of poonamDates) {
-                 const monthIndex = new Date(Date.parse(date.month +" 1, 2012")).getMonth();
-                 const tripDate = new Date(date.year, monthIndex, date.day);
-                 if (tripDate >= now) {
-                     const potentialYear = date.year.toString();
-                     const dayStr = date.day.toString();
-                     const paddedDayStr = dayStr.padStart(2, '0');
-                     const potentialDateMonth1 = `${dayStr} ${date.month}`; 
-                     const potentialDateMonth2 = `${paddedDayStr} ${date.month}`;
-                     if (groupedData[potentialYear]) {
-                         if (groupedData[potentialYear][potentialDateMonth1]) {
-                             targetYear = potentialYear;
-                             targetDateMonth = potentialDateMonth1;
-                             break;
-                         } else if (groupedData[potentialYear][potentialDateMonth2]) {
-                             targetYear = potentialYear;
-                             targetDateMonth = potentialDateMonth2;
-                             break;
-                         }
-                     }
-                 }
+function autoSelectNextTrip() {
+    const now = new Date();
+    now.setHours(0,0,0,0);
+    
+    let targetYear = null;
+    let targetDateMonth = null;
+
+    // Sabse pehle poonamDates ko chronological order mein sort kar lete hain
+    const sortedPoonam = [...poonamDates].sort((a, b) => {
+        const dateA = new Date(a.year, new Date(Date.parse(a.month + " 1")).getMonth(), a.day);
+        const dateB = new Date(b.year, new Date(Date.parse(b.month + " 1")).getMonth(), b.day);
+        return dateA - dateB;
+    });
+
+    for (const date of sortedPoonam) {
+        const monthIndex = new Date(Date.parse(date.month + " 1")).getMonth();
+        const tripDate = new Date(date.year, monthIndex, date.day);
+
+        // Agar trip aaj ya aaj ke baad ki hai
+        if (tripDate >= now) {
+            const y = date.year.toString();
+            const d = date.day.toString();
+            const paddedD = d.padStart(2, '0');
+            
+            // Sheet mein inme se koi bhi format ho sakta hai
+            const formats = [`${d} ${date.month}`, `${paddedD} ${date.month}`];
+
+            if (groupedData[y]) {
+                for (let f of formats) {
+                    if (groupedData[y][f]) {
+                        targetYear = y;
+                        targetDateMonth = f;
+                        break;
+                    }
+                }
             }
-            if (targetYear && targetDateMonth) {
-                yearFilter.value = targetYear;
-                populateDateMonthDropdown(targetYear);
-                dateMonthFilter.value = targetDateMonth;
-                renderCards(targetYear, targetDateMonth);
-            }
+            if (targetYear) break; 
         }
+    }
+
+    if (targetYear && targetDateMonth) {
+        yearFilter.value = targetYear;
+        populateDateMonthDropdown(targetYear);
+        dateMonthFilter.value = targetDateMonth;
+        renderCards(targetYear, targetDateMonth);
+    } else {
+        // Agar kuch na mile toh latest available year select kar lo
+        const availableYears = Object.keys(groupedData).sort();
+        if (availableYears.length > 0) {
+            const latestYear = availableYears[availableYears.length - 1];
+            yearFilter.value = latestYear;
+            populateDateMonthDropdown(latestYear);
+        }
+    }
+}
 
         function startCountdown() {
             const now = new Date();
